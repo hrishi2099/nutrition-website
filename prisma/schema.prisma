@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  firstName   String
+  lastName    String
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Nutrition related fields
+  age         Int?
+  height      Float?    // in cm
+  weight      Float?    // in kg
+  gender      Gender?
+  activityLevel ActivityLevel?
+  goals       Goal[]
+  dietPlans   DietPlan[]
+  
+  @@map("users")
+}
+
+model DietPlan {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  type        PlanType
+  duration    Int      // in weeks
+  calories    Int
+  mealsPerDay Int      // number of meals per day
+  price       Float
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  meals       Meal[]
+  
+  @@map("diet_plans")
+}
+
+model Meal {
+  id          String   @id @default(cuid())
+  name        String
+  type        MealType
+  calories    Int
+  protein     Float    // in grams
+  carbs       Float    // in grams  
+  fat         Float    // in grams
+  instructions String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  dietPlanId  String
+  dietPlan    DietPlan @relation(fields: [dietPlanId], references: [id], onDelete: Cascade)
+  ingredients Ingredient[]
+  
+  @@map("meals")
+}
+
+model Ingredient {
+  id       String @id @default(cuid())
+  name     String
+  quantity String
+  unit     String
+  
+  // Relations
+  mealId   String
+  meal     Meal   @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  
+  @@map("ingredients")
+}
+
+model Goal {
+  id          String   @id @default(cuid())
+  type        GoalType
+  target      Float?   // target weight, body fat %, etc.
+  deadline    DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("goals")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHTLY_ACTIVE
+  MODERATELY_ACTIVE
+  VERY_ACTIVE
+  EXTREMELY_ACTIVE
+}
+
+enum PlanType {
+  WEIGHT_LOSS
+  MUSCLE_GAIN
+  MAINTENANCE
+  ATHLETIC_PERFORMANCE
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum GoalType {
+  WEIGHT_LOSS
+  WEIGHT_GAIN
+  MUSCLE_GAIN
+  FAT_LOSS
+  MAINTENANCE
+}
