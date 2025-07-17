@@ -1,4 +1,4 @@
-import { PrismaClient, PlanType, MealType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { hashPassword } from '../src/lib/auth';
 
 const prisma = new PrismaClient();
@@ -46,7 +46,7 @@ async function main() {
     data: {
       name: 'Weight Loss Plan',
       description: 'Designed to help you lose weight safely and sustainably',
-      type: PlanType.WEIGHT_LOSS,
+      type: 'WEIGHT_LOSS',
       duration: 12,
       calories: 1400,
       mealsPerDay: 5,
@@ -55,7 +55,7 @@ async function main() {
         create: [
           {
             name: 'Protein-Packed Overnight Oats',
-            type: MealType.BREAKFAST,
+            type: 'BREAKFAST',
             calories: 350,
             protein: 25,
             carbs: 45,
@@ -73,7 +73,7 @@ async function main() {
           },
           {
             name: 'Grilled Chicken Salad',
-            type: MealType.LUNCH,
+            type: 'LUNCH',
             calories: 420,
             protein: 35,
             carbs: 15,
@@ -92,7 +92,7 @@ async function main() {
           },
           {
             name: 'Baked Salmon with Vegetables',
-            type: MealType.DINNER,
+            type: 'DINNER',
             calories: 480,
             protein: 40,
             carbs: 20,
@@ -118,7 +118,7 @@ async function main() {
     data: {
       name: 'Muscle Gain Plan',
       description: 'Optimize your nutrition for muscle building and strength',
-      type: PlanType.MUSCLE_GAIN,
+      type: 'MUSCLE_GAIN',
       duration: 16,
       calories: 2500,
       mealsPerDay: 7,
@@ -127,7 +127,7 @@ async function main() {
         create: [
           {
             name: 'High-Protein Pancakes',
-            type: MealType.BREAKFAST,
+            type: 'BREAKFAST',
             calories: 520,
             protein: 35,
             carbs: 45,
@@ -146,7 +146,7 @@ async function main() {
           },
           {
             name: 'Post-Workout Protein Bowl',
-            type: MealType.SNACK,
+            type: 'SNACK',
             calories: 380,
             protein: 30,
             carbs: 35,

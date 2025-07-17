@@ -54,6 +54,7 @@ export async function authenticateUser(email: string, password: string) {
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
+    role: user.role,
   };
 }
 

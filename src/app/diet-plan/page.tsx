@@ -1,60 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PageTransition from '@/components/PageTransition';
+import FadeInSection from '@/components/FadeInSection';
+import AnimatedButton from '@/components/AnimatedButton';
+import AnimatedInput from '@/components/AnimatedInput';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { motion } from 'framer-motion';
 
-const dietPlans = [
-  {
-    id: 1,
-    name: "Weight Loss Plan",
-    description: "Designed to help you lose weight safely and sustainably",
-    duration: "12 weeks",
-    meals: "3 meals + 2 snacks",
-    calories: "1200-1500",
-    price: "$99/month",
-    features: [
-      "Calorie-controlled meals",
-      "High protein recipes",
-      "Weekly meal prep guides",
-      "Progress tracking tools"
-    ],
-    color: "black"
-  },
-  {
-    id: 2,
-    name: "Muscle Gain Plan",
-    description: "Optimize your nutrition for muscle building and strength",
-    duration: "16 weeks",
-    meals: "4 meals + 3 snacks",
-    calories: "2200-2800",
-    price: "$119/month",
-    features: [
-      "High protein focus",
-      "Pre/post workout nutrition",
-      "Supplement guidance",
-      "Strength training meal timing"
-    ],
-    color: "gray"
-  },
-  {
-    id: 3,
-    name: "Balanced Wellness",
-    description: "Maintain optimal health with balanced nutrition",
-    duration: "Ongoing",
-    meals: "3 meals + 2 snacks",
-    calories: "1800-2200",
-    price: "$89/month",
-    features: [
-      "Balanced macronutrients",
-      "Seasonal recipe variations",
-      "Lifestyle integration",
-      "Wellness education"
-    ],
-    color: "zinc"
-  }
-];
+interface DietPlan {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  duration: number;
+  calories: number;
+  mealsPerDay: number;
+  price: number;
+  isActive: boolean;
+  meals: Array<{
+    id: string;
+    name: string;
+    type: string;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    instructions: string;
+    ingredients: Array<{
+      id: string;
+      name: string;
+      quantity: string;
+      unit: string;
+    }>;
+  }>;
+}
 
 const sampleMeals = [
   {
@@ -81,35 +62,157 @@ const sampleMeals = [
 ];
 
 export default function DietPlan() {
-  const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
+  const [dietPlans, setDietPlans] = useState<DietPlan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [priceRange, setPriceRange] = useState('all');
+
+  useEffect(() => {
+    fetchDietPlans();
+  }, []);
+
+  const fetchDietPlans = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/diet-plan');
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch diet plans');
+      }
+      
+      setDietPlans(data.dietPlans);
+    } catch (err) {
+      console.error('Error fetching diet plans:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load diet plans');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPlanTypeDisplay = (type: string) => {
+    switch (type) {
+      case 'WEIGHT_LOSS': return 'Weight Loss';
+      case 'MUSCLE_GAIN': return 'Muscle Gain';
+      case 'MAINTENANCE': return 'Maintenance';
+      case 'ATHLETIC_PERFORMANCE': return 'Athletic Performance';
+      default: return type;
+    }
+  };
+
+  const filteredPlans = dietPlans.filter(plan => {
+    const matchesSearch = plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         plan.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = filterType === 'all' || plan.type.toLowerCase().includes(filterType.toLowerCase());
+    const matchesPrice = priceRange === 'all' || 
+                        (priceRange === 'budget' && plan.price < 100) ||
+                        (priceRange === 'premium' && plan.price >= 100);
+    
+    return matchesSearch && matchesType && matchesPrice;
+  });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Diet Plans</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <AnimatedButton onClick={fetchDietPlans}>
+            Try Again
+          </AnimatedButton>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <PageTransition>
       <div className="min-h-screen">
       <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <FadeInSection className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Personalized <span className="text-black">Diet Plans</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
               Choose from our scientifically-designed nutrition plans tailored to help you achieve your specific health and fitness goals.
             </p>
-          </div>
+            
+            {/* Search and Filter Section */}
+            <div className="max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div className="md:col-span-2">
+                  <AnimatedInput
+                    label=""
+                    type="text"
+                    name="search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search diet plans..."
+                    className="w-full"
+                  />
+                </div>
+                <div>
+                  <select
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="weight">Weight Loss</option>
+                    <option value="muscle">Muscle Gain</option>
+                    <option value="wellness">Wellness</option>
+                  </select>
+                </div>
+                <div>
+                  <select
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="all">All Prices</option>
+                    <option value="budget">Under $100</option>
+                    <option value="premium">$100+</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </FadeInSection>
         </div>
       </section>
 
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <FadeInSection className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Plan</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Each plan is carefully crafted by our nutrition experts and can be customized to fit your preferences and dietary requirements.
             </p>
-          </div>
+            <div className="mt-4 text-sm text-gray-500">
+              Showing {filteredPlans.length} of {dietPlans.length} plans
+            </div>
+          </FadeInSection>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {dietPlans.map((plan, index) => (
+            {filteredPlans.length === 0 ? (
+              <div className="col-span-3 text-center py-12">
+                <div className="text-gray-400 text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No plans found</h3>
+                <p className="text-gray-600">Try adjusting your search or filter criteria.</p>
+              </div>
+            ) : (
+              filteredPlans.map((plan, index) => (
               <motion.div
                 key={plan.id}
                 className={`bg-white border-2 ${
@@ -136,54 +239,77 @@ export default function DietPlan() {
                 <div className="space-y-2 mb-6">
                   <div className="flex justify-between">
                     <span className="text-gray-500">Duration:</span>
-                    <span className="font-medium">{plan.duration}</span>
+                    <span className="font-medium">{plan.duration} weeks</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Daily Meals:</span>
-                    <span className="font-medium">{plan.meals}</span>
+                    <span className="font-medium">{plan.mealsPerDay} meals</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Calories:</span>
-                    <span className="font-medium">{plan.calories}</span>
+                    <span className="font-medium">{plan.calories} cal/day</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Type:</span>
+                    <span className="font-medium">{getPlanTypeDisplay(plan.type)}</span>
                   </div>
                 </div>
                 
                 <ul className="space-y-2 mb-6">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-sm">
-                      <span className="text-black mr-2">✓</span>
-                      {feature}
-                    </li>
-                  ))}
+                  <li className="flex items-center text-sm">
+                    <span className="text-black mr-2">✓</span>
+                    Personalized meal plans
+                  </li>
+                  <li className="flex items-center text-sm">
+                    <span className="text-black mr-2">✓</span>
+                    Nutritionist support
+                  </li>
+                  <li className="flex items-center text-sm">
+                    <span className="text-black mr-2">✓</span>
+                    Progress tracking
+                  </li>
+                  <li className="flex items-center text-sm">
+                    <span className="text-black mr-2">✓</span>
+                    Recipe variations
+                  </li>
                 </ul>
                 
                 <div className="text-2xl font-bold text-black mb-4">
-                  {plan.price}
+                  ${plan.price}/month
                 </div>
                 
-                <button
-                  className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
-                >
-                  Get Started
-                </button>
+                <Link href={`/diet-plan/${plan.id}`}>
+                  <button
+                    className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                  >
+                    View Details
+                  </button>
+                </Link>
               </motion.div>
-            ))}
+            ))
+            )}
           </div>
         </div>
       </section>
 
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <FadeInSection className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Sample Meals</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Get a taste of what your personalized meal plan might include. All recipes are nutritionist-approved and delicious.
             </p>
-          </div>
+          </FadeInSection>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {sampleMeals.map((meal, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <motion.div 
+                key={index} 
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
                 <div className="p-6">
                   <div className="text-black text-sm font-semibold mb-2">{meal.type}</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{meal.name}</h3>
@@ -208,7 +334,7 @@ export default function DietPlan() {
                     </ul>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -216,69 +342,91 @@ export default function DietPlan() {
 
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <FadeInSection className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">What&apos;s Included</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Every diet plan comes with comprehensive support and resources to ensure your success.
             </p>
-          </div>
+          </FadeInSection>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center p-6">
+            <motion.div 
+              className="text-center p-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
               <div className="text-4xl mb-4">📱</div>
               <h3 className="text-lg font-semibold mb-3">Mobile App Access</h3>
               <p className="text-gray-600 text-sm">
                 Track your meals, progress, and access recipes on the go with our user-friendly app.
               </p>
-            </div>
+            </motion.div>
             
-            <div className="text-center p-6">
+            <motion.div 
+              className="text-center p-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
               <div className="text-4xl mb-4">👨‍🍳</div>
               <h3 className="text-lg font-semibold mb-3">Chef-Designed Recipes</h3>
               <p className="text-gray-600 text-sm">
                 Enjoy delicious, nutritious meals created by professional chefs and nutritionists.
               </p>
-            </div>
+            </motion.div>
             
-            <div className="text-center p-6">
+            <motion.div 
+              className="text-center p-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
               <div className="text-4xl mb-4">🛒</div>
               <h3 className="text-lg font-semibold mb-3">Shopping Lists</h3>
               <p className="text-gray-600 text-sm">
                 Get organized weekly shopping lists with everything you need for your meal plan.
               </p>
-            </div>
+            </motion.div>
             
-            <div className="text-center p-6">
+            <motion.div 
+              className="text-center p-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
               <div className="text-4xl mb-4">💬</div>
               <h3 className="text-lg font-semibold mb-3">Expert Support</h3>
               <p className="text-gray-600 text-sm">
                 Direct access to our nutrition team for questions and plan adjustments.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       <section className="py-16 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied clients who have transformed their health with our personalized nutrition plans.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="bg-white text-black px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors"
-            >
-              Get Your Free Consultation
-            </Link>
-            <Link
-              href="/about"
-              className="border border-white text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors"
-            >
-              Learn More About Us
-            </Link>
-          </div>
+          <FadeInSection>
+            <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
+            <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+              Join thousands of satisfied clients who have transformed their health with our personalized nutrition plans.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <AnimatedButton
+                onClick={() => window.location.href = '/contact'}
+                className="bg-white text-black hover:bg-gray-100"
+              >
+                Get Your Free Consultation
+              </AnimatedButton>
+              <AnimatedButton
+                onClick={() => window.location.href = '/about'}
+                className="border border-white text-white hover:bg-gray-800"
+              >
+                Learn More About Us
+              </AnimatedButton>
+            </div>
+          </FadeInSection>
         </div>
       </section>
       </div>

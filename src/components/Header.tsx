@@ -42,6 +42,12 @@ export default function Header() {
                 <span className="text-gray-600 text-sm">
                   Welcome, {user?.firstName}
                 </span>
+                <Link
+                  href="/profile"
+                  className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  Profile
+                </Link>
                 <button
                   onClick={logout}
                   className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors"
@@ -127,6 +133,13 @@ export default function Header() {
                     <div className="px-3 py-2 text-base font-medium text-gray-600">
                       Welcome, {user?.firstName}
                     </div>
+                    <Link
+                      href="/profile"
+                      className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
                     <button
                       onClick={() => {
                         logout();

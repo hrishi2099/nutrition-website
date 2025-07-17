@@ -13,6 +13,9 @@ interface AnimatedInputProps {
   required?: boolean;
   error?: string;
   className?: string;
+  min?: string;
+  max?: string;
+  step?: string;
 }
 
 export default function AnimatedInput({
@@ -24,7 +27,10 @@ export default function AnimatedInput({
   placeholder,
   required = false,
   error,
-  className = ''
+  className = '',
+  min,
+  max,
+  step
 }: AnimatedInputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -52,6 +58,9 @@ export default function AnimatedInput({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
+          min={min}
+          max={max}
+          step={step}
           className={`
             w-full px-3 py-2 border rounded-lg shadow-sm 
             focus:outline-none focus:ring-2 focus:ring-black focus:border-black 

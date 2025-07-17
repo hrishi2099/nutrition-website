@@ -4,6 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import PageTransition from '@/components/PageTransition';
+import FadeInSection from '@/components/FadeInSection';
+import { motion } from 'framer-motion';
 
 export default function Signup() {
   const { signup } = useAuth();
@@ -152,29 +155,55 @@ export default function Signup() {
   const passwordStrength = getPasswordStrength();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold text-gray-900">
-              Create your account
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Already have an account?{' '}
-              <Link
-                href="/login"
-                className="font-medium text-black hover:text-gray-800 transition-colors"
+    <PageTransition>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-md w-full space-y-8"
+        >
+          <FadeInSection>
+            <div className="text-center">
+              <motion.h2 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="mt-6 text-3xl font-bold text-gray-900"
               >
-                Sign in here
-              </Link>
-            </p>
-          </div>
-        </div>
+                Create your account
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="mt-2 text-sm text-gray-600"
+              >
+                Already have an account?{' '}
+                <Link
+                  href="/login"
+                  className="font-medium text-black hover:text-gray-800 transition-colors"
+                >
+                  Sign in here
+                </Link>
+              </motion.p>
+            </div>
+          </FadeInSection>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <motion.form 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-lg" 
+          onSubmit={handleSubmit}
+        >
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+              >
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                   First name
                 </label>
@@ -185,17 +214,27 @@ export default function Signup() {
                   autoComplete="given-name"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors ${
+                  className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 ${
                     errors.firstName ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="First name"
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+                  <motion.p 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-1 text-sm text-red-600"
+                  >
+                    {errors.firstName}
+                  </motion.p>
                 )}
-              </div>
+              </motion.div>
 
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+              >
                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                   Last name
                 </label>
@@ -206,18 +245,28 @@ export default function Signup() {
                   autoComplete="family-name"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors ${
+                  className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 ${
                     errors.lastName ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Last name"
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+                  <motion.p 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-1 text-sm text-red-600"
+                  >
+                    {errors.lastName}
+                  </motion.p>
                 )}
-              </div>
+              </motion.div>
             </div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+            >
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
@@ -228,17 +277,27 @@ export default function Signup() {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors ${
+                className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 ${
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Enter your email"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-1 text-sm text-red-600"
+                >
+                  {errors.email}
+                </motion.p>
               )}
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
@@ -250,15 +309,17 @@ export default function Signup() {
                   autoComplete="new-password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors pr-10 ${
+                  className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 pr-10 ${
                     errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Create a password"
                 />
-                <button
+                <motion.button
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   {showPassword ? (
                     <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -270,33 +331,55 @@ export default function Signup() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                   )}
-                </button>
+                </motion.button>
               </div>
               {formData.password && (
-                <div className="mt-2">
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  transition={{ duration: 0.3 }}
+                  className="mt-2"
+                >
                   <div className="flex items-center space-x-1">
                     {[...Array(5)].map((_, index) => (
-                      <div
+                      <motion.div
                         key={index}
-                        className={`h-1 w-full rounded ${
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ delay: index * 0.1, duration: 0.3 }}
+                        className={`h-1 w-full rounded transition-colors duration-300 ${
                           index < passwordStrength.strength ? passwordStrength.color : 'bg-gray-200'
                         }`}
                       />
                     ))}
                   </div>
                   {passwordStrength.label && (
-                    <p className="mt-1 text-xs text-gray-600">
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="mt-1 text-xs text-gray-600"
+                    >
                       Password strength: {passwordStrength.label}
-                    </p>
+                    </motion.p>
                   )}
-                </div>
+                </motion.div>
               )}
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-1 text-sm text-red-600"
+                >
+                  {errors.password}
+                </motion.p>
               )}
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+            >
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm password
               </label>
@@ -308,15 +391,17 @@ export default function Signup() {
                   autoComplete="new-password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors pr-10 ${
+                  className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 pr-10 ${
                     errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Confirm your password"
                 />
-                <button
+                <motion.button
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   {showConfirmPassword ? (
                     <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -328,14 +413,24 @@ export default function Signup() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                   )}
-                </button>
+                </motion.button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-1 text-sm text-red-600"
+                >
+                  {errors.confirmPassword}
+                </motion.p>
               )}
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0, duration: 0.6 }}
+            >
               <div className="flex items-start">
                 <input
                   id="agreeToTerms"
@@ -343,30 +438,42 @@ export default function Signup() {
                   type="checkbox"
                   checked={formData.agreeToTerms}
                   onChange={handleChange}
-                  className="mt-1 h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+                  className="mt-1 h-4 w-4 text-black focus:ring-black border-gray-300 rounded transition-all duration-200"
                 />
                 <label htmlFor="agreeToTerms" className="ml-2 block text-sm text-gray-900">
                   I agree to the{' '}
-                  <Link href="/terms" className="text-black hover:text-gray-800 underline">
+                  <Link href="/terms" className="text-black hover:text-gray-800 underline transition-colors">
                     Terms and Conditions
                   </Link>{' '}
                   and{' '}
-                  <Link href="/privacy" className="text-black hover:text-gray-800 underline">
+                  <Link href="/privacy" className="text-black hover:text-gray-800 underline transition-colors">
                     Privacy Policy
                   </Link>
                 </label>
               </div>
               {errors.agreeToTerms && (
-                <p className="mt-1 text-sm text-red-600">{errors.agreeToTerms}</p>
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-1 text-sm text-red-600"
+                >
+                  {errors.agreeToTerms}
+                </motion.p>
               )}
-            </div>
+            </motion.div>
           </div>
 
-          <div>
-            <button
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.6 }}
+          >
+            <motion.button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={{ scale: isLoading ? 1 : 1.02 }}
+              whileTap={{ scale: isLoading ? 1 : 0.98 }}
             >
               {isLoading ? (
                 <>
@@ -379,23 +486,35 @@ export default function Signup() {
               ) : (
                 'Create account'
               )}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
-          <div className="mt-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+            className="mt-6"
+          >
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-50 text-gray-500">Or sign up with</span>
+                <span className="px-2 bg-white text-gray-500">Or sign up with</span>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <button
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.3, duration: 0.6 }}
+              className="mt-6 grid grid-cols-2 gap-3"
+            >
+              <motion.button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all duration-200"
+                whileHover={{ scale: 1.02, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
+                whileTap={{ scale: 0.98 }}
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -404,21 +523,24 @@ export default function Signup() {
                   <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
                 <span className="ml-2">Google</span>
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all duration-200"
+                whileHover={{ scale: 1.02, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
+                whileTap={{ scale: 0.98 }}
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
                 <span className="ml-2">Facebook</span>
-              </button>
-            </div>
-          </div>
-        </form>
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        </motion.form>
+        </motion.div>
       </div>
-    </div>
+    </PageTransition>
   );
 }
