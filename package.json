@@ -11,7 +11,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma db push --force-reset && npm run db:seed",
     "db:migrate": "prisma db push",
-    "vercel-build": "prisma generate && prisma db push && next build"
+    "vercel-build": "cross-env DATABASE_URL=\"postgresql://temp:temp@localhost:5432/temp\" prisma generate && next build"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",
@@ -31,6 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "tailwindcss": "^4",
