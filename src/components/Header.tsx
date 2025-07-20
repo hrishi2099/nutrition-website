@@ -30,6 +30,9 @@ export default function Header() {
               <Link href="/diet-plan" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Diet Plans
               </Link>
+              <Link href="/blog" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
+                Blog
+              </Link>
               <Link href="/contact" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Contact
               </Link>
@@ -119,6 +122,13 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Diet Plans
+              </Link>
+              <Link
+                href="/blog"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Blog
               </Link>
               <Link
                 href="/contact"

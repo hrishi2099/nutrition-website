@@ -41,6 +41,24 @@ async function main() {
     },
   });
 
+  // Create admin user
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'admin@nutrisap.com' },
+    update: {},
+    create: {
+      email: 'admin@nutrisap.com',
+      firstName: 'Admin',
+      lastName: 'User',
+      password: hashedPassword,
+      role: 'ADMIN',
+      age: 35,
+      height: 170,
+      weight: 70,
+      gender: 'MALE',
+      activityLevel: 'MODERATELY_ACTIVE',
+    },
+  });
+
   // Create sample diet plans
   const weightLossPlan = await prisma.dietPlan.create({
     data: {
@@ -184,9 +202,213 @@ async function main() {
     },
   });
 
+  // Create sample blog categories
+  const nutritionCategory = await prisma.blogCategory.upsert({
+    where: { name: 'Nutrition' },
+    update: {},
+    create: {
+      name: 'Nutrition',
+      slug: 'nutrition',
+      description: 'Expert advice on nutrition and healthy eating habits',
+    },
+  });
+
+  const fitnessCategory = await prisma.blogCategory.upsert({
+    where: { name: 'Fitness' },
+    update: {},
+    create: {
+      name: 'Fitness',
+      slug: 'fitness',
+      description: 'Workout tips and fitness guidance',
+    },
+  });
+
+  const recipesCategory = await prisma.blogCategory.upsert({
+    where: { name: 'Recipes' },
+    update: {},
+    create: {
+      name: 'Recipes',
+      slug: 'recipes',
+      description: 'Healthy and delicious recipe ideas',
+    },
+  });
+
+  // Create sample blog tags
+  const healthyTag = await prisma.blogTag.upsert({
+    where: { name: 'Healthy Eating' },
+    update: {},
+    create: {
+      name: 'Healthy Eating',
+      slug: 'healthy-eating',
+    },
+  });
+
+  const weightLossTag = await prisma.blogTag.upsert({
+    where: { name: 'Weight Loss' },
+    update: {},
+    create: {
+      name: 'Weight Loss',
+      slug: 'weight-loss',
+    },
+  });
+
+  const proteinTag = await prisma.blogTag.upsert({
+    where: { name: 'Protein' },
+    update: {},
+    create: {
+      name: 'Protein',
+      slug: 'protein',
+    },
+  });
+
+  // Create sample blog posts
+  const post1 = await prisma.blogPost.upsert({
+    where: { slug: '10-essential-nutrition-tips-for-better-health' },
+    update: {},
+    create: {
+      title: '10 Essential Nutrition Tips for Better Health',
+      slug: '10-essential-nutrition-tips-for-better-health',
+      content: `
+        <h2>Introduction</h2>
+        <p>Good nutrition is the foundation of a healthy lifestyle. Whether you're looking to lose weight, gain muscle, or simply feel better, these 10 essential nutrition tips will help guide you on your journey to better health.</p>
+        
+        <h3>1. Eat a Rainbow of Colors</h3>
+        <p>Different colored fruits and vegetables provide different nutrients. Aim to include a variety of colors in your diet to ensure you're getting a wide range of vitamins, minerals, and antioxidants.</p>
+        
+        <h3>2. Stay Hydrated</h3>
+        <p>Water is essential for every function in your body. Aim for at least 8 glasses of water per day, more if you're active or live in a hot climate.</p>
+        
+        <h3>3. Include Lean Protein</h3>
+        <p>Protein is crucial for muscle building and repair. Include sources like chicken, fish, beans, and Greek yogurt in your meals.</p>
+        
+        <h3>4. Choose Whole Grains</h3>
+        <p>Whole grains provide fiber and nutrients that refined grains lack. Opt for brown rice, quinoa, and whole wheat products.</p>
+        
+        <h3>5. Don't Skip Meals</h3>
+        <p>Regular meals help maintain steady blood sugar levels and prevent overeating later in the day.</p>
+      `,
+      excerpt: 'Discover the top 10 nutrition tips that can transform your health and help you achieve your wellness goals.',
+      published: true,
+      publishedAt: new Date(),
+      authorId: user1.id,
+      categoryId: nutritionCategory.id,
+      tags: {
+        create: [
+          { tagId: healthyTag.id },
+        ],
+      },
+    },
+  });
+
+  const post2 = await prisma.blogPost.upsert({
+    where: { slug: 'ultimate-guide-meal-prep-weight-loss' },
+    update: {},
+    create: {
+      title: 'The Ultimate Guide to Meal Prep for Weight Loss',
+      slug: 'ultimate-guide-meal-prep-weight-loss',
+      content: `
+        <h2>Why Meal Prep Works for Weight Loss</h2>
+        <p>Meal preparation is one of the most effective strategies for weight loss success. When you plan and prepare your meals in advance, you take control of your nutrition and remove the guesswork from healthy eating.</p>
+        
+        <h3>Benefits of Meal Prep</h3>
+        <ul>
+          <li>Portion control becomes automatic</li>
+          <li>You save time during busy weekdays</li>
+          <li>It's more cost-effective than eating out</li>
+          <li>You avoid impulsive food choices</li>
+          <li>You can track calories more accurately</li>
+        </ul>
+        
+        <h3>Getting Started</h3>
+        <p>Start with prepping just 2-3 meals for the week. As you get comfortable with the process, you can gradually increase to full weekly meal prep.</p>
+        
+        <h3>Essential Containers</h3>
+        <p>Invest in good quality glass or BPA-free plastic containers with compartments. This helps with portion control and keeps foods from mixing.</p>
+      `,
+      excerpt: 'Learn how meal preparation can be your secret weapon for successful weight loss and healthier eating habits.',
+      published: true,
+      publishedAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
+      authorId: user2.id,
+      categoryId: nutritionCategory.id,
+      tags: {
+        create: [
+          { tagId: weightLossTag.id },
+          { tagId: healthyTag.id },
+        ],
+      },
+    },
+  });
+
+  const post3 = await prisma.blogPost.upsert({
+    where: { slug: 'protein-packed-breakfast-recipes' },
+    update: {},
+    create: {
+      title: 'Protein-Packed Breakfast Recipes to Start Your Day Right',
+      slug: 'protein-packed-breakfast-recipes',
+      content: `
+        <h2>Why Protein at Breakfast Matters</h2>
+        <p>Starting your day with a protein-rich breakfast helps stabilize blood sugar, increases satiety, and can boost metabolism throughout the day.</p>
+        
+        <h3>Recipe 1: Greek Yogurt Parfait</h3>
+        <p><strong>Ingredients:</strong></p>
+        <ul>
+          <li>1 cup Greek yogurt</li>
+          <li>1/4 cup granola</li>
+          <li>1/2 cup mixed berries</li>
+          <li>1 tbsp honey</li>
+          <li>1 tbsp chopped nuts</li>
+        </ul>
+        <p><strong>Instructions:</strong> Layer ingredients in a glass, starting with yogurt, then berries, granola, and repeat. Top with nuts and honey.</p>
+        
+        <h3>Recipe 2: Protein Smoothie Bowl</h3>
+        <p><strong>Ingredients:</strong></p>
+        <ul>
+          <li>1 scoop protein powder</li>
+          <li>1 frozen banana</li>
+          <li>1/2 cup spinach</li>
+          <li>1/2 cup almond milk</li>
+          <li>Toppings: granola, coconut flakes, berries</li>
+        </ul>
+        <p><strong>Instructions:</strong> Blend all ingredients until smooth. Pour into bowl and add toppings.</p>
+      `,
+      excerpt: 'Start your morning right with these delicious, protein-rich breakfast recipes that will keep you energized all day.',
+      published: true,
+      publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      authorId: user1.id,
+      categoryId: recipesCategory.id,
+      tags: {
+        create: [
+          { tagId: proteinTag.id },
+          { tagId: healthyTag.id },
+        ],
+      },
+    },
+  });
+
+  // Create default contact info
+  const contactInfo = await prisma.contactInfo.create({
+    data: {
+      companyName: 'NutriSap',
+      email: 'info@nutrisap.com',
+      supportEmail: 'support@nutrisap.com',
+      phone: '+1 (555) 123-4567',
+      phoneHours: 'Mon-Fri: 8AM-6PM EST',
+      address: '123 Wellness Street',
+      city: 'Health City',
+      state: 'HC',
+      zipCode: '12345',
+      mondayFridayHours: '8:00 AM - 6:00 PM',
+      saturdayHours: '9:00 AM - 4:00 PM',
+      sundayHours: 'Closed',
+    },
+  });
+
   console.log('✅ Database seeded successfully!');
   console.log(`Created users: ${user1.email}, ${user2.email}`);
+  console.log(`Created admin user: ${adminUser.email} (password: password123)`);
   console.log(`Created diet plans: ${weightLossPlan.name}, ${muscleGainPlan.name}`);
+  console.log(`Created blog posts: ${post1.title}, ${post2.title}, ${post3.title}`);
+  console.log(`Created contact info for: ${contactInfo.companyName}`);
 }
 
 main()

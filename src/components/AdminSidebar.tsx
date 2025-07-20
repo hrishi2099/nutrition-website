@@ -10,6 +10,10 @@ const navigation = [
   { name: 'Users', href: '/admin/users', icon: '👥' },
   { name: 'Diet Plans', href: '/admin/diet-plans', icon: '🍎' },
   { name: 'Meals', href: '/admin/meals', icon: '🍽️' },
+  { name: 'Blog Posts', href: '/admin/blog/posts', icon: '📝' },
+  { name: 'Categories', href: '/admin/blog/categories', icon: '📂' },
+  { name: 'Tags', href: '/admin/blog/tags', icon: '🏷️' },
+  { name: 'Contact Info', href: '/admin/contact-info', icon: '📞' },
   { name: 'Analytics', href: '/admin/analytics', icon: '📈' },
 ];
 

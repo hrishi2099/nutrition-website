@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -23,6 +23,7 @@ model User {
   activityLevel String?
   dietPlans     DietPlan[]
   goals         Goal[]
+  blogPosts     BlogPost[]
 
   @@map("users")
 }
@@ -87,4 +88,82 @@ model Goal {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("goals")
+}
+
+model BlogPost {
+  id          String         @id @default(cuid())
+  title       String
+  slug        String         @unique
+  content     String
+  excerpt     String?
+  coverImage  String?
+  published   Boolean        @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  authorId    String
+  categoryId  String?
+  author      User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category    BlogCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags        BlogPostTag[]
+
+  @@map("blog_posts")
+}
+
+model BlogCategory {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  posts       BlogPost[]
+
+  @@map("blog_categories")
+}
+
+model BlogTag {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  posts     BlogPostTag[]
+
+  @@map("blog_tags")
+}
+
+model BlogPostTag {
+  id     String   @id @default(cuid())
+  postId String
+  tagId  String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, tagId])
+  @@map("blog_post_tags")
+}
+
+model ContactInfo {
+  id                String   @id @default(cuid())
+  companyName       String   @default("NutriSap")
+  email             String
+  supportEmail      String?
+  phone             String
+  phoneHours        String?
+  address           String
+  city              String
+  state             String
+  zipCode           String
+  mondayFridayHours String   @default("8:00 AM - 6:00 PM")
+  saturdayHours     String   @default("9:00 AM - 4:00 PM")
+  sundayHours       String   @default("Closed")
+  facebookUrl       String?
+  twitterUrl        String?
+  instagramUrl      String?
+  linkedinUrl       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("contact_info")
 }
