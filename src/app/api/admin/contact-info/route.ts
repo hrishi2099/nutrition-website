@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { verifyAdminToken } from '@/lib/adminAuth';
 
 export async function GET() {
   try {
@@ -24,7 +25,13 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // First verify admin authentication
+    const user = await verifyAdminToken(request);
+    console.log('Admin user attempting to update contact info:', user.email);
+
     const body = await request.json();
+    console.log('Contact info update request:', body);
+
     const {
       companyName,
       email,
@@ -51,12 +58,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check database connection
+    console.log('DATABASE_URL configured:', !!process.env.DATABASE_URL);
+
     // Check if contact info already exists
     const existingInfo = await prisma.contactInfo.findFirst();
+    console.log('Existing contact info found:', !!existingInfo);
 
     let contactInfo;
     if (existingInfo) {
       // Update existing record
+      console.log('Updating existing contact info record');
       contactInfo = await prisma.contactInfo.update({
         where: { id: existingInfo.id },
         data: {
@@ -80,6 +92,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Create new record
+      console.log('Creating new contact info record');
       contactInfo = await prisma.contactInfo.create({
         data: {
           companyName,
@@ -102,6 +115,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    console.log('Contact info saved successfully:', contactInfo.id);
+
     return NextResponse.json({
       success: true,
       contactInfo,
@@ -109,7 +124,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error saving contact info:', error);
     return NextResponse.json(
-      { error: 'Failed to save contact info' },
+      { error: 'Failed to save contact info', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

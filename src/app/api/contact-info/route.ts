@@ -22,12 +22,21 @@ export async function GET() {
     linkedinUrl: process.env.LINKEDIN_URL || null,
   };
 
+  console.log('Contact info request - DATABASE_URL configured:', !!process.env.DATABASE_URL);
+
   try {
     const contactInfo = await prisma.contactInfo.findFirst({
       orderBy: {
         createdAt: 'desc',
       },
     });
+
+    console.log('Database contact info found:', !!contactInfo);
+    if (contactInfo) {
+      console.log('Returning database contact info for company:', contactInfo.companyName);
+    } else {
+      console.log('No database info found, returning defaults');
+    }
 
     // Return database info if found, otherwise return defaults from env vars
     return NextResponse.json({
