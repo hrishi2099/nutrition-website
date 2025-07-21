@@ -1,13 +1,33 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (isAuthenticated) {
+        try {
+          const response = await fetch('/api/admin/verify', {
+            credentials: 'include',
+          });
+          setIsAdmin(response.ok);
+        } catch {
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [isAuthenticated]);
 
   return (
     <header className="bg-white shadow-md fixed w-full top-0 z-50">
@@ -51,6 +71,14 @@ export default function Header() {
                 >
                   Profile
                 </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="bg-blue-600 text-white px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
                 <button
                   onClick={logout}
                   className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors"
@@ -150,6 +178,15 @@ export default function Header() {
                     >
                       Profile
                     </Link>
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        className="bg-blue-600 text-white block px-3 py-2 text-base font-medium rounded-lg hover:bg-blue-700 transition-colors mt-2"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Admin Panel
+                      </Link>
+                    )}
                     <button
                       onClick={() => {
                         logout();
