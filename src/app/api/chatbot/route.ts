@@ -752,6 +752,198 @@ async function getEnhancedUserPreferences(sessionId: string, userId?: string): P
 }
 
 
+// BMI calculation helper functions
+function calculateBMI(weight: number, height: number): number {
+  // weight in kg, height in cm
+  const heightInMeters = height / 100;
+  return weight / (heightInMeters * heightInMeters);
+}
+
+function getBMICategory(bmi: number): { category: string; color: string; description: string } {
+  if (bmi < 18.5) {
+    return {
+      category: 'Underweight',
+      color: '🔵',
+      description: 'Below normal weight range. Consider consulting a healthcare provider about healthy weight gain strategies.'
+    };
+  } else if (bmi >= 18.5 && bmi < 25) {
+    return {
+      category: 'Normal weight',
+      color: '🟢',
+      description: 'Within healthy weight range. Focus on maintaining your current weight through balanced nutrition and regular activity.'
+    };
+  } else if (bmi >= 25 && bmi < 30) {
+    return {
+      category: 'Overweight',
+      color: '🟡',
+      description: 'Above normal weight range. Small lifestyle changes can help you reach a healthier weight.'
+    };
+  } else {
+    return {
+      category: 'Obesity',
+      color: '🔴',
+      description: 'Significantly above normal weight range. Consider consulting a healthcare provider for personalized guidance.'
+    };
+  }
+}
+
+function extractWeightHeight(message: string): { weight?: number; height?: number } {
+  const result: { weight?: number; height?: number } = {};
+  
+  // Look for weight patterns (kg, lbs, pounds)
+  const weightPatterns = [
+    /(\d+(?:\.\d+)?)\s*(?:kg|kilograms?)/i,
+    /(\d+(?:\.\d+)?)\s*(?:lbs?|pounds?)/i,
+    /weight.{0,10}?(\d+(?:\.\d+)?)/i,
+    /(\d+(?:\.\d+)?).{0,5}?(?:kg|lbs?|pounds?)/i
+  ];
+  
+  for (const pattern of weightPatterns) {
+    const match = message.match(pattern);
+    if (match) {
+      let weight = parseFloat(match[1]);
+      // Convert lbs to kg if needed
+      if (message.toLowerCase().includes('lb') || message.toLowerCase().includes('pound')) {
+        weight = weight * 0.453592;
+      }
+      result.weight = weight;
+      break;
+    }
+  }
+  
+  // Look for height patterns (cm, ft/in, meters)
+  const heightPatterns = [
+    /(\d+(?:\.\d+)?)\s*(?:cm|centimeters?)/i,
+    /(\d+(?:\.\d+)?)\s*(?:m|meters?)/i,
+    /(\d+)\s*(?:ft|feet|')\s*(\d+)\s*(?:in|inches?|")/i,
+    /(\d+)\s*(?:ft|feet|')/i,
+    /height.{0,10}?(\d+(?:\.\d+)?)/i,
+    /(\d+(?:\.\d+)?).{0,5}?(?:cm|ft|feet)/i
+  ];
+  
+  for (const pattern of heightPatterns) {
+    const match = message.match(pattern);
+    if (match) {
+      if (pattern.source.includes('ft')) {
+        // Handle feet and inches
+        const feet = parseInt(match[1]);
+        const inches = match[2] ? parseInt(match[2]) : 0;
+        result.height = (feet * 12 + inches) * 2.54; // Convert to cm
+      } else if (message.toLowerCase().includes('m') && !message.toLowerCase().includes('cm')) {
+        // Convert meters to cm
+        result.height = parseFloat(match[1]) * 100;
+      } else {
+        result.height = parseFloat(match[1]);
+      }
+      break;
+    }
+  }
+  
+  return result;
+}
+
+function handleBMICalculation(message: string, userContext: UserContext | null, greeting: string): string {
+  const extracted = extractWeightHeight(message);
+  let weight = extracted.weight || userContext?.weight || null;
+  let height = extracted.height || userContext?.height || null;
+  
+  // If we have both values, calculate BMI
+  if (weight && height) {
+    const bmi = calculateBMI(weight, height);
+    const bmiInfo = getBMICategory(bmi);
+    
+    let response = `${greeting}Here's your BMI calculation:\n\n`;
+    response += `📊 **Your BMI: ${bmi.toFixed(1)}**\n`;
+    response += `${bmiInfo.color} **Category: ${bmiInfo.category}**\n\n`;
+    response += `**What this means:**\n${bmiInfo.description}\n\n`;
+    
+    // Add personalized recommendations based on BMI category
+    if (bmi < 18.5) {
+      response += `**Nutrition Tips for Healthy Weight Gain:**\n`;
+      response += `• Focus on nutrient-dense, calorie-rich foods\n`;
+      response += `• Include healthy fats (nuts, avocados, olive oil)\n`;
+      response += `• Eat frequent, smaller meals throughout the day\n`;
+      response += `• Add protein-rich snacks between meals\n`;
+      response += `• Consider strength training to build muscle mass\n\n`;
+    } else if (bmi >= 25) {
+      response += `**Nutrition Tips for Healthy Weight Management:**\n`;
+      response += `• Create a moderate calorie deficit (300-500 calories)\n`;
+      response += `• Focus on whole, unprocessed foods\n`;
+      response += `• Fill half your plate with vegetables\n`;
+      response += `• Choose lean proteins and complex carbohydrates\n`;
+      response += `• Stay hydrated and limit sugary drinks\n`;
+      response += `• Practice portion control\n\n`;
+    } else {
+      response += `**Tips for Maintaining Healthy Weight:**\n`;
+      response += `• Continue eating a balanced, varied diet\n`;
+      response += `• Stay active with regular exercise\n`;
+      response += `• Monitor your weight regularly\n`;
+      response += `• Focus on overall health, not just the number on the scale\n\n`;
+    }
+    
+    response += `**Important Notes:**\n`;
+    response += `• BMI is a general indicator and doesn't account for muscle mass, bone density, or body composition\n`;
+    response += `• Athletes or very muscular individuals may have higher BMIs due to muscle weight\n`;
+    response += `• For personalized advice, consult with a healthcare provider or registered dietitian\n\n`;
+    
+    if (userContext?.enrolledPlan) {
+      response += `💡 Your ${userContext.enrolledPlan.name} plan is designed to support your health goals. Would you like meal suggestions that align with your BMI category?`;
+    } else {
+      response += `💡 Consider enrolling in one of our personalized diet plans for tailored nutrition guidance based on your BMI and health goals!`;
+    }
+    
+    return response;
+  }
+  
+  // If missing information, guide user on how to calculate
+  let response = `${greeting}I'd be happy to help you calculate your BMI! `;
+  
+  if (userContext?.weight && userContext?.height) {
+    // User has profile data, calculate automatically
+    const bmi = calculateBMI(userContext.weight, userContext.height);
+    const bmiInfo = getBMICategory(bmi);
+    
+    response = `${greeting}Based on your profile (${userContext.weight}kg, ${userContext.height}cm):\n\n`;
+    response += `📊 **Your BMI: ${bmi.toFixed(1)}**\n`;
+    response += `${bmiInfo.color} **Category: ${bmiInfo.category}**\n\n`;
+    response += `${bmiInfo.description}\n\n`;
+    response += `Would you like personalized nutrition recommendations based on your BMI?`;
+    
+    return response;
+  }
+  
+  // Guide user on providing information
+  if (!weight && !height) {
+    response += `To calculate your BMI, I need your weight and height.\n\n`;
+    response += `**You can tell me like this:**\n`;
+    response += `• "I weigh 70kg and I'm 175cm tall"\n`;
+    response += `• "My weight is 150 lbs and height is 5'8""\n`;
+    response += `• "Calculate BMI for 65kg and 160cm"\n\n`;
+  } else if (!weight) {
+    response += `I have your height (${height}cm), but I need your weight to calculate BMI.\n\n`;
+    response += `**Tell me your weight like:**\n`;
+    response += `• "I weigh 70kg" or "My weight is 150 lbs"\n\n`;
+  } else if (!height) {
+    response += `I have your weight (${weight}kg), but I need your height to calculate BMI.\n\n`;
+    response += `**Tell me your height like:**\n`;
+    response += `• "I'm 175cm tall" or "My height is 5'8""\n\n`;
+  }
+  
+  response += `**What is BMI?**\n`;
+  response += `Body Mass Index (BMI) is a measure that uses your height and weight to work out if your weight is healthy. It's calculated as weight (kg) divided by height (m) squared.\n\n`;
+  response += `**BMI Categories:**\n`;
+  response += `🔵 Under 18.5: Underweight\n`;
+  response += `🟢 18.5-24.9: Normal weight\n`;
+  response += `🟡 25.0-29.9: Overweight\n`;
+  response += `🔴 30.0+: Obesity\n\n`;
+  
+  if (!userContext) {
+    response += `💡 Sign up for NutriSap to save your measurements and get personalized nutrition plans!`;
+  }
+  
+  return response;
+}
+
 async function generateEnhancedNutritionResponse(message: string, userContext: UserContext | null, history: ChatMessage[]): Promise<string> {
   const userName = userContext?.firstName || '';
   const greeting = userName ? `Hi ${userName}! ` : '';
@@ -885,14 +1077,20 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
     return `${greeting}Heart-healthy nutrition can significantly impact cholesterol levels and cardiovascular health:\n\n**Foods That Lower Cholesterol:**\n🥣 **Soluble Fiber**: Oats, beans, apples, barley\n🐟 **Omega-3 Rich Fish**: Salmon, mackerel, sardines (2x/week)\n🌰 **Nuts**: Almonds, walnuts (handful daily)\n🥑 **Healthy Fats**: Avocados, olive oil, olives\n\n**Foods to Limit:**\n❌ **Saturated Fats**: Reduce red meat, full-fat dairy\n❌ **Trans Fats**: Avoid processed foods with "partially hydrogenated" oils\n❌ **Excess Sugar**: Limit added sugars and refined carbs\n\n**Heart-Healthy Eating Pattern:**\n🌿 **Mediterranean Style**: Emphasizes plants, fish, olive oil\n• Lots of vegetables and fruits\n• Whole grains over refined\n• Moderate amounts of fish and poultry\n• Limited red meat\n\n**Additional Tips:**\n• Maintain healthy weight\n• Stay physically active\n• Manage stress levels\n• Don't smoke\n\n💡 Small, consistent changes can make significant improvements in heart health over time!`;
   }
 
+  // BMI calculation functionality
+  if (message.includes('bmi') || message.includes('body mass index') || 
+      (message.includes('calculate') && (message.includes('weight') || message.includes('height')))) {
+    return handleBMICalculation(message, userContext, greeting);
+  }
+
   if (message.includes('thank') || message.includes('thanks')) {
     return `You're welcome${userName ? `, ${userName}` : ''}! I'm here whenever you need nutrition advice or healthy eating tips. Remember, small consistent changes lead to big results. Keep up the great work on your health journey! 🌟`;
   }
   
   // Default response with comprehensive nutrition topics
   if (userContext) {
-    return `${greeting}I'm here to help with your nutrition journey! You can ask me about:\n\n**Personal Guidance:**\n• Your current meal plan and recommendations\n• Personalized weight management tips\n• Your profile and calculated nutrition needs\n\n**Nutrition Topics:**\n• Macronutrients (protein, carbs, fats)\n• Vitamins, minerals, and supplements\n• Meal prep and planning strategies\n• Specific diets (keto, intermittent fasting, etc.)\n• Health conditions (diabetes, heart health)\n• Hydration and gut health\n\nWhat specific nutrition question can I help you with today?`;
+    return `${greeting}I'm here to help with your nutrition journey! You can ask me about:\n\n**Personal Guidance:**\n• Your current meal plan and recommendations\n• BMI calculation and weight management tips\n• Your profile and calculated nutrition needs\n\n**Nutrition Topics:**\n• Macronutrients (protein, carbs, fats)\n• Vitamins, minerals, and supplements\n• Meal prep and planning strategies\n• Specific diets (keto, intermittent fasting, etc.)\n• Health conditions (diabetes, heart health)\n• Hydration and gut health\n\n**Tools & Calculators:**\n• BMI calculator with personalized recommendations\n• Calorie and macro guidance\n\nWhat specific nutrition question can I help you with today?`;
   }
   
-  return "I'm here to help with ANY nutrition question! You can ask me about:\n\n**General Nutrition:**\n• Meal planning, prep, and recipes\n• Weight management strategies\n• Macronutrients and micronutrients\n• Vitamins, minerals, and supplements\n\n**Specific Topics:**\n• Different diet approaches (keto, IF, Mediterranean)\n• Health conditions and nutrition (diabetes, heart health)\n• Hydration, fiber, and digestive health\n• Food safety and cooking techniques\n\n**Personalized Help:**\n💡 Sign up for NutriSap to get customized meal plans and advice based on your specific goals, preferences, and health profile!\n\nWhat nutrition question can I answer for you today?";
+  return "I'm here to help with ANY nutrition question! You can ask me about:\n\n**General Nutrition:**\n• Meal planning, prep, and recipes\n• Weight management strategies\n• Macronutrients and micronutrients\n• Vitamins, minerals, and supplements\n\n**Tools & Calculators:**\n• BMI calculator with health recommendations\n• Nutrition guidance based on your measurements\n\n**Specific Topics:**\n• Different diet approaches (keto, IF, Mediterranean)\n• Health conditions and nutrition (diabetes, heart health)\n• Hydration, fiber, and digestive health\n• Food safety and cooking techniques\n\n**Try asking:**\n• "Calculate my BMI for 70kg and 175cm"\n• "What's my BMI if I weigh 150 lbs and I'm 5'8"?"\n\n**Personalized Help:**\n💡 Sign up for NutriSap to get customized meal plans and advice based on your specific goals, preferences, and health profile!\n\nWhat nutrition question can I answer for you today?";
 }
