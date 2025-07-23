@@ -731,7 +731,6 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
   const previousTopics = history.slice(-6).map(msg => msg.content.toLowerCase());
   const hasDiscussedWeightLoss = previousTopics.some(topic => topic.includes('weight loss') || topic.includes('lose weight'));
   const hasDiscussedMuscle = previousTopics.some(topic => topic.includes('muscle') || topic.includes('protein'));
-  const hasDiscussedMeals = previousTopics.some(topic => topic.includes('meal') || topic.includes('recipe'));
   const hasDiscussedSupplements = previousTopics.some(topic => topic.includes('supplement') || topic.includes('vitamin'));
   
   // Enhanced rule-based responses with comprehensive nutrition knowledge
