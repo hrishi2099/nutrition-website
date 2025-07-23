@@ -153,7 +153,7 @@ class TrainingDataMatcher {
     return Math.min(combinedScore, 1.0);
   }
 
-  private evaluateConditions(conditions: Prisma.JsonValue, context: Record<string, unknown> = {}): boolean {
+  private evaluateConditions(conditions: Prisma.JsonValue | null, context: Record<string, unknown> = {}): boolean {
     if (!conditions || conditions === null) {
       return true;
     }
@@ -176,7 +176,7 @@ class TrainingDataMatcher {
     return true;
   }
 
-  private processVariables(responseText: string, variables: Prisma.JsonValue = {}, userInput: string = ''): string {
+  private processVariables(responseText: string, variables: Prisma.JsonValue | null = null, userInput: string = ''): string {
     let processedResponse = responseText;
 
     // Replace predefined variables
@@ -232,7 +232,7 @@ class TrainingDataMatcher {
         if (finalScore > bestScore && finalScore > 0.3) { // Minimum threshold
           // Find best response for this intent
           const availableResponses = intent.responses.filter(response => 
-            this.evaluateConditions(response.conditions, context)
+            this.evaluateConditions(response.conditions || null, context)
           );
 
           if (availableResponses.length > 0) {
@@ -243,7 +243,7 @@ class TrainingDataMatcher {
               intentName: intent.name,
               confidence: finalScore,
               matchedKeywords: bestExample ? bestExample.keywords.filter(k => userKeywords.includes(k)) : [],
-              response: this.processVariables(selectedResponse.response, selectedResponse.variables, userInput),
+              response: this.processVariables(selectedResponse.response, selectedResponse.variables || null, userInput),
               responseType: selectedResponse.responseType,
               variables: selectedResponse.variables,
               conditions: selectedResponse.conditions
