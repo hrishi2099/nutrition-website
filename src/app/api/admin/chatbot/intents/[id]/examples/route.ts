@@ -84,8 +84,7 @@ export async function POST(
         userInput: userInput.trim(),
         keywords,
         confidence: confidence || 1.0,
-        intentId,
-        createdBy: adminUser.id
+        intentId
       }
     });
 

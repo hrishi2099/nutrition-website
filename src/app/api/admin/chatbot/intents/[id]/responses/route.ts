@@ -75,8 +75,7 @@ export async function POST(
         priority: priority || 0,
         conditions: conditions || {},
         variables: variables || {},
-        intentId,
-        createdBy: adminUser.id
+        intentId
       }
     });
 
