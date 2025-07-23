@@ -282,45 +282,83 @@ async function createEnhancedSystemPrompt(userContext: UserContext | null, sessi
   const pastPreferences = await getUserPreferences(sessionId, userContext?.id);
   const enhancedPreferences = await getEnhancedUserPreferences(sessionId, userContext?.id);
   
-  let prompt = `You are NutrisapBot, an expert AI nutrition assistant for NutriSap with comprehensive knowledge in:
+  let prompt = `You are NutrisapBot, an expert AI nutrition assistant for NutriSap with comprehensive knowledge to answer ANY nutrition-related question. Your expertise includes:
 
-CORE EXPERTISE:
-- Clinical nutrition and dietetics
+CORE NUTRITION EXPERTISE:
+- Clinical nutrition and dietetics (RD-level knowledge)
 - Macronutrient balance and micronutrient optimization
 - Evidence-based meal planning and dietary patterns
-- Weight management (loss, gain, maintenance)
-- Sports nutrition and performance
-- Medical nutrition therapy basics
-- Food science and nutrient interactions
-- Metabolic health and hormonal balance
-- Digestive health and gut microbiome
-- Special dietary needs (allergies, intolerances, restrictions)
+- Weight management (loss, gain, maintenance strategies)
+- Sports nutrition and athletic performance optimization
+- Medical nutrition therapy for common conditions
+- Food science, nutrient bioavailability, and interactions
+- Metabolic health, insulin sensitivity, and hormonal balance
+- Digestive health, gut microbiome, and fermentation
+- Special dietary needs (allergies, intolerances, medical restrictions)
 
-SPECIALIZED KNOWLEDGE:
-- Plant-based and omnivorous nutrition
-- Intermittent fasting and meal timing
-- Supplement science and recommendations
-- Cultural and ethnic cuisines with nutritional analysis
-- Budget-friendly healthy eating strategies
-- Meal prep and food safety
-- Nutrition for different life stages (pregnancy, aging, etc.)
-- Emotional eating and behavioral change
+SPECIALIZED NUTRITION KNOWLEDGE:
+- Plant-based, ketogenic, Mediterranean, and other dietary patterns
+- Intermittent fasting, meal timing, and chrono-nutrition
+- Supplement science, dosing, and evidence-based recommendations
+- Cultural cuisines with complete nutritional analysis
+- Budget-friendly healthy eating and meal planning strategies
+- Food safety, storage, preparation, and meal prep techniques
+- Nutrition across life stages (infancy, pregnancy, aging, menopause)
+- Psychology of eating, emotional eating, and behavioral change
+- Nutrient density, food quality, and organic vs conventional foods
+- Hydration science, electrolyte balance, and fluid needs
+
+ADVANCED TOPICS YOU CAN HANDLE:
+- Specific medical conditions (diabetes, heart disease, PCOS, etc.)
+- Eating disorders and disordered eating patterns
+- Food allergies, sensitivities, and elimination diets
+- Nutrient deficiencies and their symptoms/solutions
+- Exercise nutrition and pre/post-workout fueling
+- Cooking techniques that preserve or enhance nutrition
+- Reading nutrition labels and ingredient analysis
+- Dietary supplements vs whole food sources
+- Anti-inflammatory foods and oxidative stress
+- Gut health, probiotics, prebiotics, and fermented foods
 
 COMMUNICATION STYLE:
-- Be warm, supportive, and evidence-based
-- Use clear, accessible language avoiding jargon
-- Provide specific, actionable advice
-- Include relevant scientific context when helpful
-- Show empathy and understanding
-- Keep responses under 400 words
-- Use emojis sparingly (1-2 per response max)
+- Be warm, supportive, and evidence-based in all responses
+- Use clear, accessible language while avoiding excessive jargon
+- Provide specific, actionable advice with practical steps
+- Include relevant scientific context and latest research when helpful
+- Show empathy and understanding for user's challenges
+- Keep responses comprehensive but under 500 words for readability
+- Use emojis thoughtfully (1-3 per response max for engagement)
 - Always recommend consulting healthcare professionals for medical concerns
+- Ask follow-up questions to provide more personalized advice
+- Acknowledge when questions are outside your scope but offer related help
 
-MEMORY AND LEARNING:
-- Remember user preferences and past successful recommendations
-- Build on previous conversations naturally
-- Adapt communication style to user's knowledge level
-- Track dietary progress and celebrate wins`;
+RESPONSE GUIDELINES:
+- For any nutrition question, provide a thorough, helpful answer
+- Include practical examples and specific food recommendations
+- Mention portion sizes, timing, and preparation methods when relevant
+- Address potential concerns or contraindications
+- Provide both immediate and long-term strategies
+- Reference credible sources when making specific claims
+- Adapt complexity to user's apparent knowledge level
+
+MEMORY AND PERSONALIZATION:
+- Remember user preferences, allergies, and past successful recommendations
+- Build on previous conversations naturally and reference past topics
+- Adapt communication style and complexity to user's knowledge level
+- Track dietary progress, celebrate wins, and provide encouragement
+- Consider user's cultural background and food preferences
+- Tailor advice based on their goals, lifestyle, and constraints
+- Remember their specific challenges and provide ongoing support
+
+KEY CAPABILITIES:
+- Answer ANY nutrition question, no matter how specific or complex
+- Provide meal ideas, recipes, and cooking tips
+- Explain the 'why' behind nutritional recommendations
+- Help with grocery shopping, meal planning, and food budgeting
+- Address nutrition myths and provide evidence-based corrections
+- Support users with various dietary restrictions and preferences
+- Offer alternatives and modifications for different needs
+- Provide both quick tips and comprehensive guidance as needed`;
 
   if (pastPreferences.length > 0) {
     prompt += `\n\nUSER LEARNING DATA:\n${pastPreferences.map(p => `- ${p}`).join('\n')}`;
@@ -373,6 +411,17 @@ MEMORY AND LEARNING:
 - Gender: ${userContext.gender || 'Not specified'}
 - Activity Level: ${userContext.activityLevel || 'Not specified'}`;
 
+    // Calculate additional useful metrics
+    if (userContext.weight && userContext.height) {
+      const bmi = userContext.weight / Math.pow(userContext.height / 100, 2);
+      const bmr = userContext.gender === 'MALE' 
+        ? 88.362 + (13.397 * userContext.weight) + (4.799 * userContext.height) - (5.677 * (userContext.age || 30))
+        : 447.593 + (9.247 * userContext.weight) + (3.098 * userContext.height) - (4.330 * (userContext.age || 30));
+      prompt += `
+- BMI: ${bmi.toFixed(1)} (calculated)
+- Estimated BMR: ${Math.round(bmr)} calories/day`;
+    }
+
     if (userContext.enrolledPlan) {
       prompt += `
 - Current Plan: ${userContext.enrolledPlan.name} (${userContext.enrolledPlan.type})
@@ -384,9 +433,9 @@ MEMORY AND LEARNING:
       prompt += `\n- Active Goals: ${userContext.goals.map((g) => `${g.type}: ${g.target || 'Not set'}`).join(', ')}`;
     }
 
-    prompt += `\n\nPersonalize all responses using this profile. Address the user by name occasionally and reference their plan/goals when relevant.`;
+    prompt += `\n\nPersonalize all responses using this profile. Address the user by name occasionally, reference their plan/goals when relevant, and consider their physical stats for calorie/macro recommendations. Provide specific advice based on their activity level and any enrolled plan.`;
   } else {
-    prompt += `\n\nThe user is not authenticated. Provide general nutrition advice and gently encourage them to sign up for personalized NutriSap plans.`;
+    prompt += `\n\nThe user is not authenticated. Provide comprehensive general nutrition advice for their questions while gently encouraging them to sign up for personalized NutriSap plans when relevant. Still answer their questions thoroughly and helpfully.`;
   }
 
   return prompt;
@@ -682,9 +731,10 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
   const previousTopics = history.slice(-6).map(msg => msg.content.toLowerCase());
   const hasDiscussedWeightLoss = previousTopics.some(topic => topic.includes('weight loss') || topic.includes('lose weight'));
   const hasDiscussedMuscle = previousTopics.some(topic => topic.includes('muscle') || topic.includes('protein'));
-  // const hasDiscussedMeals = previousTopics.some(topic => topic.includes('meal') || topic.includes('recipe'));
+  const hasDiscussedMeals = previousTopics.some(topic => topic.includes('meal') || topic.includes('recipe'));
+  const hasDiscussedSupplements = previousTopics.some(topic => topic.includes('supplement') || topic.includes('vitamin'));
   
-  // Enhanced rule-based responses with personalization and memory
+  // Enhanced rule-based responses with comprehensive nutrition knowledge
   
   if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
     if (userContext) {
@@ -758,14 +808,63 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
     }
     return "Please sign up or log in to view your personalized profile and nutrition recommendations!";
   }
+  // Comprehensive nutrition topic responses
+  if (message.includes('vitamin') || message.includes('supplement')) {
+    let response = hasDiscussedSupplements 
+      ? `${greeting}Continuing our supplement discussion - here are key points about vitamin supplementation:\n\n• **Vitamin D**: Most people benefit from 1000-2000 IU daily, especially in winter months\n• **B12**: Essential for vegans and vegetarians (2.4 mcg daily)\n• **Omega-3**: Consider algae-based or fish oil if not eating fatty fish 2x/week\n• **Multivitamin**: Can fill nutrient gaps but focus on whole foods first`
+      : `${greeting}Great question about vitamins and supplements! Here's evidence-based guidance:\n\n🥗 **Food First Approach**: Aim to get nutrients from whole foods when possible\n\n**Common Beneficial Supplements:**\n• Vitamin D (especially if limited sun exposure)\n• B12 (for plant-based eaters)\n• Omega-3 fatty acids\n• Magnesium (if dietary intake is low)\n\n⚠️ Always consult your healthcare provider before starting new supplements, especially if you have medical conditions or take medications.`;
+    
+    if (!hasDiscussedSupplements) {
+      response += `\n\n💡 Would you like specific guidance on any particular vitamin or supplement?`;
+    }
+    return response;
+  }
+
+  if (message.includes('hydration') || message.includes('water') || message.includes('drink')) {
+    return `${greeting}Hydration is crucial for optimal health! Here's what you need to know:\n\n💧 **Daily Fluid Needs:**\n• General guideline: 8-10 cups (2-2.5L) daily\n• More if you're active, in hot weather, or pregnant/breastfeeding\n• Monitor urine color - pale yellow indicates good hydration\n\n**Best Hydration Sources:**\n• Plain water (best choice)\n• Herbal teas and sparkling water\n• Water-rich foods (cucumbers, watermelon, soups)\n\n🚫 **Limit**: Sugary drinks, excessive caffeine, and alcohol\n\n💡 Pro tip: Start your day with a glass of water and keep a water bottle nearby as a reminder!`;
+  }
+
+  if (message.includes('carb') || message.includes('carbohydrate')) {
+    return `${greeting}Carbohydrates are your body's preferred energy source! Here's the complete guide:\n\n**Types of Carbs:**\n🌾 **Complex Carbs** (Choose these!): Whole grains, legumes, vegetables\n🍬 **Simple Carbs**: Fruits (good), added sugars (limit)\n\n**Daily Recommendations:**\n• 45-65% of total calories from carbs\n• Focus on fiber-rich sources (25-35g fiber daily)\n• Time carbs around workouts for energy\n\n**Best Sources:**\n• Oats, quinoa, brown rice, sweet potatoes\n• Fruits and vegetables\n• Legumes and lentils\n\n${userContext?.enrolledPlan ? `Based on your ${userContext.enrolledPlan.name} plan, aim for balanced carb intake throughout the day.` : 'Consider timing carbs around your most active periods!'}`;
+  }
+
+  if (message.includes('protein') && !hasDiscussedMuscle) {
+    const proteinNeeds = userContext?.weight ? Math.round(userContext.weight * 0.8 * 2.2) : 50;
+    return `${greeting}Protein is essential for muscle maintenance, immune function, and satiety!\n\n**Daily Protein Needs:**\n• General: 0.8g per kg body weight\n• Active individuals: 1.2-2.0g per kg\n• ${userContext?.weight ? `For you: approximately ${proteinNeeds}g daily` : 'Calculate: weight in kg × 0.8-1.2g'}\n\n**Complete Protein Sources:**\n🥩 **Animal**: Chicken, fish, eggs, Greek yogurt\n🌱 **Plant**: Quinoa, soy products, hemp seeds\n\n**Protein Combining** (for plant-based):\n• Beans + rice\n• Nuts + seeds\n• Hummus + whole grain pita\n\n💡 Spread protein throughout the day for optimal absorption!`;
+  }
+
+  if (message.includes('fiber') || message.includes('digestion') || message.includes('gut health')) {
+    return `${greeting}Fiber and gut health are fundamental to overall wellness!\n\n**Fiber Benefits:**\n• Improved digestion and regularity\n• Better blood sugar control\n• Heart health support\n• Increased satiety for weight management\n\n**Daily Fiber Goals:**\n• Women: 25g daily\n• Men: 38g daily\n\n**Best Fiber Sources:**\n🥗 **Soluble**: Oats, apples, beans (feeds good bacteria)\n🌾 **Insoluble**: Whole grains, vegetables (promotes regularity)\n\n**Gut Health Tips:**\n• Include fermented foods (yogurt, kimchi, kefir)\n• Eat diverse plant foods (aim for 30 different plants/week)\n• Stay hydrated\n• Manage stress levels\n\n⚠️ Increase fiber gradually to avoid digestive discomfort!`;
+  }
+
+  if (message.includes('meal prep') || message.includes('meal planning')) {
+    return `${greeting}Meal prep is a game-changer for healthy eating! Here's your complete guide:\n\n**Weekly Meal Prep Strategy:**\n📅 **Sunday Prep Day**:\n• Plan 3-4 meals for the week\n• Grocery shop with a list\n• Batch cook proteins and grains\n\n**Prep-Friendly Foods:**\n• **Proteins**: Grilled chicken, baked salmon, hard-boiled eggs\n• **Carbs**: Brown rice, quinoa, roasted sweet potatoes\n• **Vegetables**: Roasted veggies, pre-cut raw vegetables\n\n**Storage Tips:**\n🥗 Mason jars for salads (dressing on bottom)\n🍱 Glass containers for balanced meals\n❄️ Freeze portions for busy weeks\n\n**Time-Saving Hacks:**\n• Use a slow cooker or Instant Pot\n• Pre-cut vegetables when you get home from shopping\n• Make double portions for leftovers\n\n${userContext?.enrolledPlan ? `Your ${userContext.enrolledPlan.name} plan meals are perfect for batch preparation!` : 'Start with prepping just 2-3 meals to build the habit!'}`;
+  }
+
+  if (message.includes('keto') || message.includes('ketogenic')) {
+    return `${greeting}The ketogenic diet is a high-fat, very low-carb approach. Here's what you need to know:\n\n**Keto Macros:**\n• 70-80% calories from fat\n• 15-25% from protein\n• 5-10% from carbs (typically 20-50g daily)\n\n**Foods to Emphasize:**\n🥑 **Healthy Fats**: Avocados, olive oil, nuts, seeds\n🥩 **Proteins**: Fish, poultry, eggs, meat\n🥬 **Low-carb vegetables**: Leafy greens, broccoli, cauliflower\n\n**Potential Benefits:**\n• Rapid initial weight loss\n• Improved blood sugar control\n• Increased satiety\n\n**Considerations:**\n⚠️ Can cause initial fatigue ("keto flu")\n⚠️ May affect athletic performance initially\n⚠️ Requires careful planning for nutrient adequacy\n\n💡 Consult a healthcare provider before starting, especially if you have medical conditions. Consider a less restrictive approach like Mediterranean diet for long-term sustainability!`;
+  }
+
+  if (message.includes('intermittent fasting') || message.includes('fasting')) {
+    return `${greeting}Intermittent fasting (IF) focuses on *when* you eat rather than *what* you eat:\n\n**Popular IF Methods:**\n⏰ **16:8**: Fast 16 hours, eat within 8-hour window\n📅 **5:2**: Eat normally 5 days, restrict calories 2 days\n🌅 **OMAD**: One meal a day\n\n**Potential Benefits:**\n• Simplified meal planning\n• May support weight management\n• Possible metabolic benefits\n• Can improve insulin sensitivity\n\n**Who Should Avoid IF:**\n❌ Pregnant/breastfeeding women\n❌ History of eating disorders\n❌ Certain medical conditions\n❌ Children and teenagers\n\n**Getting Started:**\n1. Start with 12:12 and gradually extend fasting window\n2. Stay hydrated during fasting periods\n3. Focus on nutrient-dense foods during eating windows\n4. Listen to your body - stop if you feel unwell\n\n💡 IF isn't magic - total calorie intake and food quality still matter most!`;
+  }
+
+  if (message.includes('diabetes') || message.includes('blood sugar')) {
+    return `${greeting}Blood sugar management is crucial for health! Here are evidence-based nutrition strategies:\n\n**Blood Sugar Friendly Foods:**\n🥗 **Low Glycemic**: Non-starchy vegetables, berries, nuts\n🌾 **Complex Carbs**: Oats, quinoa, legumes\n🥩 **Lean Proteins**: Fish, chicken, tofu\n🥑 **Healthy Fats**: Avocado, olive oil, nuts\n\n**Meal Timing Tips:**\n• Eat regular, balanced meals\n• Pair carbs with protein/fat to slow absorption\n• Consider smaller, more frequent meals\n• Stay consistent with meal timing\n\n**Portion Control:**\n• Use the plate method: 1/2 vegetables, 1/4 protein, 1/4 carbs\n• Monitor portion sizes of carb-containing foods\n• Include fiber-rich foods for better blood sugar control\n\n⚠️ **Important**: This is general nutrition information. For diabetes management, work closely with your healthcare team and a registered dietitian for personalized guidance!\n\n💡 Regular physical activity also helps with blood sugar control!`;
+  }
+
+  if (message.includes('cholesterol') || message.includes('heart health')) {
+    return `${greeting}Heart-healthy nutrition can significantly impact cholesterol levels and cardiovascular health:\n\n**Foods That Lower Cholesterol:**\n🥣 **Soluble Fiber**: Oats, beans, apples, barley\n🐟 **Omega-3 Rich Fish**: Salmon, mackerel, sardines (2x/week)\n🌰 **Nuts**: Almonds, walnuts (handful daily)\n🥑 **Healthy Fats**: Avocados, olive oil, olives\n\n**Foods to Limit:**\n❌ **Saturated Fats**: Reduce red meat, full-fat dairy\n❌ **Trans Fats**: Avoid processed foods with "partially hydrogenated" oils\n❌ **Excess Sugar**: Limit added sugars and refined carbs\n\n**Heart-Healthy Eating Pattern:**\n🌿 **Mediterranean Style**: Emphasizes plants, fish, olive oil\n• Lots of vegetables and fruits\n• Whole grains over refined\n• Moderate amounts of fish and poultry\n• Limited red meat\n\n**Additional Tips:**\n• Maintain healthy weight\n• Stay physically active\n• Manage stress levels\n• Don't smoke\n\n💡 Small, consistent changes can make significant improvements in heart health over time!`;
+  }
+
   if (message.includes('thank') || message.includes('thanks')) {
     return `You're welcome${userName ? `, ${userName}` : ''}! I'm here whenever you need nutrition advice or healthy eating tips. Remember, small consistent changes lead to big results. Keep up the great work on your health journey! 🌟`;
   }
   
-  // Default response with personalization
+  // Default response with comprehensive nutrition topics
   if (userContext) {
-    return `${greeting}I'm here to help with your nutrition journey! You can ask me about:\n\n• Your current meal plan and recommendations\n• Personalized weight management tips\n• Protein and macro guidance\n• Healthy recipes and snack ideas\n• Your profile and goals\n• General nutrition advice\n\nWhat would you like to know about your health and nutrition?`;
+    return `${greeting}I'm here to help with your nutrition journey! You can ask me about:\n\n**Personal Guidance:**\n• Your current meal plan and recommendations\n• Personalized weight management tips\n• Your profile and calculated nutrition needs\n\n**Nutrition Topics:**\n• Macronutrients (protein, carbs, fats)\n• Vitamins, minerals, and supplements\n• Meal prep and planning strategies\n• Specific diets (keto, intermittent fasting, etc.)\n• Health conditions (diabetes, heart health)\n• Hydration and gut health\n\nWhat specific nutrition question can I help you with today?`;
   }
   
-  return "I'm here to help with nutrition and healthy eating! You can ask me about:\n\n• Meal planning and recipes\n• Weight management tips\n• Protein sources and macros\n• Healthy snack ideas\n• Diet plan recommendations\n• Hydration and general nutrition\n\n💡 Sign up for NutriSap to get personalized advice based on your goals and preferences!\n\nWhat specific nutrition topic would you like to explore?";
+  return "I'm here to help with ANY nutrition question! You can ask me about:\n\n**General Nutrition:**\n• Meal planning, prep, and recipes\n• Weight management strategies\n• Macronutrients and micronutrients\n• Vitamins, minerals, and supplements\n\n**Specific Topics:**\n• Different diet approaches (keto, IF, Mediterranean)\n• Health conditions and nutrition (diabetes, heart health)\n• Hydration, fiber, and digestive health\n• Food safety and cooking techniques\n\n**Personalized Help:**\n💡 Sign up for NutriSap to get customized meal plans and advice based on your specific goals, preferences, and health profile!\n\nWhat nutrition question can I answer for you today?";
 }

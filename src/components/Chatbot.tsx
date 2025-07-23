@@ -67,7 +67,7 @@ export default function Chatbot() {
       // Create new session with welcome message
       const welcomeMessage: ChatMessage = {
         role: 'assistant',
-        content: "Hi! I'm NutrisapBot 🥗 Your personal nutrition assistant from NutriSap. I'm here to help with nutrition advice, meal planning, diet recommendations, and healthy eating tips. What would you like to know about your wellness journey?",
+        content: "Hi! I'm NutrisapBot 🥗 Your comprehensive nutrition assistant from NutriSap. I can answer ANY nutrition question - from meal planning and macronutrients to specific diets, supplements, and health conditions. Whether you need personalized advice or general nutrition knowledge, I'm here to help! What nutrition topic would you like to explore?",
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
@@ -76,7 +76,7 @@ export default function Chatbot() {
       // Fallback to welcome message
       const welcomeMessage: ChatMessage = {
         role: 'assistant',
-        content: "Hi! I'm NutrisapBot 🥗 Your personal nutrition assistant from NutriSap. I'm here to help with nutrition advice, meal planning, diet recommendations, and healthy eating tips. What would you like to know about your wellness journey?",
+        content: "Hi! I'm NutrisapBot 🥗 Your comprehensive nutrition assistant from NutriSap. I can answer ANY nutrition question - from meal planning and macronutrients to specific diets, supplements, and health conditions. Whether you need personalized advice or general nutrition knowledge, I'm here to help! What nutrition topic would you like to explore?",
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
@@ -172,7 +172,7 @@ export default function Chatbot() {
     setTimeout(() => {
       const welcomeMessage: ChatMessage = {
         role: 'assistant',
-        content: "Hi! I'm NutrisapBot 🥗 Your personal nutrition assistant from NutriSap. I'm here to help with nutrition advice, meal planning, diet recommendations, and healthy eating tips. What would you like to know about your wellness journey?",
+        content: "Hi! I'm NutrisapBot 🥗 Your comprehensive nutrition assistant from NutriSap. I can answer ANY nutrition question - from meal planning and macronutrients to specific diets, supplements, and health conditions. Whether you need personalized advice or general nutrition knowledge, I'm here to help! What nutrition topic would you like to explore?",
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
@@ -240,12 +240,12 @@ export default function Chatbot() {
                 >
                   <div className={`max-w-xs lg:max-w-md px-3 py-2 rounded-lg ${
                     message.role === 'user'
-                      ? 'bg-black text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-black dark:bg-white text-white dark:text-black'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                   }`}>
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                     <p className={`text-xs mt-1 ${
-                      message.role === 'user' ? 'text-gray-300' : 'text-gray-500'
+                      message.role === 'user' ? 'text-gray-300 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'
                     }`}>
                       {message.timestamp.toLocaleTimeString([], { 
                         hour: '2-digit', 
@@ -263,7 +263,7 @@ export default function Chatbot() {
                   animate={{ opacity: 1 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg">
+                  <div className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-lg">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -278,18 +278,22 @@ export default function Chatbot() {
             {/* Quick Actions */}
             {messages.length <= 1 && (
               <div className="px-4 pb-2">
-                <p className="text-xs text-gray-500 mb-2">Quick questions:</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Popular nutrition topics:</p>
                 <div className="flex flex-wrap gap-1">
                   {[
                     "My meal plan",
                     "Weight loss tips",
-                    "My profile", 
-                    "Healthy recipes"
+                    "Protein needs",
+                    "Vitamins & supplements",
+                    "Meal prep ideas",
+                    "Hydration guide",
+                    "Keto diet info",
+                    "Heart health foods"
                   ].map((question) => (
                     <button
                       key={question}
                       onClick={() => setInputValue(question)}
-                      className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-full transition-colors"
+                      className="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full transition-colors"
                     >
                       {question}
                     </button>
@@ -299,7 +303,7 @@ export default function Chatbot() {
             )}
 
             {/* Input */}
-            <div className="p-4 border-t">
+            <div className="p-4 border-t dark:border-gray-700">
               <div className="flex space-x-2">
                 <input
                   type="text"
@@ -307,13 +311,13 @@ export default function Chatbot() {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Ask me about nutrition..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
+                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   disabled={isLoading}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!inputValue.trim() || isLoading}
-                  className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
