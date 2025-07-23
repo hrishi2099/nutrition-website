@@ -586,8 +586,8 @@ async function upsertUserPreference(
   confidence: number
 ) {
   const whereClause = userId 
-    ? { userId, preferenceType: type, preferenceKey: key }
-    : { sessionId, preferenceType: type, preferenceKey: key };
+    ? { userId_preferenceType_preferenceKey: { userId, preferenceType: type, preferenceKey: key } }
+    : { sessionId_preferenceType_preferenceKey: { sessionId, preferenceType: type, preferenceKey: key } };
     
   await prisma.userPreference.upsert({
     where: whereClause,
