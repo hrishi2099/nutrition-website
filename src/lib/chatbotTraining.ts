@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 interface TrainingMatch {
   intentId: string;
@@ -26,8 +27,8 @@ interface IntentWithData {
     response: string;
     responseType: string;
     priority: number;
-    conditions?: Record<string, unknown>;
-    variables?: Record<string, unknown>;
+    conditions?: Prisma.JsonValue;
+    variables?: Prisma.JsonValue;
   }[];
 }
 
@@ -152,28 +153,39 @@ class TrainingDataMatcher {
     return Math.min(combinedScore, 1.0);
   }
 
-  private evaluateConditions(conditions: Record<string, unknown>, context: Record<string, unknown> = {}): boolean {
-    if (!conditions || Object.keys(conditions).length === 0) {
+  private evaluateConditions(conditions: Prisma.JsonValue, context: Record<string, unknown> = {}): boolean {
+    if (!conditions || conditions === null) {
       return true;
     }
 
-    // Simple condition evaluation - can be extended
-    for (const [key, value] of Object.entries(conditions)) {
-      if (context[key] !== value) {
-        return false;
+    // Handle conditions as an object
+    if (typeof conditions === 'object' && !Array.isArray(conditions)) {
+      const conditionsObj = conditions as Record<string, unknown>;
+      if (Object.keys(conditionsObj).length === 0) {
+        return true;
+      }
+
+      // Simple condition evaluation - can be extended
+      for (const [key, value] of Object.entries(conditionsObj)) {
+        if (context[key] !== value) {
+          return false;
+        }
       }
     }
 
     return true;
   }
 
-  private processVariables(responseText: string, variables: Record<string, unknown> = {}, userInput: string = ''): string {
+  private processVariables(responseText: string, variables: Prisma.JsonValue = {}, userInput: string = ''): string {
     let processedResponse = responseText;
 
     // Replace predefined variables
-    for (const [key, value] of Object.entries(variables)) {
-      const placeholder = `{{${key}}}`;
-      processedResponse = processedResponse.replace(new RegExp(placeholder, 'g'), String(value));
+    if (variables && typeof variables === 'object' && !Array.isArray(variables)) {
+      const variablesObj = variables as Record<string, unknown>;
+      for (const [key, value] of Object.entries(variablesObj)) {
+        const placeholder = `{{${key}}}`;
+        processedResponse = processedResponse.replace(new RegExp(placeholder, 'g'), String(value));
+      }
     }
 
     // Replace dynamic variables
