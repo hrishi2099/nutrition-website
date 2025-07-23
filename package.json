@@ -17,14 +17,17 @@
   "dependencies": {
     "@prisma/client": "^6.11.1",
     "@types/bcryptjs": "^2.4.6",
+    "@types/uuid": "^10.0.0",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.23.5",
     "jose": "^6.0.11",
     "next": "15.3.5",
+    "openai": "^5.10.1",
     "prisma": "^6.11.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tsx": "^4.20.3"
+    "tsx": "^4.20.3",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -7,27 +7,27 @@ export default function Home() {
   return (
     <PageTransition>
       <div className="min-h-screen">
-      <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20">
+      <section className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
               Transform Your Health with
-              <span className="text-black"> Personalized Nutrition</span>
+              <span className="text-black dark:text-gray-100"> Personalized Nutrition</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
               Discover the power of customized diet plans, expert guidance, and sustainable lifestyle changes 
               that fit your unique needs and goals.
             </p>
             <FadeInSection delay={0.3} className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/diet-plan"
-                className="bg-black text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                className="bg-black dark:bg-white text-white dark:text-black px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
               >
                 Get Your Diet Plan
               </Link>
               <Link
                 href="/about"
-                className="border border-black text-black px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                className="border border-black dark:border-white text-black dark:text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
               >
                 Learn More
               </Link>
@@ -36,36 +36,36 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose NutriSap?</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Why Choose NutriSap?</h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Our evidence-based approach combines nutrition science with personalized care to help you achieve lasting results.
             </p>
           </FadeInSection>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <AnimatedCard delay={0.1} className="text-center p-6 rounded-lg bg-gray-50 shadow-sm hover:shadow-md transition-shadow">
+            <AnimatedCard delay={0.1} className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
               <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-xl font-semibold mb-3">Personalized Plans</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Personalized Plans</h3>
+              <p className="text-gray-600 dark:text-gray-300">
                 Custom nutrition plans tailored to your lifestyle, preferences, and health goals.
               </p>
             </AnimatedCard>
             
-            <AnimatedCard delay={0.2} className="text-center p-6 rounded-lg bg-gray-100 shadow-sm hover:shadow-md transition-shadow">
+            <AnimatedCard delay={0.2} className="text-center p-6 rounded-lg bg-gray-100 dark:bg-gray-700 shadow-sm hover:shadow-md transition-shadow">
               <div className="text-4xl mb-4">👨‍⚕️</div>
-              <h3 className="text-xl font-semibold mb-3">Expert Guidance</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Expert Guidance</h3>
+              <p className="text-gray-600 dark:text-gray-300">
                 Work with certified nutritionists and dietitians who understand your unique needs.
               </p>
             </AnimatedCard>
             
-            <AnimatedCard delay={0.3} className="text-center p-6 rounded-lg bg-gray-50 shadow-sm hover:shadow-md transition-shadow">
+            <AnimatedCard delay={0.3} className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold mb-3">Track Progress</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Track Progress</h3>
+              <p className="text-gray-600 dark:text-gray-300">
                 Monitor your journey with easy-to-use tools and regular check-ins with our team.
               </p>
             </AnimatedCard>
@@ -73,7 +73,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>

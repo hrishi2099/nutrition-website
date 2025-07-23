@@ -24,6 +24,7 @@ model User {
   dietPlans     DietPlan[]
   goals         Goal[]
   blogPosts     BlogPost[]
+  chatSessions  ChatSession[]
 
   @@map("users")
 }
@@ -166,4 +167,118 @@ model ContactInfo {
   updatedAt         DateTime @updatedAt
 
   @@map("contact_info")
+}
+
+model ChatSession {
+  id        String        @id @default(cuid())
+  userId    String?
+  user      User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId String        @unique // For anonymous users
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  messages  ChatMessage[]
+
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id            String      @id @default(cuid())
+  sessionId     String
+  session       ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role          String      // 'user' or 'assistant'
+  content       String
+  userContext   Json?       // Store user context at time of message
+  createdAt     DateTime    @default(now())
+
+  @@map("chat_messages")
+}
+
+model NutritionFact {
+  id          String   @id @default(cuid())
+  category    String   // e.g., "weight_loss", "muscle_gain", "general", "supplements"
+  title       String
+  content     String
+  tags        String[] // Keywords for matching
+  difficulty  String   @default("beginner") // beginner, intermediate, advanced
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("nutrition_facts")
+}
+
+model FoodDatabase {
+  id              String  @id @default(cuid())
+  name            String
+  category        String  // e.g., "fruits", "vegetables", "proteins", "grains"
+  caloriesPer100g Int
+  proteinPer100g  Float
+  carbsPer100g    Float
+  fatPer100g      Float
+  fiberPer100g    Float?
+  sugarPer100g    Float?
+  sodiumPer100g   Float?
+  vitaminC        Float?  // mg per 100g
+  calcium         Float?  // mg per 100g
+  iron            Float?  // mg per 100g
+  isOrganic       Boolean @default(false)
+  commonServing   String? // e.g., "1 medium apple (182g)"
+  tags            String[] // e.g., ["low_calorie", "high_protein", "vegetarian"]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("food_database")
+}
+
+model RecipeRecommendation {
+  id              String   @id @default(cuid())
+  name            String
+  category        String   // breakfast, lunch, dinner, snack
+  cuisine         String?  // italian, asian, mexican, etc.
+  difficulty      String   @default("easy") // easy, medium, hard  
+  prepTime        Int      // minutes
+  cookTime        Int      // minutes
+  servings        Int
+  calories        Int      // per serving
+  protein         Float    // grams per serving
+  carbs           Float    // grams per serving
+  fat             Float    // grams per serving
+  ingredients     String[] // List of ingredients
+  instructions    String   // Step by step instructions
+  dietaryTags     String[] // vegetarian, vegan, gluten_free, dairy_free, etc.
+  goalTags        String[] // weight_loss, muscle_gain, heart_healthy, etc.
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("recipe_recommendations")
+}
+
+model UserPreference {
+  id            String   @id @default(cuid())
+  userId        String?
+  sessionId     String?  // For anonymous users
+  preferenceType String  // dietary, food_likes, goal_focus, etc.
+  preferenceKey  String  // vegetarian, high_protein, weight_loss, etc.
+  preferenceValue String // liked, disliked, interested, neutral
+  confidence    Float   @default(0.5) // 0-1 confidence score
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, preferenceType, preferenceKey])
+  @@unique([sessionId, preferenceType, preferenceKey])
+  @@map("user_preferences")
+}
+
+model ChatFeedback {
+  id         String   @id @default(cuid())
+  sessionId  String
+  messageId  String   // Reference to the chat message
+  userId     String?
+  feedbackType String // helpful, not_helpful, correct, incorrect
+  rating     Int?     // 1-5 star rating
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  @@map("chat_feedback")
 }
