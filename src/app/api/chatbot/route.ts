@@ -661,7 +661,7 @@ async function getEnhancedUserPreferences(sessionId: string, userId?: string): P
       if (!preferences[pref.preferenceType]) {
         preferences[pref.preferenceType] = {};
       }
-      preferences[pref.preferenceType][pref.preferenceKey] = {
+      (preferences[pref.preferenceType] as Record<string, { value: string; confidence: number }>)[pref.preferenceKey] = {
         value: pref.preferenceValue,
         confidence: pref.confidence
       };
