@@ -264,13 +264,13 @@ async function storeChatMessages(
         sessionId,
         role: 'user',
         content: userMessage,
-        userContext: userContextData as any
+        userContext: userContextData as Record<string, unknown> | null
       },
       {
         sessionId,
         role: 'assistant',
         content: botResponse,
-        userContext: userContextData as any
+        userContext: userContextData as Record<string, unknown> | null
       }
     ]
   });
