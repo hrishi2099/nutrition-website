@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -19,8 +19,8 @@ interface TrainingResponse {
   id: string;
   response: string;
   responseType: string;
-  conditions?: any;
-  variables?: any;
+  conditions?: Record<string, unknown>;
+  variables?: Record<string, unknown>;
   priority: number;
   isActive: boolean;
   usageCount: number;
@@ -61,13 +61,7 @@ export default function IntentDetailPage() {
     priority: 0,
   });
 
-  useEffect(() => {
-    if (intentId) {
-      fetchIntentDetails();
-    }
-  }, [intentId]);
-
-  const fetchIntentDetails = async () => {
+  const fetchIntentDetails = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/chatbot/intents/${intentId}`, {
@@ -85,7 +79,13 @@ export default function IntentDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [intentId]);
+
+  useEffect(() => {
+    if (intentId) {
+      fetchIntentDetails();
+    }
+  }, [intentId, fetchIntentDetails]);
 
   const addExample = async (e: React.FormEvent) => {
     e.preventDefault();

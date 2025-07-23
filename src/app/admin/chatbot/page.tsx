@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { motion } from 'framer-motion';
@@ -34,7 +34,6 @@ export default function ChatbotTrainingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedIntent, setSelectedIntent] = useState<TrainingIntent | null>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -43,11 +42,7 @@ export default function ChatbotTrainingPage() {
     priority: 0,
   });
 
-  useEffect(() => {
-    fetchTrainingData();
-  }, []);
-
-  const fetchTrainingData = async () => {
+  const fetchTrainingData = useCallback(async () => {
     try {
       setLoading(true);
       const [intentsResponse, statsResponse] = await Promise.all([
@@ -69,7 +64,11 @@ export default function ChatbotTrainingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchTrainingData();
+  }, [fetchTrainingData]);
 
   const createIntent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,7 +131,6 @@ export default function ChatbotTrainingPage() {
       }
 
       setIntents(intents.filter(intent => intent.id !== intentId));
-      setSelectedIntent(null);
     } catch (err) {
       alert('Failed to delete intent: ' + (err instanceof Error ? err.message : 'Unknown error'));
     }

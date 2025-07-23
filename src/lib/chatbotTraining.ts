@@ -7,8 +7,8 @@ interface TrainingMatch {
   matchedKeywords: string[];
   response: string;
   responseType: string;
-  variables?: any;
-  conditions?: any;
+  variables?: Record<string, unknown>;
+  conditions?: Record<string, unknown>;
 }
 
 interface IntentWithData {
@@ -26,8 +26,8 @@ interface IntentWithData {
     response: string;
     responseType: string;
     priority: number;
-    conditions?: any;
-    variables?: any;
+    conditions?: Record<string, unknown>;
+    variables?: Record<string, unknown>;
   }[];
 }
 
@@ -152,7 +152,7 @@ class TrainingDataMatcher {
     return Math.min(combinedScore, 1.0);
   }
 
-  private evaluateConditions(conditions: any, context: any = {}): boolean {
+  private evaluateConditions(conditions: Record<string, unknown>, context: Record<string, unknown> = {}): boolean {
     if (!conditions || Object.keys(conditions).length === 0) {
       return true;
     }
@@ -167,7 +167,7 @@ class TrainingDataMatcher {
     return true;
   }
 
-  private processVariables(responseText: string, variables: any = {}, userInput: string = ''): string {
+  private processVariables(responseText: string, variables: Record<string, unknown> = {}, userInput: string = ''): string {
     let processedResponse = responseText;
 
     // Replace predefined variables
@@ -184,7 +184,7 @@ class TrainingDataMatcher {
     return processedResponse;
   }
 
-  async findBestMatch(userInput: string, context: any = {}): Promise<TrainingMatch | null> {
+  async findBestMatch(userInput: string, context: Record<string, unknown> = {}): Promise<TrainingMatch | null> {
     try {
       const intents = await this.loadTrainingData();
       let bestMatch: TrainingMatch | null = null;
@@ -257,7 +257,7 @@ class TrainingDataMatcher {
   private async logMatchAnalytics(
     userInput: string, 
     match: TrainingMatch, 
-    context: any
+    context: Record<string, unknown>
   ): Promise<void> {
     try {
       await prisma.chatbotAnalytics.create({
@@ -293,7 +293,12 @@ class TrainingDataMatcher {
     await this.loadTrainingData();
   }
 
-  async getMatchStatistics(): Promise<any> {
+  async getMatchStatistics(): Promise<Array<{
+    intentId: string;
+    intentName: string;
+    matchCount: number;
+    avgConfidence: number;
+  }>> {
     const stats = await prisma.chatbotAnalytics.groupBy({
       by: ['matchedIntentId'],
       _count: { id: true },
