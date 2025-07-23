@@ -8,8 +8,8 @@ interface TrainingMatch {
   matchedKeywords: string[];
   response: string;
   responseType: string;
-  variables?: Record<string, unknown>;
-  conditions?: Record<string, unknown>;
+  variables?: Prisma.JsonValue;
+  conditions?: Prisma.JsonValue;
 }
 
 interface IntentWithData {
