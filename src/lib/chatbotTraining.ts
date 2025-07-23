@@ -278,7 +278,7 @@ class TrainingDataMatcher {
           intentMatched: match.intentId,
           confidence: match.confidence,
           responseUsed: match.response.substring(0, 255), // Truncate if needed
-          userContext: context || {},
+          userContext: context as Prisma.InputJsonValue || {},
           fallbackUsed: false
         }
       });
