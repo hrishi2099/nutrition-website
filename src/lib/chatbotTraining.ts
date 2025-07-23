@@ -274,13 +274,12 @@ class TrainingDataMatcher {
     try {
       await prisma.chatbotAnalytics.create({
         data: {
-          userInput,
-          matchedIntentId: match.intentId,
+          sessionId: (context.sessionId as string) || 'unknown',
+          intentMatched: match.intentId,
           confidence: match.confidence,
-          responseType: match.responseType,
-          context: context || {},
-          matchedKeywords: match.matchedKeywords,
-          timestamp: new Date()
+          responseUsed: match.response.substring(0, 255), // Truncate if needed
+          userContext: context || {},
+          fallbackUsed: false
         }
       });
 
@@ -312,23 +311,24 @@ class TrainingDataMatcher {
     avgConfidence: number;
   }>> {
     const stats = await prisma.chatbotAnalytics.groupBy({
-      by: ['matchedIntentId'],
+      by: ['intentMatched'],
       _count: { id: true },
       _avg: { confidence: true },
       orderBy: { _count: { id: 'desc' } },
-      take: 10
+      take: 10,
+      where: { intentMatched: { not: null } }
     });
 
     const intents = await prisma.trainingIntent.findMany({
       where: { 
-        id: { in: stats.map(s => s.matchedIntentId).filter(Boolean) as string[] }
+        id: { in: stats.map(s => s.intentMatched).filter(Boolean) as string[] }
       },
       select: { id: true, name: true }
     });
 
     return stats.map(stat => ({
-      intentId: stat.matchedIntentId,
-      intentName: intents.find(i => i.id === stat.matchedIntentId)?.name || 'Unknown',
+      intentId: stat.intentMatched || 'unknown',
+      intentName: intents.find(i => i.id === stat.intentMatched)?.name || 'Unknown',
       matchCount: stat._count.id,
       avgConfidence: stat._avg.confidence || 0
     }));
