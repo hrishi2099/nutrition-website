@@ -332,24 +332,26 @@ MEMORY AND LEARNING:
 
   // Add learned preferences
   const preferenceDetails = [];
-  if (enhancedPreferences.dietary.plant_based?.confidence > 0.6) {
-    preferenceDetails.push(`User shows interest in plant-based nutrition (confidence: ${enhancedPreferences.dietary.plant_based.confidence})`);
+  const prefs = enhancedPreferences as Record<string, Record<string, { value: string; confidence: number }>>;
+  
+  if (prefs.dietary?.plant_based?.confidence > 0.6) {
+    preferenceDetails.push(`User shows interest in plant-based nutrition (confidence: ${prefs.dietary.plant_based.confidence})`);
   }
-  if (enhancedPreferences.goal_focus.weight_loss?.confidence > 0.7) {
-    preferenceDetails.push(`User is actively focused on weight loss (confidence: ${enhancedPreferences.goal_focus.weight_loss.confidence})`);
+  if (prefs.goal_focus?.weight_loss?.confidence > 0.7) {
+    preferenceDetails.push(`User is actively focused on weight loss (confidence: ${prefs.goal_focus.weight_loss.confidence})`);
   }
-  if (enhancedPreferences.goal_focus.muscle_gain?.confidence > 0.7) {
-    preferenceDetails.push(`User is actively focused on muscle gain (confidence: ${enhancedPreferences.goal_focus.muscle_gain.confidence})`);
+  if (prefs.goal_focus?.muscle_gain?.confidence > 0.7) {
+    preferenceDetails.push(`User is actively focused on muscle gain (confidence: ${prefs.goal_focus.muscle_gain.confidence})`);
   }
-  if (enhancedPreferences.macro_focus.high_protein?.confidence > 0.6) {
-    preferenceDetails.push(`User is interested in high-protein foods (confidence: ${enhancedPreferences.macro_focus.high_protein.confidence})`);
+  if (prefs.macro_focus?.high_protein?.confidence > 0.6) {
+    preferenceDetails.push(`User is interested in high-protein foods (confidence: ${prefs.macro_focus.high_protein.confidence})`);
   }
   
   // Add food preferences
-  const likedFoods = Object.keys(enhancedPreferences.food_likes || {})
-    .filter(food => enhancedPreferences.food_likes[food].value === 'liked' && enhancedPreferences.food_likes[food].confidence > 0.5);
-  const dislikedFoods = Object.keys(enhancedPreferences.food_likes || {})
-    .filter(food => enhancedPreferences.food_likes[food].value === 'disliked' && enhancedPreferences.food_likes[food].confidence > 0.5);
+  const likedFoods = Object.keys(prefs.food_likes || {})
+    .filter(food => prefs.food_likes[food].value === 'liked' && prefs.food_likes[food].confidence > 0.5);
+  const dislikedFoods = Object.keys(prefs.food_likes || {})
+    .filter(food => prefs.food_likes[food].value === 'disliked' && prefs.food_likes[food].confidence > 0.5);
     
   if (likedFoods.length > 0) {
     preferenceDetails.push(`User likes: ${likedFoods.join(', ')}`);
