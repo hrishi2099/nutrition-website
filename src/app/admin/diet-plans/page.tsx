@@ -174,11 +174,11 @@ export default function DietPlansPage() {
     return (
       <AdminSidebar>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
           <button
             onClick={fetchDietPlans}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
           >
             Try Again
           </button>
@@ -192,12 +192,12 @@ export default function DietPlansPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Diet Plans</h1>
-            <p className="text-gray-600">Manage diet plans and meal configurations</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Diet Plans</h1>
+            <p className="text-gray-600 dark:text-gray-300">Manage diet plans and meal configurations</p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
           >
             Create New Plan
           </button>
@@ -210,10 +210,10 @@ export default function DietPlansPage() {
               key={plan.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-lg shadow-md p-6"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{plan.name}</h3>
                 <div className="flex items-center space-x-2">
                   <span className={`px-2 py-1 text-xs rounded-full ${
                     plan.isActive 
@@ -230,34 +230,34 @@ export default function DietPlansPage() {
                 </div>
               </div>
               
-              <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{plan.description}</p>
               
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Type:</span>
-                  <span className="text-sm font-medium">{getPlanTypeDisplay(plan.type)}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Type:</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{getPlanTypeDisplay(plan.type)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Duration:</span>
-                  <span className="text-sm font-medium">{plan.duration} weeks</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Duration:</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{plan.duration} weeks</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Calories:</span>
-                  <span className="text-sm font-medium">{plan.calories}/day</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Calories:</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{plan.calories}/day</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Meals:</span>
-                  <span className="text-sm font-medium">{plan.mealsPerDay}/day</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Meals:</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{plan.mealsPerDay}/day</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Price:</span>
-                  <span className="text-sm font-medium">${plan.price}/month</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Price:</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">${plan.price}/month</span>
                 </div>
               </div>
 
               {plan.user && (
-                <div className="mb-4 p-2 bg-blue-50 rounded">
-                  <p className="text-xs text-blue-800">
+                <div className="mb-4 p-2 bg-blue-50 dark:bg-blue-900 rounded">
+                  <p className="text-xs text-blue-800 dark:text-blue-300">
                     Enrolled by: {plan.user.firstName} {plan.user.lastName}
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export default function DietPlansPage() {
               <div className="flex space-x-2">
                 <button
                   onClick={() => setSelectedPlan(plan)}
-                  className="flex-1 bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-200"
+                  className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded text-sm hover:bg-gray-200 dark:hover:bg-gray-600"
                 >
                   View Details
                 </button>
@@ -294,12 +294,12 @@ export default function DietPlansPage() {
         {/* Create Diet Plan Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Create New Diet Plan</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Create New Diet Plan</h2>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100"
                 >
                   ✕
                 </button>
@@ -307,39 +307,39 @@ export default function DietPlansPage() {
               
               <form onSubmit={createDietPlan} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Plan Name
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Description
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     rows={3}
                     required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Type
                   </label>
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="WEIGHT_LOSS">Weight Loss</option>
                     <option value="MUSCLE_GAIN">Muscle Gain</option>
@@ -350,28 +350,28 @@ export default function DietPlansPage() {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Duration (weeks)
                     </label>
                     <input
                       type="number"
                       value={formData.duration}
                       onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       min="1"
                       required
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Calories/day
                     </label>
                     <input
                       type="number"
                       value={formData.calories}
                       onChange={(e) => setFormData({ ...formData, calories: parseInt(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       min="1000"
                       required
                     />
@@ -380,14 +380,14 @@ export default function DietPlansPage() {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Meals/day
                     </label>
                     <input
                       type="number"
                       value={formData.mealsPerDay}
                       onChange={(e) => setFormData({ ...formData, mealsPerDay: parseInt(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       min="1"
                       max="10"
                       required
@@ -395,14 +395,14 @@ export default function DietPlansPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Price ($)
                     </label>
                     <input
                       type="number"
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       min="0"
                       step="0.01"
                       required
@@ -413,14 +413,14 @@ export default function DietPlansPage() {
                 <div className="flex space-x-3">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    className="flex-1 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
                   >
                     Create Plan
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowCreateModal(false)}
-                    className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                    className="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
                   >
                     Cancel
                   </button>
@@ -433,12 +433,12 @@ export default function DietPlansPage() {
         {/* Plan Details Modal */}
         {selectedPlan && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-96 overflow-y-auto">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-96 overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Diet Plan Details</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Diet Plan Details</h2>
                 <button
                   onClick={() => setSelectedPlan(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100"
                 >
                   ✕
                 </button>
@@ -446,42 +446,42 @@ export default function DietPlansPage() {
               
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{selectedPlan.name}</h3>
-                  <p className="text-gray-600">{selectedPlan.description}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{selectedPlan.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">{selectedPlan.description}</p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Type</label>
-                    <p className="text-gray-900">{getPlanTypeDisplay(selectedPlan.type)}</p>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
+                    <p className="text-gray-900 dark:text-white">{getPlanTypeDisplay(selectedPlan.type)}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Duration</label>
-                    <p className="text-gray-900">{selectedPlan.duration} weeks</p>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Duration</label>
+                    <p className="text-gray-900 dark:text-white">{selectedPlan.duration} weeks</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Calories</label>
-                    <p className="text-gray-900">{selectedPlan.calories}/day</p>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Calories</label>
+                    <p className="text-gray-900 dark:text-white">{selectedPlan.calories}/day</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Price</label>
-                    <p className="text-gray-900">${selectedPlan.price}/month</p>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Price</label>
+                    <p className="text-gray-900 dark:text-white">${selectedPlan.price}/month</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Meals ({selectedPlan.meals.length})</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Meals ({selectedPlan.meals.length})</label>
                   {selectedPlan.meals.length > 0 ? (
                     <div className="space-y-2 max-h-48 overflow-y-auto">
                       {selectedPlan.meals.map((meal) => (
-                        <div key={meal.id} className="bg-gray-50 p-3 rounded">
-                          <p className="font-medium">{meal.name}</p>
-                          <p className="text-sm text-gray-600">{meal.type} • {meal.calories} calories</p>
+                        <div key={meal.id} className="bg-gray-50 dark:bg-gray-700 p-3 rounded">
+                          <p className="font-medium text-gray-900 dark:text-white">{meal.name}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{meal.type} • {meal.calories} calories</p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500">No meals configured</p>
+                    <p className="text-gray-500 dark:text-gray-400">No meals configured</p>
                   )}
                 </div>
               </div>

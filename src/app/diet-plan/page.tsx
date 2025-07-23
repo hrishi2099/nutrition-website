@@ -116,7 +116,7 @@ export default function DietPlan() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <LoadingSpinner />
       </div>
     );
@@ -124,10 +124,10 @@ export default function DietPlan() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Diet Plans</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Diet Plans</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
           <AnimatedButton onClick={fetchDietPlans}>
             Try Again
           </AnimatedButton>
@@ -138,14 +138,14 @@ export default function DietPlan() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen">
-      <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <section className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Personalized <span className="text-black">Diet Plans</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              Personalized <span className="text-black dark:text-gray-100">Diet Plans</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
               Choose from our scientifically-designed nutrition plans tailored to help you achieve your specific health and fitness goals.
             </p>
             
@@ -167,7 +167,7 @@ export default function DietPlan() {
                   <select
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   >
                     <option value="all">All Types</option>
                     <option value="weight">Weight Loss</option>
@@ -179,7 +179,7 @@ export default function DietPlan() {
                   <select
                     value={priceRange}
                     onChange={(e) => setPriceRange(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   >
                     <option value="all">All Prices</option>
                     <option value="budget">Under $100</option>
@@ -192,14 +192,14 @@ export default function DietPlan() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Plan</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Choose Your Plan</h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Each plan is carefully crafted by our nutrition experts and can be customized to fit your preferences and dietary requirements.
             </p>
-            <div className="mt-4 text-sm text-gray-500">
+            <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
               Showing {filteredPlans.length} of {dietPlans.length} plans
             </div>
           </FadeInSection>
@@ -208,17 +208,17 @@ export default function DietPlan() {
             {filteredPlans.length === 0 ? (
               <div className="col-span-3 text-center py-12">
                 <div className="text-gray-400 text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No plans found</h3>
-                <p className="text-gray-600">Try adjusting your search or filter criteria.</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No plans found</h3>
+                <p className="text-gray-600 dark:text-gray-300">Try adjusting your search or filter criteria.</p>
               </div>
             ) : (
               filteredPlans.map((plan, index) => (
               <motion.div
                 key={plan.id}
-                className={`bg-white border-2 ${
+                className={`bg-white dark:bg-gray-800 border-2 ${
                   selectedPlan === plan.id 
-                    ? 'border-black shadow-lg' 
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-black dark:border-white shadow-lg' 
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                 } rounded-lg p-6 transition-all duration-300 cursor-pointer`}
                 onClick={() => setSelectedPlan(plan.id)}
                 initial={{ opacity: 0, y: 30 }}
@@ -231,56 +231,56 @@ export default function DietPlan() {
                 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="text-black text-lg font-semibold mb-2">
+                <div className="text-black dark:text-white text-lg font-semibold mb-2">
                   {plan.name}
                 </div>
-                <p className="text-gray-600 mb-4">{plan.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">{plan.description}</p>
                 
                 <div className="space-y-2 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Duration:</span>
-                    <span className="font-medium">{plan.duration} weeks</span>
+                    <span className="text-gray-500 dark:text-gray-400">Duration:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{plan.duration} weeks</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Daily Meals:</span>
-                    <span className="font-medium">{plan.mealsPerDay} meals</span>
+                    <span className="text-gray-500 dark:text-gray-400">Daily Meals:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{plan.mealsPerDay} meals</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Calories:</span>
-                    <span className="font-medium">{plan.calories} cal/day</span>
+                    <span className="text-gray-500 dark:text-gray-400">Calories:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{plan.calories} cal/day</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Type:</span>
-                    <span className="font-medium">{getPlanTypeDisplay(plan.type)}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Type:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{getPlanTypeDisplay(plan.type)}</span>
                   </div>
                 </div>
                 
                 <ul className="space-y-2 mb-6">
-                  <li className="flex items-center text-sm">
-                    <span className="text-black mr-2">✓</span>
+                  <li className="flex items-center text-sm text-gray-900 dark:text-gray-300">
+                    <span className="text-black dark:text-white mr-2">✓</span>
                     Personalized meal plans
                   </li>
-                  <li className="flex items-center text-sm">
-                    <span className="text-black mr-2">✓</span>
+                  <li className="flex items-center text-sm text-gray-900 dark:text-gray-300">
+                    <span className="text-black dark:text-white mr-2">✓</span>
                     Nutritionist support
                   </li>
-                  <li className="flex items-center text-sm">
-                    <span className="text-black mr-2">✓</span>
+                  <li className="flex items-center text-sm text-gray-900 dark:text-gray-300">
+                    <span className="text-black dark:text-white mr-2">✓</span>
                     Progress tracking
                   </li>
-                  <li className="flex items-center text-sm">
-                    <span className="text-black mr-2">✓</span>
+                  <li className="flex items-center text-sm text-gray-900 dark:text-gray-300">
+                    <span className="text-black dark:text-white mr-2">✓</span>
                     Recipe variations
                   </li>
                 </ul>
                 
-                <div className="text-2xl font-bold text-black mb-4">
+                <div className="text-2xl font-bold text-black dark:text-white mb-4">
                   ${plan.price}/month
                 </div>
                 
                 <Link href={`/diet-plan/${plan.id}`}>
                   <button
-                    className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                    className="w-full bg-black dark:bg-white text-white dark:text-black py-3 rounded-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                   >
                     View Details
                   </button>
@@ -292,11 +292,11 @@ export default function DietPlan() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Sample Meals</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Sample Meals</h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Get a taste of what your personalized meal plan might include. All recipes are nutritionist-approved and delicious.
             </p>
           </FadeInSection>
@@ -305,29 +305,29 @@ export default function DietPlan() {
             {sampleMeals.map((meal, index) => (
               <motion.div 
                 key={index} 
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="p-6">
-                  <div className="text-black text-sm font-semibold mb-2">{meal.type}</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{meal.name}</h3>
+                  <div className="text-black dark:text-white text-sm font-semibold mb-2">{meal.type}</div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{meal.name}</h3>
                   
                   <div className="flex justify-between mb-4">
                     <div className="text-center">
-                      <div className="text-lg font-semibold text-gray-900">{meal.calories}</div>
-                      <div className="text-sm text-gray-500">Calories</div>
+                      <div className="text-lg font-semibold text-gray-900 dark:text-white">{meal.calories}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">Calories</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-semibold text-gray-900">{meal.protein}</div>
-                      <div className="text-sm text-gray-500">Protein</div>
+                      <div className="text-lg font-semibold text-gray-900 dark:text-white">{meal.protein}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">Protein</div>
                     </div>
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Ingredients:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Ingredients:</h4>
+                    <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                       {meal.ingredients.map((ingredient, i) => (
                         <li key={i}>• {ingredient}</li>
                       ))}
@@ -340,11 +340,11 @@ export default function DietPlan() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">What&apos;s Included</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">What&apos;s Included</h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Every diet plan comes with comprehensive support and resources to ensure your success.
             </p>
           </FadeInSection>
@@ -357,8 +357,8 @@ export default function DietPlan() {
               transition={{ delay: 0.1 }}
             >
               <div className="text-4xl mb-4">📱</div>
-              <h3 className="text-lg font-semibold mb-3">Mobile App Access</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Mobile App Access</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Track your meals, progress, and access recipes on the go with our user-friendly app.
               </p>
             </motion.div>
@@ -370,8 +370,8 @@ export default function DietPlan() {
               transition={{ delay: 0.2 }}
             >
               <div className="text-4xl mb-4">👨‍🍳</div>
-              <h3 className="text-lg font-semibold mb-3">Chef-Designed Recipes</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Chef-Designed Recipes</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Enjoy delicious, nutritious meals created by professional chefs and nutritionists.
               </p>
             </motion.div>
@@ -383,8 +383,8 @@ export default function DietPlan() {
               transition={{ delay: 0.3 }}
             >
               <div className="text-4xl mb-4">🛒</div>
-              <h3 className="text-lg font-semibold mb-3">Shopping Lists</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Shopping Lists</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Get organized weekly shopping lists with everything you need for your meal plan.
               </p>
             </motion.div>
@@ -396,8 +396,8 @@ export default function DietPlan() {
               transition={{ delay: 0.4 }}
             >
               <div className="text-4xl mb-4">💬</div>
-              <h3 className="text-lg font-semibold mb-3">Expert Support</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Expert Support</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Direct access to our nutrition team for questions and plan adjustments.
               </p>
             </motion.div>
@@ -405,11 +405,11 @@ export default function DietPlan() {
         </div>
       </section>
 
-      <section className="py-16 bg-black">
+      <section className="py-16 bg-black dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <FadeInSection>
             <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
-            <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-300 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
               Join thousands of satisfied clients who have transformed their health with our personalized nutrition plans.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -421,7 +421,7 @@ export default function DietPlan() {
               </AnimatedButton>
               <AnimatedButton
                 onClick={() => window.location.href = '/about'}
-                className="border border-white text-white hover:bg-gray-800"
+                className="border border-white text-white hover:bg-gray-800 dark:hover:bg-gray-700"
               >
                 Learn More About Us
               </AnimatedButton>

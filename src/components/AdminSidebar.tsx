@@ -27,16 +27,16 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-        <div className="relative flex flex-col w-64 bg-white shadow-xl">
-          <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-lg font-semibold text-gray-900">Admin Panel</h2>
+        <div className="relative flex flex-col w-64 bg-white dark:bg-gray-800 shadow-xl">
+          <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Admin Panel</h2>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
             >
               ✕
             </button>
@@ -48,8 +48,8 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                 href={item.href}
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   pathname === item.href
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
                 onClick={() => setSidebarOpen(false)}
               >
@@ -63,9 +63,9 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-1 bg-white shadow-lg">
-          <div className="flex items-center justify-center p-6 border-b">
-            <h2 className="text-xl font-bold text-gray-900">Admin Panel</h2>
+        <div className="flex flex-col flex-1 bg-white dark:bg-gray-800 shadow-lg">
+          <div className="flex items-center justify-center p-6 border-b dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Admin Panel</h2>
           </div>
           <nav className="flex-1 px-4 py-4 space-y-2">
             {navigation.map((item) => (
@@ -74,8 +74,8 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                 href={item.href}
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   pathname === item.href
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 <span className="mr-3">{item.icon}</span>
@@ -83,18 +83,18 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
               </Link>
             ))}
           </nav>
-          <div className="p-4 border-t bg-gray-50">
+          <div className="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
             <div className="flex items-center">
-              <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-blue-600 font-semibold">
+              <div className="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                <span className="text-blue-600 dark:text-blue-300 font-semibold">
                   {adminUser?.firstName?.charAt(0) || 'A'}
                 </span>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {adminUser?.firstName} {adminUser?.lastName}
                 </p>
-                <p className="text-xs text-gray-500">{adminUser?.email}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{adminUser?.email}</p>
               </div>
             </div>
           </div>
@@ -104,27 +104,27 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top header */}
-        <div className="sticky top-0 z-10 bg-white shadow-sm border-b">
+        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
           <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 text-gray-600 hover:text-gray-900"
+              className="lg:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h1 className="text-xl font-semibold text-gray-900 lg:hidden">Admin Panel</h1>
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white lg:hidden">Admin Panel</h1>
             <div className="flex items-center space-x-4">
               <Link
                 href="/"
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 ← Back to Site
               </Link>
               <Link
                 href="/login"
-                className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                className="bg-red-600 dark:bg-red-700 text-white px-3 py-1 rounded text-sm hover:bg-red-700 dark:hover:bg-red-800"
               >
                 Logout
               </Link>

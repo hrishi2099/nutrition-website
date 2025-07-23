@@ -187,7 +187,7 @@ export default function ProfilePage() {
 
   if (isLoading || profileLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
         <LoadingSpinner />
       </div>
     );
@@ -195,7 +195,7 @@ export default function ProfilePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <AnimatedButton onClick={() => window.location.reload()}>
@@ -208,9 +208,9 @@ export default function ProfilePage() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
         <div className="text-center">
-          <p className="text-gray-600">Profile not found</p>
+          <p className="text-gray-600 dark:text-gray-300">Profile not found</p>
         </div>
       </div>
     );
@@ -218,14 +218,14 @@ export default function ProfilePage() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection>
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 My Profile
               </h1>
-              <p className="text-lg text-gray-600">
+              <p className="text-lg text-gray-600 dark:text-gray-300">
                 Manage your nutrition and fitness profile
               </p>
             </div>
@@ -235,9 +235,9 @@ export default function ProfilePage() {
             {/* Personal Information */}
             <div className="lg:col-span-2">
               <FadeInSection>
-                <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-900">
+                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
                       Personal Information
                     </h2>
                     <AnimatedButton
@@ -250,10 +250,10 @@ export default function ProfilePage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Full Name
                       </label>
-                      <p className="text-lg text-gray-900">
+                      <p className="text-lg text-gray-900 dark:text-white">
                         {profile.firstName} {profile.lastName}
                       </p>
                     </div>
@@ -350,7 +350,7 @@ export default function ProfilePage() {
                       {profile.goals.map((goal) => (
                         <div
                           key={goal.id}
-                          className="border border-gray-200 rounded-lg p-4"
+                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
                         >
                           <div className="flex justify-between items-start">
                             <div>
@@ -398,7 +398,7 @@ export default function ProfilePage() {
                       {enrollments.map((plan) => (
                         <div
                           key={plan.id}
-                          className="border border-gray-200 rounded-lg p-4"
+                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
                         >
                           <div className="flex justify-between items-start mb-2">
                             <h3 className="text-lg font-medium text-gray-900">
