@@ -282,3 +282,97 @@ model ChatFeedback {
 
   @@map("chat_feedback")
 }
+
+// Trainable Chatbot Models
+model TrainingIntent {
+  id          String            @id @default(cuid())
+  name        String            @unique // e.g., "weight_loss_advice", "meal_planning"
+  description String?
+  category    String?           // e.g., "nutrition", "fitness", "general"
+  isActive    Boolean           @default(true)
+  priority    Int               @default(0) // Higher priority intents matched first
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  createdBy   String?           // Admin user who created this
+  examples    TrainingExample[]
+  responses   TrainingResponse[]
+  @@map("training_intents")
+}
+
+model TrainingExample {
+  id          String         @id @default(cuid())
+  intentId    String
+  intent      TrainingIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
+  userInput   String         // Example user question/statement
+  keywords    String[]       // Extracted keywords for matching
+  confidence  Float          @default(1.0) // How confident this example represents the intent
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  @@map("training_examples")
+}
+
+model TrainingResponse {
+  id          String         @id @default(cuid())
+  intentId    String
+  intent      TrainingIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
+  response    String         // The bot response text
+  responseType String        @default("text") // text, template, function
+  conditions  Json?          // Conditions for when to use this response
+  variables   Json?          // Template variables or function parameters
+  priority    Int            @default(0) // Higher priority responses used first
+  isActive    Boolean        @default(true)
+  usageCount  Int            @default(0) // Track how often this response is used
+  successRate Float?         // Based on user feedback
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  @@map("training_responses")
+}
+
+model ChatbotKnowledge {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  category    String?  // e.g., "nutrition_facts", "recipes", "tips"
+  tags        String[] // For keyword matching
+  source      String?  // Where this knowledge came from
+  confidence  Float    @default(1.0)
+  isActive    Boolean  @default(true)
+  usageCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String?  // Admin user who added this
+  @@map("chatbot_knowledge")
+}
+
+model ChatbotAnalytics {
+  id              String   @id @default(cuid())
+  sessionId       String
+  messageId       String?
+  intentMatched   String?  // Which intent was matched
+  confidence      Float?   // Confidence of the match
+  responseUsed    String?  // Which response was used
+  userSatisfied   Boolean? // Based on feedback
+  responseTime    Int?     // Time taken to generate response (ms)
+  fallbackUsed    Boolean  @default(false)
+  errorOccurred   Boolean  @default(false)
+  errorMessage    String?
+  userContext     Json?    // User context at time of interaction
+  createdAt       DateTime @default(now())
+  @@map("chatbot_analytics")
+}
+
+model ChatbotTrainingSession {
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  trainedBy     String   // Admin user ID
+  intentsCount  Int      @default(0)
+  examplesCount Int      @default(0)
+  accuracy      Float?   // Overall training accuracy
+  isActive      Boolean  @default(true)
+  trainingData  Json?    // Backup of training configuration
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  @@map("chatbot_training_sessions")
+}

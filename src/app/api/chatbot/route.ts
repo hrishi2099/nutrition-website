@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 import { prisma } from '@/lib/prisma';
 import { v4 as uuidv4 } from 'uuid';
+import { trainingMatcher } from '@/lib/chatbotTraining';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -164,7 +165,35 @@ async function generateIntelligentResponse(
   userContext: UserContext | null,
   sessionId: string
 ): Promise<string> {
-  // Try AI-powered response first
+  // First, try custom training data matching
+  try {
+    const trainingContext = {
+      userId: userContext?.id,
+      isAuthenticated: !!userContext,
+      hasEnrolledPlan: !!userContext?.enrolledPlan,
+      userGoals: userContext?.goals?.map(g => g.type) || [],
+      sessionId
+    };
+
+    const trainingMatch = await trainingMatcher.findBestMatch(message, trainingContext);
+    
+    if (trainingMatch && trainingMatch.confidence > 0.4) {
+      // Log successful training match
+      console.log(`Training match found: ${trainingMatch.intentName} (confidence: ${trainingMatch.confidence})`);
+      
+      // Add personalization context if user is authenticated
+      let response = trainingMatch.response;
+      if (userContext?.firstName && !response.includes(userContext.firstName)) {
+        response = response.replace(/^(Hi|Hello|Hey)/, `$1 ${userContext.firstName}`);
+      }
+      
+      return response;
+    }
+  } catch (error) {
+    console.error('Training data matching failed:', error);
+  }
+
+  // Try AI-powered response if no training match
   if (openai) {
     try {
       return await generateAIResponse(message, history, userContext, sessionId);
