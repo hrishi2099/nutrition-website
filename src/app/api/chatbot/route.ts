@@ -844,8 +844,8 @@ function extractWeightHeight(message: string): { weight?: number; height?: numbe
 
 function handleBMICalculation(message: string, userContext: UserContext | null, greeting: string): string {
   const extracted = extractWeightHeight(message);
-  let weight = extracted.weight || userContext?.weight || null;
-  let height = extracted.height || userContext?.height || null;
+  const weight = extracted.weight || userContext?.weight || null;
+  const height = extracted.height || userContext?.height || null;
   
   // If we have both values, calculate BMI
   if (weight && height) {
