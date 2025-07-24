@@ -1,0 +1,274 @@
+[
+  {
+    "intent": "indian_diet_basics",
+    "description": "Basic information about Indian diet principles and food groups",
+    "category": "indian_nutrition",
+    "priority": 5,
+    "examples": [
+      { "userInput": "What is a traditional Indian diet?", "confidence": 1.0 },
+      { "userInput": "Tell me about Indian food principles", "confidence": 0.9 },
+      { "userInput": "What are the basics of eating Indian style?", "confidence": 0.8 }
+    ],
+    "responses": [
+      {
+        "response": "A traditional Indian diet emphasizes whole foods, plant-based ingredients, and balanced nutrition through various food groups. It typically includes grains (rice, wheat), legumes (dal), vegetables, dairy, and spices. The diet follows principles of Ayurveda, focusing on fresh, seasonal ingredients and balanced flavors - sweet, sour, salty, bitter, pungent, and astringent.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "ayurvedic_nutrition",
+    "description": "Ayurvedic principles of nutrition and eating according to doshas",
+    "category": "indian_nutrition",
+    "priority": 7,
+    "examples": [
+      { "userInput": "What is Ayurvedic eating?", "confidence": 1.0 },
+      { "userInput": "How to eat according to my dosha?", "confidence": 0.9 },
+      { "userInput": "Tell me about vata pitta kapha diet", "confidence": 0.95 }
+    ],
+    "responses": [
+      {
+        "response": "Ayurvedic nutrition is based on your constitutional type (dosha): Vata types benefit from warm, moist, grounding foods like cooked grains and stews. Pitta types need cooling foods like cucumber, coconut, and sweet fruits. Kapha types thrive on light, spicy, and warm foods. Focus on eating according to your dominant dosha while considering seasonal changes.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "regional_indian_diets",
+    "description": "Information about different regional Indian diets and their characteristics",
+    "category": "indian_nutrition",
+    "priority": 6,
+    "examples": [
+      { "userInput": "What is South Indian diet like?", "confidence": 1.0 },
+      { "userInput": "Tell me about Bengali food habits", "confidence": 0.9 },
+      { "userInput": "What do people eat in Punjab?", "confidence": 0.8 },
+      { "userInput": "Gujarati thali nutrition", "confidence": 0.9 }
+    ],
+    "responses": [
+      {
+        "response": "Regional Indian diets vary significantly: South Indian diets emphasize rice, coconut, curry leaves, and fermented foods like idli/dosa. Bengali cuisine features fish, rice, and sweets. Punjabi food includes wheat rotis, dairy, and hearty vegetarian dishes. Gujarati thalis offer balanced sweet, salty, and spicy flavors with emphasis on vegetables and legumes. Each region has adapted to local climate and ingredients.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_superfoods",
+    "description": "Traditional Indian superfoods and their health benefits",
+    "category": "indian_nutrition",
+    "priority": 8,
+    "examples": [
+      { "userInput": "What are Indian superfoods?", "confidence": 1.0 },
+      { "userInput": "Tell me about turmeric benefits", "confidence": 0.9 },
+      { "userInput": "Is ghee healthy?", "confidence": 0.8 },
+      { "userInput": "Health benefits of Indian spices", "confidence": 0.95 }
+    ],
+    "responses": [
+      {
+        "response": "Indian superfoods include: Turmeric (anti-inflammatory), Ghee (healthy fats, aids digestion), Amla (Vitamin C powerhouse), Moringa (nutrient-dense), Tulsi (adaptogenic), Fenugreek (blood sugar control), Cumin (digestive aid), Ginger (anti-nausea), and Neem (detoxifying). These have been used for centuries in traditional medicine and are now recognized globally for their health benefits.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_weight_loss",
+    "description": "Weight loss strategies using traditional Indian foods and methods",
+    "category": "indian_nutrition",
+    "priority": 9,
+    "examples": [
+      { "userInput": "How to lose weight with Indian food?", "confidence": 1.0 },
+      { "userInput": "Indian diet plan for weight loss", "confidence": 0.95 },
+      { "userInput": "Can I lose weight eating dal rice?", "confidence": 0.8 }
+    ],
+    "responses": [
+      {
+        "response": "Yes! Indian foods can support weight loss: Focus on dal (protein-rich), include plenty of vegetables, choose brown rice over white, use minimal oil, incorporate metabolism-boosting spices like ginger and cinnamon. Traditional combinations like dal-rice provide complete proteins. Emphasize home-cooked meals, control portions, and include digestive spices. Avoid fried foods and excess ghee while maintaining the nutritional diversity of Indian cuisine.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_diabetes_diet",
+    "description": "Diabetic-friendly Indian food choices and meal planning",
+    "category": "indian_nutrition",
+    "priority": 10,
+    "examples": [
+      { "userInput": "Indian food for diabetes", "confidence": 1.0 },
+      { "userInput": "Can diabetics eat rice?", "confidence": 0.9 },
+      { "userInput": "Sugar control with Indian diet", "confidence": 0.9 }
+    ],
+    "responses": [
+      {
+        "response": "Indian diabetic diet tips: Choose brown rice or millets over white rice, include high-fiber vegetables, opt for whole wheat rotis, emphasize protein-rich dal, use bitter gourd and fenugreek for blood sugar control. Avoid refined carbs, limit sweet dishes, include cinnamon and turmeric. Traditional foods like methi seeds, jamun, and karela are excellent for managing diabetes naturally.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_vegetarian_protein",
+    "description": "Protein sources and combinations in Indian vegetarian diet",
+    "category": "indian_nutrition",
+    "priority": 8,
+    "examples": [
+      { "userInput": "Protein sources in Indian vegetarian diet", "confidence": 1.0 },
+      { "userInput": "How to get complete protein from dal rice?", "confidence": 0.9 },
+      { "userInput": "Indian vegan protein foods", "confidence": 0.85 }
+    ],
+    "responses": [
+      {
+        "response": "Indian vegetarian diet offers excellent protein sources: Dal-rice combination provides complete amino acid profile, paneer and curd offer dairy proteins, nuts and seeds like almonds and sesame, chickpeas and other legumes, quinoa and amaranth. Traditional combinations maximize protein absorption - like dal with rice or roti. Include sprouted legumes, tofu, and protein-rich vegetables like spinach.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_meal_timing",
+    "description": "Traditional Indian meal timing and eating practices",
+    "category": "indian_nutrition",
+    "priority": 6,
+    "examples": [
+      { "userInput": "When should I eat meals according to Indian tradition?", "confidence": 1.0 },
+      { "userInput": "Traditional Indian eating schedule", "confidence": 0.95 },
+      { "userInput": "Ayurvedic meal timing", "confidence": 0.9 }
+    ],
+    "responses": [
+      {
+        "response": "Traditional Indian meal timing follows Ayurvedic principles: Light breakfast before sunrise or early morning, substantial lunch when digestive fire is strongest (12-2 PM), light dinner before sunset (6-7 PM). Avoid eating after 8 PM for better digestion. Include warm water throughout the day, and maintain 3-4 hour gaps between meals. This aligns with natural circadian rhythms.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_fermented_foods",
+    "description": "Benefits and types of fermented foods in Indian cuisine",
+    "category": "indian_nutrition",
+    "priority": 7,
+    "examples": [
+      { "userInput": "Indian fermented foods benefits", "confidence": 1.0 },
+      { "userInput": "Why eat idli dosa for health?", "confidence": 0.8 },
+      { "userInput": "Probiotics in Indian food", "confidence": 0.9 }
+    ],
+    "responses": [
+      {
+        "response": "Indian fermented foods are probiotic powerhouses: Idli/Dosa (fermented rice-lentil batter), Dhokla (fermented chickpea flour), pickles, buttermilk, and fermented rice. These foods improve gut health, enhance nutrient absorption, boost immunity, and aid digestion. The fermentation process increases B-vitamins and makes proteins more bioavailable. Include these daily for optimal digestive health.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_seasonal_eating",
+    "description": "Seasonal food choices according to Indian traditions",
+    "category": "indian_nutrition",
+    "priority": 6,
+    "examples": [
+      { "userInput": "What to eat in summer according to Indian tradition?", "confidence": 1.0 },
+      { "userInput": "Winter foods in India", "confidence": 0.9 },
+      { "userInput": "Monsoon diet Indian style", "confidence": 0.8 }
+    ],
+    "responses": [
+      {
+        "response": "Indian seasonal eating: Summer - cooling foods like cucumber, watermelon, buttermilk, coconut water, minimal spices. Monsoon - warm, light foods, avoid raw vegetables, include ginger and turmeric for immunity. Winter - warming foods like jaggery, ghee, nuts, hot spices like ginger and black pepper. This approach maintains body balance and prevents seasonal illnesses naturally.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_cooking_methods",
+    "description": "Healthy traditional Indian cooking methods and their benefits",
+    "category": "indian_nutrition",
+    "priority": 5,
+    "examples": [
+      { "userInput": "Healthy Indian cooking methods", "confidence": 1.0 },
+      { "userInput": "Is pressure cooking healthy?", "confidence": 0.8 },
+      { "userInput": "Traditional ways to cook Indian food", "confidence": 0.9 }
+    ],
+    "responses": [
+      {
+        "response": "Healthy Indian cooking methods: Steaming (idli, dhokla), pressure cooking (retains nutrients in dal), clay pot cooking (enhances flavors naturally), grilling/roasting (tandoor style), sautéing with minimal oil using spices. Avoid deep frying, use ghee in moderation, and emphasize slow cooking methods that preserve nutrients while developing complex flavors through spice combinations.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_digestive_practices",
+    "description": "Traditional Indian practices for better digestion",
+    "category": "indian_nutrition",
+    "priority": 7,
+    "examples": [
+      { "userInput": "How to improve digestion Indian way?", "confidence": 1.0 },
+      { "userInput": "Indian home remedies for digestion", "confidence": 0.9 },
+      { "userInput": "Digestive spices in Indian cooking", "confidence": 0.85 }
+    ],
+    "responses": [
+      {
+        "response": "Indian digestive practices: Start meals with ginger or ajwain, include digestive spices like cumin, coriander, fennel in cooking. Drink warm water with meals, chew fennel seeds after eating, have buttermilk with lunch. Practice mindful eating, avoid cold drinks with hot food, and include digestive teas like ginger-tulsi. These time-tested methods enhance digestion naturally.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_fasting_traditions",
+    "description": "Traditional Indian fasting practices and their health benefits",
+    "category": "indian_nutrition",
+    "priority": 6,
+    "examples": [
+      { "userInput": "Indian fasting for health", "confidence": 1.0 },
+      { "userInput": "Ekadashi fasting benefits", "confidence": 0.9 },
+      { "userInput": "What to eat during Navratri fasting?", "confidence": 0.8 }
+    ],
+    "responses": [
+      {
+        "response": "Traditional Indian fasting promotes detoxification and spiritual well-being: Ekadashi fasting (bi-monthly) gives digestive system rest, Navratri fasting includes fruits, nuts, and specific grains like singhara. These practices boost metabolism, improve insulin sensitivity, and promote cellular repair. Always include adequate hydration and gentle foods when breaking fasts.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_pregnancy_nutrition",
+    "description": "Traditional Indian nutrition guidelines for pregnancy",
+    "category": "indian_nutrition",
+    "priority": 8,
+    "examples": [
+      { "userInput": "Indian diet during pregnancy", "confidence": 1.0 },
+      { "userInput": "Traditional foods for pregnant women", "confidence": 0.9 },
+      { "userInput": "Garbh sanskar nutrition", "confidence": 0.8 }
+    ],
+    "responses": [
+      {
+        "response": "Traditional Indian pregnancy nutrition emphasizes: Ghee for brain development, almonds and walnuts for baby's growth, plenty of dal for protein, green leafy vegetables for folate, milk and paneer for calcium. Include saffron, dates, and figs. Avoid papaya, pineapple, and excessive spicy foods. Focus on fresh, home-cooked meals with digestive spices like ginger and cumin.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  },
+  {
+    "intent": "indian_postpartum_diet",
+    "description": "Traditional Indian postpartum nutrition and recovery foods",
+    "category": "indian_nutrition",
+    "priority": 7,
+    "examples": [
+      { "userInput": "What to eat after delivery Indian way?", "confidence": 1.0 },
+      { "userInput": "Postpartum diet Indian tradition", "confidence": 0.95 },
+      { "userInput": "Foods for new mothers India", "confidence": 0.9 }
+    ],
+    "responses": [
+      {
+        "response": "Traditional Indian postpartum diet focuses on warming, nourishing foods: Ghee with warm milk, methi seeds for lactation, dry fruits and nuts for energy, warm spices like ginger and ajwain for digestion. Include protein-rich dal, easy-to-digest khichdi, and bone broths. Avoid cold foods and drinks. This 40-day nutrition plan helps recovery and milk production.",
+        "responseType": "text",
+        "priority": 10
+      }
+    ]
+  }
+]
