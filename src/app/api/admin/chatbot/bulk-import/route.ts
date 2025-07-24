@@ -104,8 +104,8 @@ export async function POST(request: NextRequest) {
                   response: response.response,
                   responseType: response.responseType || 'text',
                   priority: response.priority || 0,
-                  conditions: (response.conditions as Prisma.InputJsonValue) || null,
-                  variables: (response.variables as Prisma.InputJsonValue) || null,
+                  conditions: response.conditions ? (response.conditions as Prisma.InputJsonValue) : null,
+                  variables: response.variables ? (response.variables as Prisma.InputJsonValue) : null,
                   isActive: true,
                   usageCount: 0
                 }
