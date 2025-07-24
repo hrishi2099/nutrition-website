@@ -1,7 +1,73 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import AnimatedCard from '@/components/AnimatedCard';
 
+interface TeamMember {
+  id: string;
+  name: string;
+  position: string;
+  bio: string;
+  avatar?: string;
+  email?: string;
+  linkedIn?: string;
+  twitter?: string;
+  specialties: string[];
+  displayOrder: number;
+}
+
 export default function About() {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await fetch('/api/team');
+        if (response.ok) {
+          const data = await response.json();
+          setTeamMembers(data.teamMembers || []);
+        }
+      } catch (error) {
+        console.error('Failed to fetch team members:', error);
+        // Fallback to default team members if API fails
+        setTeamMembers([
+          {
+            id: '1',
+            name: 'Dr. Sarah Johnson',
+            position: 'Lead Nutritionist',
+            bio: 'Ph.D. in Nutritional Science with 10+ years of experience in clinical nutrition and wellness coaching.',
+            avatar: '👩‍⚕️',
+            specialties: [],
+            displayOrder: 0
+          },
+          {
+            id: '2',
+            name: 'Michael Chen',
+            position: 'Sports Nutritionist',
+            bio: 'Registered Dietitian specializing in athletic performance and sports nutrition for optimal results.',
+            avatar: '👨‍⚕️',
+            specialties: [],
+            displayOrder: 1
+          },
+          {
+            id: '3',
+            name: 'Emily Rodriguez',
+            position: 'Wellness Coach',
+            bio: 'Certified Wellness Coach focused on sustainable lifestyle changes and behavioral nutrition.',
+            avatar: '👩‍🔬',
+            specialties: [],
+            displayOrder: 2
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTeamMembers();
+  }, []);
   return (
     <PageTransition>
       <div className="min-h-screen">
@@ -90,40 +156,54 @@ export default function About() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <AnimatedCard delay={0.1} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
-              <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl">👩‍⚕️</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Dr. Sarah Johnson</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-3">Lead Nutritionist</p>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Ph.D. in Nutritional Science with 10+ years of experience in clinical nutrition and wellness coaching.
-              </p>
-            </AnimatedCard>
-            
-            <AnimatedCard delay={0.2} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
-              <div className="w-24 h-24 bg-gray-200 dark:bg-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl">👨‍⚕️</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Michael Chen</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-3">Sports Nutritionist</p>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Registered Dietitian specializing in athletic performance and sports nutrition for optimal results.
-              </p>
-            </AnimatedCard>
-            
-            <AnimatedCard delay={0.3} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
-              <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl">👩‍🔬</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Emily Rodriguez</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-3">Wellness Coach</p>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Certified Wellness Coach focused on sustainable lifestyle changes and behavioral nutrition.
-              </p>
-            </AnimatedCard>
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white"></div>
+            </div>
+          ) : (
+            <div className={`grid grid-cols-1 ${teamMembers.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-8`}>
+              {teamMembers.map((member, index) => (
+                <AnimatedCard key={member.id} delay={0.1 * (index + 1)} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+                  <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-2xl">{member.avatar || '👤'}</span>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{member.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-3">{member.position}</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">
+                    {member.bio}
+                  </p>
+                  {member.specialties.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-1 mb-3">
+                      {member.specialties.slice(0, 3).map((specialty, idx) => (
+                        <span key={idx} className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded">
+                          {specialty}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {(member.email || member.linkedIn || member.twitter) && (
+                    <div className="flex justify-center space-x-2 mt-3">
+                      {member.email && (
+                        <a href={`mailto:${member.email}`} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                          📧
+                        </a>
+                      )}
+                      {member.linkedIn && (
+                        <a href={member.linkedIn} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                          💼
+                        </a>
+                      )}
+                      {member.twitter && (
+                        <a href={member.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                          🐦
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </AnimatedCard>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

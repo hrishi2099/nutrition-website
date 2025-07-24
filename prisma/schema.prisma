@@ -376,3 +376,21 @@ model ChatbotTrainingSession {
   updatedAt     DateTime @updatedAt
   @@map("chatbot_training_sessions")
 }
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  name        String
+  position    String
+  bio         String
+  avatar      String?  // URL or emoji
+  email       String?
+  linkedIn    String?
+  twitter     String?
+  specialties String[] // Areas of expertise
+  isActive    Boolean  @default(true)
+  displayOrder Int     @default(0) // For controlling display order
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("team_members")
+}
