@@ -18,8 +18,7 @@ export async function GET() {
         email: true,
         linkedIn: true,
         twitter: true,
-        specialties: true,
-        displayOrder: true
+        specialties: true
       }
     });
 

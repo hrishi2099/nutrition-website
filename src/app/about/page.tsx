@@ -14,7 +14,6 @@ interface TeamMember {
   linkedIn?: string;
   twitter?: string;
   specialties: string[];
-  displayOrder: number;
 }
 
 export default function About() {
@@ -39,8 +38,7 @@ export default function About() {
             position: 'Lead Nutritionist',
             bio: 'Ph.D. in Nutritional Science with 10+ years of experience in clinical nutrition and wellness coaching.',
             avatar: '👩‍⚕️',
-            specialties: [],
-            displayOrder: 0
+            specialties: []
           },
           {
             id: '2',
@@ -48,8 +46,7 @@ export default function About() {
             position: 'Sports Nutritionist',
             bio: 'Registered Dietitian specializing in athletic performance and sports nutrition for optimal results.',
             avatar: '👨‍⚕️',
-            specialties: [],
-            displayOrder: 1
+            specialties: []
           },
           {
             id: '3',
@@ -57,8 +54,7 @@ export default function About() {
             position: 'Wellness Coach',
             bio: 'Certified Wellness Coach focused on sustainable lifestyle changes and behavioral nutrition.',
             avatar: '👩‍🔬',
-            specialties: [],
-            displayOrder: 2
+            specialties: []
           }
         ]);
       } finally {

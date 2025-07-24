@@ -12,7 +12,7 @@ async function getAdminUser() {
       return null;
     }
 
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-key');
     const { payload } = await jwtVerify(token, secret);
     const userId = payload.userId as string;
 
