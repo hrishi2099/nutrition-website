@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyAdminToken } from '@/lib/adminAuth';
+import { Prisma } from '@prisma/client';
 
 interface ImportIntent {
   intent: string;
@@ -103,8 +104,8 @@ export async function POST(request: NextRequest) {
                   response: response.response,
                   responseType: response.responseType || 'text',
                   priority: response.priority || 0,
-                  conditions: response.conditions || null,
-                  variables: response.variables || null,
+                  conditions: (response.conditions as Prisma.InputJsonValue) || null,
+                  variables: (response.variables as Prisma.InputJsonValue) || null,
                   isActive: true,
                   usageCount: 0
                 }
