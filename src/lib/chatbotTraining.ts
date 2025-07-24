@@ -73,10 +73,27 @@ class TrainingDataMatcher {
 
   private extractKeywords(text: string): string[] {
     const normalized = this.normalizeText(text);
-    return normalized
-      .split(' ')
-      .filter(word => word.length > 2)
-      .slice(0, 15);
+    const words = normalized.split(' ').filter(word => word.length > 2);
+    
+    // Remove common stop words
+    const stopWords = new Set([
+      'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with',
+      'by', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had',
+      'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might',
+      'can', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it',
+      'we', 'they', 'me', 'him', 'her', 'us', 'them', 'my', 'your', 'his',
+      'her', 'its', 'our', 'their', 'what', 'when', 'where', 'why', 'how'
+    ]);
+    
+    const filteredWords = words.filter(word => !stopWords.has(word));
+    
+    // Extract n-grams for better context
+    const keywords = [...filteredWords];
+    for (let i = 0; i < filteredWords.length - 1; i++) {
+      keywords.push(`${filteredWords[i]} ${filteredWords[i + 1]}`);
+    }
+    
+    return keywords.slice(0, 20);
   }
 
   private calculateSimilarity(userKeywords: string[], exampleKeywords: string[]): number {
@@ -84,18 +101,31 @@ class TrainingDataMatcher {
       return 0;
     }
 
-    const matchingKeywords = userKeywords.filter(keyword => 
+    // Exact keyword matches
+    const exactMatches = userKeywords.filter(keyword => 
       exampleKeywords.includes(keyword)
-    );
-
-    const keywordScore = matchingKeywords.length / Math.max(userKeywords.length, exampleKeywords.length);
+    ).length;
     
-    // Boost score if there are exact substring matches
+    // Partial keyword matches (for fuzzy matching)
+    let partialMatches = 0;
+    for (const userKeyword of userKeywords) {
+      for (const exampleKeyword of exampleKeywords) {
+        if (userKeyword.includes(exampleKeyword) || exampleKeyword.includes(userKeyword)) {
+          partialMatches += 0.5;
+          break;
+        }
+      }
+    }
+    
+    const totalMatches = exactMatches + partialMatches;
+    const keywordScore = totalMatches / Math.max(userKeywords.length, exampleKeywords.length);
+    
+    // Boost score for phrase matches
     const userText = userKeywords.join(' ');
     const exampleText = exampleKeywords.join(' ');
-    const substringBoost = exampleText.includes(userText) || userText.includes(exampleText) ? 0.2 : 0;
-
-    return Math.min(keywordScore + substringBoost, 1.0);
+    const phraseBoost = this.calculatePhraseMatch(userText, exampleText);
+    
+    return Math.min(keywordScore + phraseBoost, 1.0);
   }
 
   private calculateLevenshteinDistance(str1: string, str2: string): number {
@@ -123,6 +153,28 @@ class TrainingDataMatcher {
     return matrix[str2.length][str1.length];
   }
 
+  private calculatePhraseMatch(userText: string, exampleText: string): number {
+    const userPhrases = userText.split(' ');
+    const examplePhrases = exampleText.split(' ');
+    
+    let longestMatch = 0;
+    for (let i = 0; i < userPhrases.length; i++) {
+      for (let j = 0; j < examplePhrases.length; j++) {
+        let matchLength = 0;
+        while (
+          i + matchLength < userPhrases.length &&
+          j + matchLength < examplePhrases.length &&
+          userPhrases[i + matchLength] === examplePhrases[j + matchLength]
+        ) {
+          matchLength++;
+        }
+        longestMatch = Math.max(longestMatch, matchLength);
+      }
+    }
+    
+    return longestMatch > 1 ? longestMatch * 0.1 : 0;
+  }
+
   private calculateAdvancedSimilarity(userInput: string, exampleInput: string): number {
     const userNormalized = this.normalizeText(userInput);
     const exampleNormalized = this.normalizeText(exampleInput);
@@ -147,8 +199,11 @@ class TrainingDataMatcher {
     const distance = this.calculateLevenshteinDistance(userNormalized, exampleNormalized);
     const levenshteinSimilarity = maxLength > 0 ? 1 - (distance / maxLength) : 0;
 
+    // Semantic similarity boost for nutrition/health terms
+    const semanticBoost = this.calculateSemanticBoost(userNormalized, exampleNormalized);
+    
     // Combined score with weights
-    const combinedScore = (keywordSimilarity * 0.7) + (levenshteinSimilarity * 0.3);
+    const combinedScore = (keywordSimilarity * 0.6) + (levenshteinSimilarity * 0.3) + (semanticBoost * 0.1);
     
     return Math.min(combinedScore, 1.0);
   }
@@ -174,6 +229,31 @@ class TrainingDataMatcher {
     }
 
     return true;
+  }
+
+  private calculateSemanticBoost(userText: string, exampleText: string): number {
+    // Define semantic groups for nutrition domain
+    const semanticGroups = {
+      weightLoss: ['lose', 'weight', 'fat', 'slim', 'diet', 'calories', 'deficit'],
+      weightGain: ['gain', 'weight', 'muscle', 'bulk', 'mass', 'protein'],
+      nutrition: ['nutrition', 'nutrients', 'vitamins', 'minerals', 'healthy', 'food'],
+      fitness: ['exercise', 'workout', 'fitness', 'training', 'gym', 'cardio'],
+      health: ['health', 'wellness', 'medical', 'doctor', 'symptoms'],
+      bmi: ['bmi', 'body', 'mass', 'index', 'calculate', 'height', 'weight']
+    };
+    
+    let maxBoost = 0;
+    for (const [group, terms] of Object.entries(semanticGroups)) {
+      const userMatches = terms.filter(term => userText.includes(term)).length;
+      const exampleMatches = terms.filter(term => exampleText.includes(term)).length;
+      
+      if (userMatches > 0 && exampleMatches > 0) {
+        const groupBoost = Math.min(userMatches, exampleMatches) / Math.max(userMatches, exampleMatches);
+        maxBoost = Math.max(maxBoost, groupBoost * 0.2);
+      }
+    }
+    
+    return maxBoost;
   }
 
   private processVariables(responseText: string, variables: Prisma.JsonValue | null = null, userInput: string = ''): string {
@@ -228,8 +308,11 @@ class TrainingDataMatcher {
         const priorityBoost = intent.priority * 0.05; // 5% boost per priority level
         const finalScore = Math.min(intentBestScore + priorityBoost, 1.0);
 
+        // Adaptive threshold based on intent priority
+        const threshold = Math.max(0.3 - (intent.priority * 0.02), 0.15);
+        
         // Check if this is the best match so far
-        if (finalScore > bestScore && finalScore > 0.3) { // Minimum threshold
+        if (finalScore > bestScore && finalScore > threshold) {
           // Find best response for this intent
           const availableResponses = intent.responses.filter(response => 
             this.evaluateConditions(response.conditions || null, context)

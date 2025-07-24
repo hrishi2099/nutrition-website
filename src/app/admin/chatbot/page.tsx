@@ -34,12 +34,27 @@ export default function ChatbotTrainingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
 
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     category: 'nutrition',
     priority: 0,
+  });
+
+  // Filter intents based on search and filters
+  const filteredIntents = intents.filter(intent => {
+    const matchesSearch = intent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (intent.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory === 'all' || intent.category === filterCategory;
+    const matchesStatus = filterStatus === 'all' || 
+                         (filterStatus === 'active' && intent.isActive) ||
+                         (filterStatus === 'inactive' && !intent.isActive);
+    
+    return matchesSearch && matchesCategory && matchesStatus;
   });
 
   const fetchTrainingData = useCallback(async () => {
@@ -199,12 +214,29 @@ export default function ChatbotTrainingPage() {
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Chatbot Training</h1>
             <p className="text-gray-600 dark:text-gray-300">Manage intents, examples, and responses to train your chatbot</p>
           </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
-          >
-            Add New Intent
-          </button>
+          <div className="flex space-x-3">
+            <button
+              onClick={() => window.location.href = '/admin/chatbot/bulk-import'}
+              className="bg-purple-600 dark:bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-700 dark:hover:bg-purple-800 flex items-center space-x-2"
+            >
+              <span>📤</span>
+              <span>Bulk Import</span>
+            </button>
+            <button
+              onClick={() => window.location.href = '/admin/chatbot/analytics'}
+              className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded hover:bg-green-700 dark:hover:bg-green-800 flex items-center space-x-2"
+            >
+              <span>📊</span>
+              <span>Analytics</span>
+            </button>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800 flex items-center space-x-2"
+            >
+              <span>➕</span>
+              <span>New Intent</span>
+            </button>
+          </div>
         </div>
 
         {/* Training Stats */}
@@ -243,13 +275,52 @@ export default function ChatbotTrainingPage() {
           </div>
         )}
 
+        {/* Filters and Search */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-64">
+              <input
+                type="text"
+                placeholder="Search intents..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Categories</option>
+              <option value="nutrition">Nutrition</option>
+              <option value="fitness">Fitness</option>
+              <option value="general">General</option>
+              <option value="health">Health</option>
+              <option value="recipes">Recipes</option>
+            </select>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
         {/* Intents List */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b dark:border-gray-700">
+          <div className="px-6 py-4 border-b dark:border-gray-700 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Training Intents</h2>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              {filteredIntents.length} of {intents.length} intents
+            </div>
           </div>
           
-          {intents.length === 0 ? (
+          {filteredIntents.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">🤖</div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No intents found</h3>
@@ -289,7 +360,7 @@ export default function ChatbotTrainingPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {intents.map((intent) => (
+                  {filteredIntents.map((intent) => (
                     <motion.tr
                       key={intent.id}
                       initial={{ opacity: 0 }}
