@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { verifyAdminToken } from '@/lib/admin-auth';
+import { verifyAdminToken } from '@/lib/adminAuth';
 
 interface ImportIntent {
   intent: string;
@@ -15,8 +15,8 @@ interface ImportIntent {
     response: string;
     responseType: string;
     priority: number;
-    conditions?: Record<string, any>;
-    variables?: Record<string, any>;
+    conditions?: Record<string, unknown>;
+    variables?: Record<string, unknown>;
   }>;
 }
 
@@ -39,37 +39,38 @@ export async function POST(request: NextRequest) {
     };
 
     for (const [index, intentData] of intents.entries()) {
+      const typedIntentData = intentData as ImportIntent;
       try {
         // Validate required fields
-        if (!intentData.intent || !intentData.category) {
+        if (!typedIntentData.intent || !typedIntentData.category) {
           results.errors.push(`Intent ${index + 1}: Missing required fields (intent, category)`);
           continue;
         }
 
         // Check if intent already exists
         const existingIntent = await prisma.trainingIntent.findFirst({
-          where: { name: intentData.intent }
+          where: { name: typedIntentData.intent }
         });
 
         if (existingIntent) {
-          results.errors.push(`Intent ${index + 1}: Intent '${intentData.intent}' already exists`);
+          results.errors.push(`Intent ${index + 1}: Intent '${typedIntentData.intent}' already exists`);
           continue;
         }
 
         // Create the intent
         const createdIntent = await prisma.trainingIntent.create({
           data: {
-            name: intentData.intent,
-            description: intentData.description || null,
-            category: intentData.category,
-            priority: intentData.priority || 0,
+            name: typedIntentData.intent,
+            description: typedIntentData.description || null,
+            category: typedIntentData.category,
+            priority: typedIntentData.priority || 0,
             isActive: true
           }
         });
 
         // Add examples
-        if (intentData.examples && Array.isArray(intentData.examples)) {
-          for (const example of intentData.examples) {
+        if (typedIntentData.examples && Array.isArray(typedIntentData.examples)) {
+          for (const example of typedIntentData.examples) {
             if (example.userInput) {
               // Extract keywords from user input
               const keywords = example.userInput
@@ -93,8 +94,8 @@ export async function POST(request: NextRequest) {
         }
 
         // Add responses
-        if (intentData.responses && Array.isArray(intentData.responses)) {
-          for (const response of intentData.responses) {
+        if (typedIntentData.responses && Array.isArray(typedIntentData.responses)) {
+          for (const response of typedIntentData.responses) {
             if (response.response) {
               await prisma.trainingResponse.create({
                 data: {

@@ -243,7 +243,7 @@ class TrainingDataMatcher {
     };
     
     let maxBoost = 0;
-    for (const [group, terms] of Object.entries(semanticGroups)) {
+    for (const [, terms] of Object.entries(semanticGroups)) {
       const userMatches = terms.filter(term => userText.includes(term)).length;
       const exampleMatches = terms.filter(term => exampleText.includes(term)).length;
       

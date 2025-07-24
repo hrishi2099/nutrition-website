@@ -17,8 +17,8 @@ interface ImportTemplate {
     response: string;
     responseType: string;
     priority: number;
-    conditions?: Record<string, any>;
-    variables?: Record<string, any>;
+    conditions?: Record<string, unknown>;
+    variables?: Record<string, unknown>;
   }>;
 }
 
