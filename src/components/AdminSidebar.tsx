@@ -11,6 +11,7 @@ const navigation = [
   { name: 'Diet Plans', href: '/admin/diet-plans', icon: '🍎' },
   { name: 'Meals', href: '/admin/meals', icon: '🍽️' },
   { name: 'Chatbot Training', href: '/admin/chatbot', icon: '🤖' },
+  { name: 'Neural Network', href: '/admin/neural-network', icon: '🧠' },
   { name: 'Team Management', href: '/admin/team', icon: '👨‍💼' },
   { name: 'Blog Posts', href: '/admin/blog/posts', icon: '📝' },
   { name: 'Categories', href: '/admin/blog/categories', icon: '📂' },

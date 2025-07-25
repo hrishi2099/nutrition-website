@@ -417,3 +417,14 @@ model TeamMember {
   
   @@map("team_members")
 }
+
+model NeuralNetworkLog {
+  id         String   @id @default(cuid())
+  eventType  String   // training_completed, prediction, error, etc.
+  metadata   Json?    // Additional data about the event
+  createdAt  DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("neural_network_logs")
+}

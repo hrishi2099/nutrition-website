@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { trainingMatcher } from '@/lib/chatbotTraining';
 import { validateChatMessage } from '@/lib/validation';
 import { devLog, logError } from '@/lib/logger';
+import { neuralNetworkManager } from '@/lib/neuralNetwork/neuralNetworkManager';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -182,7 +183,40 @@ async function generateIntelligentResponse(
   userContext: UserContext | null,
   sessionId: string
 ): Promise<string> {
-  // First, try custom training data matching
+  // First, try neural network prediction
+  try {
+    const neuralResult = await neuralNetworkManager.getEnhancedPrediction(message, true);
+    
+    if (neuralResult.neuralPrediction && neuralResult.neuralPrediction.confidence > 0.8) {
+      devLog(`Neural network match found: ${neuralResult.neuralPrediction.intentName} (confidence: ${neuralResult.neuralPrediction.confidence})`);
+      
+      // Get the response for this intent
+      const intent = await prisma.trainingIntent.findUnique({
+        where: { id: neuralResult.neuralPrediction.intentId },
+        include: {
+          responses: {
+            where: { isActive: true },
+            orderBy: { priority: 'desc' }
+          }
+        }
+      });
+
+      if (intent && intent.responses.length > 0) {
+        let response = intent.responses[0].response;
+        
+        // Add personalization context if user is authenticated
+        if (userContext?.firstName && !response.includes(userContext.firstName)) {
+          response = response.replace(/^(Hi|Hello|Hey)/, `$1 ${userContext.firstName}`);
+        }
+        
+        return response;
+      }
+    }
+  } catch (error) {
+    logError('neural network prediction', error);
+  }
+
+  // Fallback to traditional training data matching
   try {
     const trainingContext = {
       userId: userContext?.id,
@@ -194,9 +228,9 @@ async function generateIntelligentResponse(
 
     const trainingMatch = await trainingMatcher.findBestMatch(message, trainingContext);
     
-    if (trainingMatch && trainingMatch.confidence > 0.4) {
+    if (trainingMatch && trainingMatch.confidence > 0.7) {
       // Log successful training match
-      devLog(`Training match found: ${trainingMatch.intentName} (confidence: ${trainingMatch.confidence})`);
+      devLog(`Fallback training match found: ${trainingMatch.intentName} (confidence: ${trainingMatch.confidence})`);
       
       // Add personalization context if user is authenticated
       let response = trainingMatch.response;
@@ -235,7 +269,7 @@ async function generateAIResponse(
   
   const messages = [
     { role: 'system' as const, content: systemPrompt },
-    ...history.slice(-10).map(msg => ({ // Include last 10 messages for better context
+    ...history.slice(-20).map(msg => ({ // Include last 20 messages for better context
       role: msg.role as 'user' | 'assistant',
       content: msg.content
     })),
@@ -243,10 +277,10 @@ async function generateAIResponse(
   ];
 
   const response = await openai!.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4o-mini',
     messages,
     max_tokens: 600,
-    temperature: 0.7,
+    temperature: 0.3,
     presence_penalty: 0.3, // Encourage diverse responses
     frequency_penalty: 0.2, // Reduce repetition
   });
@@ -328,7 +362,7 @@ async function createEnhancedSystemPrompt(userContext: UserContext | null, sessi
   const pastPreferences = await getUserPreferences(sessionId, userContext?.id);
   const enhancedPreferences = await getEnhancedUserPreferences(sessionId, userContext?.id);
   
-  let prompt = `You are NutrisapBot, an expert AI nutrition assistant for NutriSap with comprehensive knowledge to answer ANY nutrition-related question. Your expertise includes:
+  let prompt = `You are NutrisapBot, an expert AI nutrition assistant for NutriSap. You must provide ACCURATE, evidence-based nutrition information only. Your expertise includes:
 
 CORE NUTRITION EXPERTISE:
 - Clinical nutrition and dietetics (RD-level knowledge)
@@ -366,11 +400,19 @@ ADVANCED TOPICS YOU CAN HANDLE:
 - Anti-inflammatory foods and oxidative stress
 - Gut health, probiotics, prebiotics, and fermented foods
 
+ACCURACY AND SAFETY REQUIREMENTS:
+- ALWAYS provide evidence-based information from reputable sources
+- NEVER guess or make up nutritional facts, values, or recommendations
+- If you don't know something specific, acknowledge it and suggest consulting professionals
+- Cross-reference information with established nutritional guidelines (FDA, WHO, RDA)
+- Cite specific studies or organizations when making claims
+- Be cautious with medical nutrition advice - always recommend healthcare consultation
+
 COMMUNICATION STYLE:
 - Be warm, supportive, and evidence-based in all responses
 - Use clear, accessible language while avoiding excessive jargon
 - Provide specific, actionable advice with practical steps
-- Include relevant scientific context and latest research when helpful
+- Include relevant scientific context and credible sources when helpful
 - Show empathy and understanding for user's challenges
 - Keep responses comprehensive but under 500 words for readability
 - Use emojis thoughtfully (1-3 per response max for engagement)
@@ -379,13 +421,14 @@ COMMUNICATION STYLE:
 - Acknowledge when questions are outside your scope but offer related help
 
 RESPONSE GUIDELINES:
-- For any nutrition question, provide a thorough, helpful answer
-- Include practical examples and specific food recommendations
+- Verify all nutritional facts before stating them
+- Include practical examples and specific food recommendations with accurate nutritional data
 - Mention portion sizes, timing, and preparation methods when relevant
-- Address potential concerns or contraindications
-- Provide both immediate and long-term strategies
-- Reference credible sources when making specific claims
-- Adapt complexity to user's apparent knowledge level
+- Address potential concerns or contraindications based on established research
+- Provide both immediate and long-term strategies backed by evidence
+- Always reference credible sources (FDA, WHO, peer-reviewed studies) when making specific claims
+- If uncertain about specific values or recommendations, say so and suggest professional consultation
+- Adapt complexity to user's apparent knowledge level while maintaining accuracy
 
 MEMORY AND PERSONALIZATION:
 - Remember user preferences, allergies, and past successful recommendations

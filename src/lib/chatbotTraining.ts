@@ -308,8 +308,8 @@ class TrainingDataMatcher {
         const priorityBoost = intent.priority * 0.05; // 5% boost per priority level
         const finalScore = Math.min(intentBestScore + priorityBoost, 1.0);
 
-        // Adaptive threshold based on intent priority
-        const threshold = Math.max(0.3 - (intent.priority * 0.02), 0.15);
+        // Adaptive threshold based on intent priority - higher for better accuracy
+        const threshold = Math.max(0.6 - (intent.priority * 0.05), 0.4);
         
         // Check if this is the best match so far
         if (finalScore > bestScore && finalScore > threshold) {
