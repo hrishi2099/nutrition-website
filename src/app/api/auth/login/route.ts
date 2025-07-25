@@ -4,9 +4,12 @@ import { createJWT } from '@/lib/jwt';
 import { logError } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
+  let email: string | undefined;
+  let password: string | undefined;
+  
   try {
     const body = await request.json();
-    const { email, password } = body;
+    ({ email, password } = body);
 
     // Validate required fields
     if (!email || !password) {
