@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { v4 as uuidv4 } from 'uuid';
 import { trainingMatcher } from '@/lib/chatbotTraining';
 import { validateChatMessage } from '@/lib/validation';
+import { devLog, logError } from '@/lib/logger';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
