@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateUser } from '@/lib/auth';
-import { SignJWT } from 'jose';
-
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-secret-key'
-);
+import { createJWT } from '@/lib/jwt';
+import { logError } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,11 +20,7 @@ export async function POST(request: NextRequest) {
     const user = await authenticateUser(email, password);
 
     // Create JWT token
-    const token = await new SignJWT({ userId: user.id })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime('24h')
-      .sign(secret);
+    const token = await createJWT({ userId: user.id });
 
     // Create response with token in cookie
     const response = NextResponse.json({
@@ -52,7 +45,7 @@ export async function POST(request: NextRequest) {
     return response;
 
   } catch (error) {
-    console.error('Login error:', error);
+    logError('login', error, { email });
 
     if (error instanceof Error && error.message === 'Invalid credentials') {
       return NextResponse.json(

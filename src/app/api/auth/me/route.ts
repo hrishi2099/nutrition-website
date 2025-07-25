@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
+import { verifyJWT } from '@/lib/jwt';
 import { getUserById } from '@/lib/auth';
-
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-secret-key'
-);
+import { logError } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify JWT token
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await verifyJWT(token);
     const userId = payload.userId as string;
 
     if (!userId) {
@@ -41,7 +38,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ user });
 
   } catch (error) {
-    console.error('Auth verification error:', error);
+    logError('auth verification', error);
 
     return NextResponse.json(
       { error: 'Invalid token' },

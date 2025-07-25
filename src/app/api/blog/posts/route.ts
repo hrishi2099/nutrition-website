@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminToken } from '@/lib/adminAuth';
 import { prisma } from '@/lib/prisma';
+import { validateBlogPost } from '@/lib/validation';
 
 export async function GET(request: NextRequest) {
   try {
@@ -86,15 +88,32 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { title, content, excerpt, coverImage, categoryId, tagIds, authorId, published } = body;
-
-    if (!title || !content || !authorId) {
+    // Verify admin authentication
+    const adminUser = await verifyAdminToken(request);
+    if (!adminUser) {
       return NextResponse.json(
-        { error: 'Title, content, and author are required' },
+        { error: 'Unauthorized - Admin access required' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { title, content, excerpt, coverImage, categoryId, tagIds, published } = body;
+
+    // Validate blog post data
+    const validation = validateBlogPost(body);
+    if (!validation.isValid) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: validation.errors
+        },
         { status: 400 }
       );
     }
+
+    // Use the authenticated admin user as the author
+    const authorId = adminUser.id;
 
     const slug = title
       .toLowerCase()

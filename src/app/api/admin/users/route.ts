@@ -44,12 +44,19 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Admin users fetch error:', error);
+    
+    // Check if it's an authentication error
+    if (error instanceof Error && error.message.includes('Admin authentication failed')) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Admin access required' },
+        { status: 401 }
+      );
+    }
+    
+    // Server error for all other cases
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Failed to fetch users' 
-      },
-      { status: 401 }
+      { error: 'Failed to fetch users' },
+      { status: 500 }
     );
   }
 }

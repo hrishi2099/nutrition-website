@@ -26,6 +26,9 @@ model User {
   blogPosts     BlogPost[]
   chatSessions  ChatSession[]
 
+  @@index([email])
+  @@index([role])
+  @@index([createdAt])
   @@map("users")
 }
 
@@ -45,6 +48,10 @@ model DietPlan {
   user        User?    @relation(fields: [userId], references: [id])
   meals       Meal[]
 
+  @@index([userId])
+  @@index([isActive])
+  @@index([type])
+  @@index([createdAt])
   @@map("diet_plans")
 }
 
@@ -108,6 +115,11 @@ model BlogPost {
   category    BlogCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   tags        BlogPostTag[]
 
+  @@index([published])
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([createdAt])
+  @@index([slug])
   @@map("blog_posts")
 }
 
@@ -178,6 +190,9 @@ model ChatSession {
   updatedAt DateTime      @updatedAt
   messages  ChatMessage[]
 
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
   @@map("chat_sessions")
 }
 
@@ -190,6 +205,9 @@ model ChatMessage {
   userContext   Json?       // Store user context at time of message
   createdAt     DateTime    @default(now())
 
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([role])
   @@map("chat_messages")
 }
 
@@ -296,6 +314,11 @@ model TrainingIntent {
   createdBy   String?           // Admin user who created this
   examples    TrainingExample[]
   responses   TrainingResponse[]
+  
+  @@index([category])
+  @@index([isActive])
+  @@index([priority])
+  @@index([name])
   @@map("training_intents")
 }
 

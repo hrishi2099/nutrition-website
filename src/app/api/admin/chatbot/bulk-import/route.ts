@@ -58,61 +58,64 @@ export async function POST(request: NextRequest) {
           continue;
         }
 
-        // Create the intent
-        const createdIntent = await prisma.trainingIntent.create({
-          data: {
-            name: typedIntentData.intent,
-            description: typedIntentData.description || null,
-            category: typedIntentData.category,
-            priority: typedIntentData.priority || 0,
-            isActive: true
+        // Use transaction for all related operations
+        await prisma.$transaction(async (tx) => {
+          // Create the intent
+          const createdIntent = await tx.trainingIntent.create({
+            data: {
+              name: typedIntentData.intent,
+              description: typedIntentData.description || null,
+              category: typedIntentData.category,
+              priority: typedIntentData.priority || 0,
+              isActive: true
+            }
+          });
+
+          // Add examples
+          if (typedIntentData.examples && Array.isArray(typedIntentData.examples)) {
+            for (const example of typedIntentData.examples) {
+              if (example.userInput) {
+                // Extract keywords from user input
+                const keywords = example.userInput
+                  .toLowerCase()
+                  .replace(/[^\w\s]/g, ' ')
+                  .split(/\s+/)
+                  .filter(word => word.length > 2)
+                  .slice(0, 15);
+
+                await tx.trainingExample.create({
+                  data: {
+                    intentId: createdIntent.id,
+                    userInput: example.userInput,
+                    keywords: keywords,
+                    confidence: example.confidence || 1.0,
+                    isActive: true
+                  }
+                });
+              }
+            }
+          }
+
+          // Add responses
+          if (typedIntentData.responses && Array.isArray(typedIntentData.responses)) {
+            for (const response of typedIntentData.responses) {
+              if (response.response) {
+                await tx.trainingResponse.create({
+                  data: {
+                    intentId: createdIntent.id,
+                    response: response.response,
+                    responseType: response.responseType || 'text',
+                    priority: response.priority || 0,
+                    conditions: response.conditions ? (response.conditions as Prisma.InputJsonValue) : undefined,
+                    variables: response.variables ? (response.variables as Prisma.InputJsonValue) : undefined,
+                    isActive: true,
+                    usageCount: 0
+                  }
+                });
+              }
+            }
           }
         });
-
-        // Add examples
-        if (typedIntentData.examples && Array.isArray(typedIntentData.examples)) {
-          for (const example of typedIntentData.examples) {
-            if (example.userInput) {
-              // Extract keywords from user input
-              const keywords = example.userInput
-                .toLowerCase()
-                .replace(/[^\w\s]/g, ' ')
-                .split(/\s+/)
-                .filter(word => word.length > 2)
-                .slice(0, 15);
-
-              await prisma.trainingExample.create({
-                data: {
-                  intentId: createdIntent.id,
-                  userInput: example.userInput,
-                  keywords: keywords,
-                  confidence: example.confidence || 1.0,
-                  isActive: true
-                }
-              });
-            }
-          }
-        }
-
-        // Add responses
-        if (typedIntentData.responses && Array.isArray(typedIntentData.responses)) {
-          for (const response of typedIntentData.responses) {
-            if (response.response) {
-              await prisma.trainingResponse.create({
-                data: {
-                  intentId: createdIntent.id,
-                  response: response.response,
-                  responseType: response.responseType || 'text',
-                  priority: response.priority || 0,
-                  conditions: response.conditions ? (response.conditions as Prisma.InputJsonValue) : undefined,
-                  variables: response.variables ? (response.variables as Prisma.InputJsonValue) : undefined,
-                  isActive: true,
-                  usageCount: 0
-                }
-              });
-            }
-          }
-        }
 
         results.success++;
       } catch (error) {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminToken } from '@/lib/adminAuth';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(
@@ -53,6 +54,15 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Verify admin authentication
+    const adminUser = await verifyAdminToken(request);
+    if (!adminUser) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Admin access required' },
+        { status: 401 }
+      );
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { title, content, excerpt, coverImage, categoryId, tagIds, published } = body;
@@ -155,6 +165,15 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Verify admin authentication
+    const adminUser = await verifyAdminToken(request);
+    if (!adminUser) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Admin access required' },
+        { status: 401 }
+      );
+    }
+
     const { id } = await params;
     
     const post = await prisma.blogPost.findUnique({

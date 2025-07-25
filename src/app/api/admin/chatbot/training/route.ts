@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { jwtVerify } from 'jose';
+import { verifyJWT } from '@/lib/jwt';
 import { trainingMatcher } from '@/lib/chatbotTraining';
 
 async function getAdminUser() {
@@ -12,8 +12,7 @@ async function getAdminUser() {
       return null;
     }
 
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-key');
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await verifyJWT(token);
     const userId = payload.userId as string;
 
     const { prisma } = await import('@/lib/prisma');

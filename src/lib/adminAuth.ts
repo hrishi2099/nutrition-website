@@ -1,10 +1,6 @@
 import { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
+import { verifyJWT } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
-
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-secret-key'
-);
 
 export async function verifyAdminToken(request: NextRequest) {
   try {
@@ -14,7 +10,7 @@ export async function verifyAdminToken(request: NextRequest) {
       throw new Error('No token provided');
     }
 
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await verifyJWT(token);
     const userId = payload.userId as string;
 
     if (!userId) {

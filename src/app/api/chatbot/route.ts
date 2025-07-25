@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { cookies } from 'next/headers';
-import { jwtVerify } from 'jose';
+import { verifyJWT } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
 import { v4 as uuidv4 } from 'uuid';
 import { trainingMatcher } from '@/lib/chatbotTraining';
+import { validateChatMessage } from '@/lib/validation';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -52,16 +53,21 @@ try {
     });
   }
 } catch {
-  console.log('OpenAI not configured, using rule-based responses');
+  devLog('OpenAI not configured, using rule-based responses');
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { message, sessionId }: { message: string; sessionId?: string } = await request.json();
 
-    if (!message || message.trim().length === 0) {
+    // Validate chat message
+    const messageValidation = validateChatMessage(message);
+    if (!messageValidation.isValid) {
       return NextResponse.json(
-        { error: 'Message is required' },
+        { 
+          error: 'Invalid message',
+          details: messageValidation.errors
+        },
         { status: 400 }
       );
     }
@@ -83,7 +89,7 @@ export async function POST(request: NextRequest) {
     
     // Learn from user interaction (run in background)
     learnFromInteraction(message, response, session.id, userContext?.id).catch(err => 
-      console.error('Learning error:', err)
+      logError('chatbot learning', err)
     );
 
     return NextResponse.json({
@@ -99,7 +105,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Chatbot API error:', error);
+    logError('chatbot API', error, { message: message?.substring(0, 100), sessionId });
     return NextResponse.json(
       { error: 'Failed to process message' },
       { status: 500 }
@@ -116,8 +122,7 @@ async function getUserContext(): Promise<UserContext | null> {
       return null;
     }
 
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-key');
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await verifyJWT(token);
     const userId = payload.userId as string;
 
     // Fetch user data with enrolled plan and goals
@@ -154,7 +159,7 @@ async function getUserContext(): Promise<UserContext | null> {
       goals: user.goals
     };
   } catch (error) {
-    console.error('Error getting user context:', error);
+    logError('user context retrieval', error);
     return null;
   }
 }
@@ -179,7 +184,7 @@ async function generateIntelligentResponse(
     
     if (trainingMatch && trainingMatch.confidence > 0.4) {
       // Log successful training match
-      console.log(`Training match found: ${trainingMatch.intentName} (confidence: ${trainingMatch.confidence})`);
+      devLog(`Training match found: ${trainingMatch.intentName} (confidence: ${trainingMatch.confidence})`);
       
       // Add personalization context if user is authenticated
       let response = trainingMatch.response;
@@ -190,7 +195,7 @@ async function generateIntelligentResponse(
       return response;
     }
   } catch (error) {
-    console.error('Training data matching failed:', error);
+    logError('training data matching', error);
   }
 
   // Try AI-powered response if no training match
@@ -198,7 +203,7 @@ async function generateIntelligentResponse(
     try {
       return await generateAIResponse(message, history, userContext, sessionId);
     } catch (error) {
-      console.error('AI response failed, falling back to rule-based:', error);
+      logError('AI response fallback', error);
     }
   }
 
