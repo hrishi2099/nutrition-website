@@ -58,8 +58,19 @@ try {
 }
 
 export async function POST(request: NextRequest) {
+  let message: string | undefined;
+  let sessionId: string | undefined;
+  
   try {
-    const { message, sessionId }: { message: string; sessionId?: string } = await request.json();
+    ({ message, sessionId } = await request.json());
+
+    // Validate required fields
+    if (!message) {
+      return NextResponse.json(
+        { error: 'Message is required' },
+        { status: 400 }
+      );
+    }
 
     // Validate chat message
     const messageValidation = validateChatMessage(message);
