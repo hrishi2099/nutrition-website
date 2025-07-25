@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminProvider, useAdmin } from '@/contexts/AdminContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import ErrorBoundary from '@/components/ErrorBoundary';
+import { ErrorBoundaryWrapper } from '@/components/ErrorBoundary';
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const { isAdmin, isLoading } = useAdmin();
@@ -46,14 +46,14 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ErrorBoundary name="Admin Layout">
+    <ErrorBoundaryWrapper name="Admin Layout">
       <AdminProvider>
         <AdminLayoutContent>
-          <ErrorBoundary name="Admin Page Content">
+          <ErrorBoundaryWrapper name="Admin Page Content">
             {children}
-          </ErrorBoundary>
+          </ErrorBoundaryWrapper>
         </AdminLayoutContent>
       </AdminProvider>
-    </ErrorBoundary>
+    </ErrorBoundaryWrapper>
   );
 }
