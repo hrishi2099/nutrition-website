@@ -26,10 +26,13 @@ class Logger {
     const timestamp = new Date().toISOString();
     const prefix = `[${timestamp}] [${level}]`;
 
+    // Map log levels to console methods
+    const consoleMethod = level === 'DEBUG' ? 'log' : level.toLowerCase() as keyof Console;
+
     if (data) {
-      console[level === 'DEBUG' ? 'log' : level](prefix, message, data);
+      (console[consoleMethod] as any)(prefix, message, data);
     } else {
-      console[level === 'DEBUG' ? 'log' : level](prefix, message);
+      (console[consoleMethod] as any)(prefix, message);
     }
   }
 
