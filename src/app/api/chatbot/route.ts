@@ -8,6 +8,7 @@ import { trainingMatcher } from '@/lib/chatbotTraining';
 import { validateChatMessage } from '@/lib/validation';
 import { devLog, logError } from '@/lib/logger';
 import { neuralNetworkManager } from '@/lib/neuralNetwork/neuralNetworkManager';
+import { conversationManager } from '@/lib/conversationManager';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -183,6 +184,35 @@ async function generateIntelligentResponse(
   userContext: UserContext | null,
   sessionId: string
 ): Promise<string> {
+  // First, try conversation manager for natural interactions
+  try {
+    const conversationContext = {
+      userId: userContext?.id,
+      sessionId,
+      firstName: userContext?.firstName,
+      enrolledPlan: userContext?.enrolledPlan,
+      goals: userContext?.goals,
+      previousMessages: history.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        timestamp: new Date() // Approximate timestamp
+      }))
+    };
+
+    const conversationResponse = await conversationManager.analyzeAndRespond(message, conversationContext);
+    
+    // Use conversation manager response if it has good confidence
+    if (conversationResponse.confidence > 0.7) {
+      devLog(`Conversation manager response: ${conversationResponse.type} (confidence: ${conversationResponse.confidence})`);
+      
+      // Log the conversation for analytics
+      await conversationManager.logConversation(message, conversationResponse, conversationContext);
+      
+      return conversationResponse.response;
+    }
+  } catch (error) {
+    logError('conversation manager', error);
+  }
   // First, try neural network prediction
   try {
     const neuralResult = await neuralNetworkManager.getEnhancedPrediction(message, true);
@@ -1008,22 +1038,67 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
   const userName = userContext?.firstName || '';
   const greeting = userName ? `Hi ${userName}! ` : '';
   
-  // Analyze conversation history for context
-  const previousTopics = history.slice(-6).map(msg => msg.content.toLowerCase());
+  // Analyze conversation history for context and patterns
+  const previousTopics = history.slice(-8).map(msg => msg.content.toLowerCase());
+  const recentUserMessages = history.slice(-4).filter(msg => msg.role === 'user').map(msg => msg.content.toLowerCase());
   const hasDiscussedWeightLoss = previousTopics.some(topic => topic.includes('weight loss') || topic.includes('lose weight'));
   const hasDiscussedMuscle = previousTopics.some(topic => topic.includes('muscle') || topic.includes('protein'));
   const hasDiscussedSupplements = previousTopics.some(topic => topic.includes('supplement') || topic.includes('vitamin'));
+  const hasDiscussedMealPlan = previousTopics.some(topic => topic.includes('meal') || topic.includes('plan') || topic.includes('diet'));
+  
+  // Check if user seems confused or needs different approach
+  const seemsConfused = recentUserMessages.some(msg => 
+    msg.includes('don\'t understand') || msg.includes('confused') || msg.includes('what') || msg.includes('unclear')
+  );
+  
+  // Check for urgency or specific needs
+  const isUrgent = message.includes('urgent') || message.includes('help') || message.includes('problem');
+  const needsSimple = message.includes('simple') || message.includes('easy') || message.includes('basic');
+  
+  // Current time for time-based responses
+  const currentHour = new Date().getHours();
+  const isEarlyMorning = currentHour < 7;
+  const isMealTime = (currentHour >= 7 && currentHour <= 9) || (currentHour >= 12 && currentHour <= 14) || (currentHour >= 18 && currentHour <= 20);
   
   // Enhanced rule-based responses with comprehensive nutrition knowledge
   
   if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-    if (userContext) {
-      const planInfo = userContext.enrolledPlan 
-        ? ` I can see you're enrolled in our ${userContext.enrolledPlan.name} plan - that's great!`
-        : ' Have you considered enrolling in one of our personalized diet plans?';
-      return `${greeting}I'm NutrisapBot, your personal nutrition assistant from NutriSap.${planInfo} How can I help with your nutrition journey today?`;
+    let response = greeting;
+    
+    // Time-based greeting
+    if (isEarlyMorning) {
+      response += "Good early morning! Starting your day with nutrition planning?";
+    } else if (isMealTime) {
+      response += "Perfect timing! Planning a nutritious meal?";
+    } else {
+      response += "I'm NutrisapBot, your nutrition assistant from NutriSap.";
     }
-    return "Hello! I'm NutrisapBot, your nutrition assistant from NutriSap. I'm here to help with meal planning, nutrition advice, and healthy eating tips. Consider signing up for personalized diet plans! What can I help you with today?";
+    
+    if (userContext) {
+      if (userContext.enrolledPlan) {
+        response += ` I see you're on our ${userContext.enrolledPlan.name} plan - excellent choice!`;
+        if (isMealTime) {
+          response += ` Ready to explore some meal options from your plan?`;
+        }
+      } else {
+        response += ' Have you considered one of our personalized diet plans? They can really help streamline your nutrition goals.';
+      }
+      
+      // Add context based on previous conversations
+      if (hasDiscussedWeightLoss) {
+        response += " Ready to continue working on those weight loss goals?";
+      } else if (hasDiscussedMuscle) {
+        response += " Shall we dive deeper into your muscle-building nutrition?";
+      } else if (hasDiscussedMealPlan) {
+        response += " Want to explore more meal planning strategies?";
+      } else {
+        response += " How can I help with your nutrition journey today?";
+      }
+    } else {
+      response += " I'm here to help with meal planning, nutrition advice, and healthy eating tips. Consider signing up for personalized diet plans! What nutrition topic interests you?";
+    }
+    
+    return response;
   }
   
   if (message.includes('meal plan') || message.includes('diet plan')) {
@@ -1147,10 +1222,124 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
     return `You're welcome${userName ? `, ${userName}` : ''}! I'm here whenever you need nutrition advice or healthy eating tips. Remember, small consistent changes lead to big results. Keep up the great work on your health journey! 🌟`;
   }
   
-  // Default response with comprehensive nutrition topics
+  // Enhanced contextual default response
+  return generateContextualDefaultResponse(message, userContext, history, {
+    hasDiscussedWeightLoss,
+    hasDiscussedMuscle, 
+    hasDiscussedSupplements,
+    hasDiscussedMealPlan,
+    seemsConfused,
+    isUrgent,
+    needsSimple,
+    isMealTime,
+    greeting
+  });
+}
+
+function generateContextualDefaultResponse(
+  message: string,
+  userContext: UserContext | null,
+  history: ChatMessage[],
+  context: {
+    hasDiscussedWeightLoss: boolean;
+    hasDiscussedMuscle: boolean;
+    hasDiscussedSupplements: boolean;
+    hasDiscussedMealPlan: boolean;
+    seemsConfused: boolean;
+    isUrgent: boolean;
+    needsSimple: boolean;
+    isMealTime: boolean;
+    greeting: string;
+  }
+): string {
+  const { 
+    hasDiscussedWeightLoss, hasDiscussedMuscle, hasDiscussedSupplements, 
+    hasDiscussedMealPlan, seemsConfused, isUrgent, needsSimple, isMealTime, greeting 
+  } = context;
+
+  // Handle confused users with simpler approach
+  if (seemsConfused || needsSimple) {
+    return `${greeting}I can see you might want a simpler approach! Let me help you step by step. Here are some easy ways to get started:\n\n🍎 **Simple Questions You Can Ask:**\n• "What should I eat for breakfast?"\n• "How much water should I drink?"\n• "What are healthy snacks?"\n• "How can I eat more vegetables?"\n\n💡 Try asking one specific question at a time, and I'll give you clear, easy-to-follow advice!`;
+  }
+
+  // Handle urgent requests
+  if (isUrgent) {
+    let response = `${greeting}I'm here to help right away! For urgent health concerns, please consult a healthcare professional immediately.\n\n`;
+    response += `For **nutrition emergencies** I can help with:\n• Food safety questions\n• Dietary restrictions guidance\n• Quick meal solutions\n• Emergency meal planning\n\nWhat specific nutrition help do you need right now?`;
+    return response;
+  }
+
+  let response = greeting;
+  
+  // Contextual opening based on conversation history
+  if (hasDiscussedWeightLoss && hasDiscussedMealPlan) {
+    response += "It looks like you're really focused on weight loss and meal planning - that's fantastic! ";
+  } else if (hasDiscussedMuscle && hasDiscussedSupplements) {
+    response += "I can see you're serious about muscle building and nutrition optimization - great approach! ";
+  } else if (hasDiscussedMealPlan) {
+    response += "I love that you're thinking about meal planning - it's one of the best ways to improve nutrition! ";
+  } else if (history.length > 5) {
+    response += "We've been having a great conversation about nutrition! ";
+  } else {
+    response += "I'm excited to help you with your nutrition questions! ";
+  }
+
+  // Time-based suggestions
+  if (isMealTime) {
+    response += "Since it's meal time, would you like some quick meal ideas or recipe suggestions? ";
+  }
+
+  // Personalized suggestions based on user context
   if (userContext) {
-    return `${greeting}I'm here to help with your nutrition journey! You can ask me about:\n\n**Personal Guidance:**\n• Your current meal plan and recommendations\n• BMI calculation and weight management tips\n• Your profile and calculated nutrition needs\n\n**Nutrition Topics:**\n• Macronutrients (protein, carbs, fats)\n• Vitamins, minerals, and supplements\n• Meal prep and planning strategies\n• Specific diets (keto, intermittent fasting, etc.)\n• Health conditions (diabetes, heart health)\n• Hydration and gut health\n\n**Tools & Calculators:**\n• BMI calculator with personalized recommendations\n• Calorie and macro guidance\n\nWhat specific nutrition question can I help you with today?`;
+    response += `\n\n**Personalized Options for You:**\n`;
+    
+    if (userContext.enrolledPlan) {
+      response += `• Explore your ${userContext.enrolledPlan.name} meal options\n`;
+      response += `• Get recipes from your plan\n`;
+      response += `• Track your progress\n`;
+    } else {
+      response += `• Get a personalized diet plan recommendation\n`;
+      response += `• Calculate your BMI and nutritional needs\n`;
+      response += `• Learn about meal plans that fit your goals\n`;
+    }
+
+    if (userContext.goals && userContext.goals.length > 0) {
+      const goalTypes = userContext.goals.map(g => g.type).join(', ');
+      response += `• Nutrition advice for your ${goalTypes} goals\n`;
+    }
+  }
+
+  // Smart topic suggestions based on conversation history
+  response += `\n**Popular Topics to Explore:**\n`;
+  
+  if (!hasDiscussedWeightLoss) {
+    response += `• Weight management strategies\n`;
+  }
+  if (!hasDiscussedMuscle) {
+    response += `• Muscle building nutrition\n`;
+  }
+  if (!hasDiscussedMealPlan) {
+    response += `• Meal planning and prep tips\n`;
+  }
+  if (!hasDiscussedSupplements) {
+    response += `• Vitamins and supplements guidance\n`;
   }
   
-  return "I'm here to help with ANY nutrition question! You can ask me about:\n\n**General Nutrition:**\n• Meal planning, prep, and recipes\n• Weight management strategies\n• Macronutrients and micronutrients\n• Vitamins, minerals, and supplements\n\n**Tools & Calculators:**\n• BMI calculator with health recommendations\n• Nutrition guidance based on your measurements\n\n**Specific Topics:**\n• Different diet approaches (keto, IF, Mediterranean)\n• Health conditions and nutrition (diabetes, heart health)\n• Hydration, fiber, and digestive health\n• Food safety and cooking techniques\n\n**Try asking:**\n• \"Calculate my BMI for 70kg and 175cm\"\n• \"What's my BMI if I weigh 150 lbs and I'm 5'8\\\"?\"\n\n**Personalized Help:**\n💡 Sign up for NutriSap to get customized meal plans and advice based on your specific goals, preferences, and health profile!\n\nWhat nutrition question can I answer for you today?";
+  response += `• BMI calculator and health insights\n`;
+  response += `• Specific diet approaches (keto, Mediterranean, etc.)\n`;
+
+  // Conversation starters
+  response += `\n**Easy Ways to Get Started:**\n`;
+  response += `• "Help me plan healthy meals"\n`;
+  response += `• "What should I know about protein?"\n`;
+  response += `• "Calculate my BMI"\n`;
+  response += `• "I want to lose weight naturally"\n`;
+
+  if (!userContext) {
+    response += `\n💡 **Pro Tip:** Sign up for NutriSap to get personalized meal plans and save your preferences!`;
+  }
+
+  response += `\n\nWhat nutrition topic would you like to explore together?`;
+
+  return response;
 }
