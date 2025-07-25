@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { verifyJWT } from '@/lib/jwt';
+import { verifyAdminToken } from '@/lib/adminAuth';
 import { neuralNetworkManager } from '@/lib/neuralNetwork/neuralNetworkManager';
 import { logError } from '@/lib/logger';
 
@@ -17,17 +16,7 @@ async function ensureInitialized() {
 export async function GET(request: NextRequest) {
   try {
     // Verify admin authentication
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { payload } = await verifyJWT(token);
-    if (payload.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    await verifyAdminToken(request);
 
     await ensureInitialized();
 
@@ -65,6 +54,12 @@ export async function GET(request: NextRequest) {
     }
   } catch (error) {
     logError('Neural network API GET', error);
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('authentication')) {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+    
     return NextResponse.json(
       { error: 'Failed to get neural network information' },
       { status: 500 }
@@ -75,17 +70,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Verify admin authentication
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { payload } = await verifyJWT(token);
-    if (payload.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    await verifyAdminToken(request);
 
     await ensureInitialized();
 
@@ -173,6 +158,12 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     logError('Neural network API POST', error);
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('authentication')) {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+    
     return NextResponse.json(
       { error: 'Failed to perform neural network operation' },
       { status: 500 }
