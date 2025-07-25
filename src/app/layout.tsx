@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import { AuthProvider } from "@/contexts/AuthContext";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import { ErrorBoundaryWrapper } from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,24 +32,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
       >
-        <ErrorBoundary>
+        <ErrorBoundaryWrapper>
           <AuthProvider>
-            <ErrorBoundary name="Header">
+            <ErrorBoundaryWrapper name="Header">
               <Header />
-            </ErrorBoundary>
+            </ErrorBoundaryWrapper>
             <main className="pt-16 min-h-screen bg-white dark:bg-gray-900">
-              <ErrorBoundary name="Page Content">
+              <ErrorBoundaryWrapper name="Page Content">
                 {children}
-              </ErrorBoundary>
+              </ErrorBoundaryWrapper>
             </main>
-            <ErrorBoundary name="Footer">
+            <ErrorBoundaryWrapper name="Footer">
               <Footer />
-            </ErrorBoundary>
-            <ErrorBoundary name="Chatbot">
+            </ErrorBoundaryWrapper>
+            <ErrorBoundaryWrapper name="Chatbot">
               <Chatbot />
-            </ErrorBoundary>
+            </ErrorBoundaryWrapper>
           </AuthProvider>
-        </ErrorBoundary>
+        </ErrorBoundaryWrapper>
       </body>
     </html>
   );
