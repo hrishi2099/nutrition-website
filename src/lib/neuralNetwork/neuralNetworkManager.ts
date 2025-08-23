@@ -242,7 +242,7 @@ export class NeuralNetworkManager {
         data: {
           intentId,
           userInput,
-          keywords: simpleTextProcessor.processText(userInput).stems,
+          keywords: JSON.stringify(simpleTextProcessor.processText(userInput).stems),
           confidence: 1.0,
           isActive: true
         }

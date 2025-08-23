@@ -51,7 +51,20 @@ export default function TeamManagementPage() {
       }
 
       const data = await response.json();
-      setTeamMembers(data.teamMembers || []);
+      const teamMembers = data.teamMembers || [];
+      if (teamMembers) {
+        teamMembers.forEach((member: any) => {
+          if (typeof member.specialties === 'string') {
+            try {
+              member.specialties = JSON.parse(member.specialties);
+            } catch (e) {
+              console.error("Failed to parse specialties", e);
+              member.specialties = [];
+            }
+          }
+        });
+      }
+      setTeamMembers(teamMembers);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load team members');
     } finally {
@@ -128,12 +141,22 @@ export default function TeamManagementPage() {
 
       const data = await response.json();
       
+      const updatedMember = data.teamMember;
+      if (updatedMember && typeof updatedMember.specialties === 'string') {
+        try {
+          updatedMember.specialties = JSON.parse(updatedMember.specialties);
+        } catch (e) {
+          console.error("Failed to parse specialties", e);
+          updatedMember.specialties = [];
+        }
+      }
+
       if (editingMember) {
         setTeamMembers(teamMembers.map(member => 
-          member.id === editingMember.id ? data.teamMember : member
+          member.id === editingMember.id ? updatedMember : member
         ));
       } else {
-        setTeamMembers([...teamMembers, data.teamMember]);
+        setTeamMembers([...teamMembers, updatedMember]);
       }
 
       setShowCreateModal(false);
@@ -160,8 +183,17 @@ export default function TeamManagementPage() {
       }
 
       const data = await response.json();
+      const updatedMember = data.teamMember;
+      if (updatedMember && typeof updatedMember.specialties === 'string') {
+        try {
+          updatedMember.specialties = JSON.parse(updatedMember.specialties);
+        } catch (e) {
+          console.error("Failed to parse specialties", e);
+          updatedMember.specialties = [];
+        }
+      }
       setTeamMembers(teamMembers.map(member => 
-        member.id === memberId ? data.teamMember : member
+        member.id === memberId ? updatedMember : member
       ));
     } catch (err) {
       alert('Failed to update team member status: ' + (err instanceof Error ? err.message : 'Unknown error'));

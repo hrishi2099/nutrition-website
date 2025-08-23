@@ -55,9 +55,14 @@ export async function GET(
       return NextResponse.json({ error: 'Example not found' }, { status: 404 });
     }
 
+    const parsedExample = {
+      ...example,
+      keywords: typeof example.keywords === 'string' ? JSON.parse(example.keywords) : example.keywords,
+    };
+
     return NextResponse.json({
       success: true,
-      example
+      example: parsedExample,
     });
   } catch (error) {
     console.error('Error fetching training example:', error);
@@ -85,6 +90,7 @@ export async function PATCH(
       where: { id },
       data: {
         ...body,
+        keywords: body.keywords ? JSON.stringify(body.keywords) : undefined,
         updatedAt: new Date()
       }
     });

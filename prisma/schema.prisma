@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -216,7 +216,7 @@ model NutritionFact {
   category    String   // e.g., "weight_loss", "muscle_gain", "general", "supplements"
   title       String
   content     String
-  tags        String[] // Keywords for matching
+  tags        String @db.Text // Keywords for matching
   difficulty  String   @default("beginner") // beginner, intermediate, advanced
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -241,7 +241,7 @@ model FoodDatabase {
   iron            Float?  // mg per 100g
   isOrganic       Boolean @default(false)
   commonServing   String? // e.g., "1 medium apple (182g)"
-  tags            String[] // e.g., ["low_calorie", "high_protein", "vegetarian"]
+  tags            String @db.Text // e.g., ["low_calorie", "high_protein", "vegetarian"]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -261,10 +261,10 @@ model RecipeRecommendation {
   protein         Float    // grams per serving
   carbs           Float    // grams per serving
   fat             Float    // grams per serving
-  ingredients     String[] // List of ingredients
+  ingredients     String @db.Text // List of ingredients
   instructions    String   // Step by step instructions
-  dietaryTags     String[] // vegetarian, vegan, gluten_free, dairy_free, etc.
-  goalTags        String[] // weight_loss, muscle_gain, heart_healthy, etc.
+  dietaryTags     String @db.Text // vegetarian, vegan, gluten_free, dairy_free, etc.
+  goalTags        String @db.Text // weight_loss, muscle_gain, heart_healthy, etc.
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -327,7 +327,7 @@ model TrainingExample {
   intentId    String
   intent      TrainingIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
   userInput   String         // Example user question/statement
-  keywords    String[]       // Extracted keywords for matching
+  keywords    String @db.Text       // Extracted keywords for matching
   confidence  Float          @default(1.0) // How confident this example represents the intent
   isActive    Boolean        @default(true)
   createdAt   DateTime       @default(now())
@@ -357,7 +357,7 @@ model ChatbotKnowledge {
   title       String
   content     String
   category    String?  // e.g., "nutrition_facts", "recipes", "tips"
-  tags        String[] // For keyword matching
+  tags        String @db.Text // For keyword matching
   source      String?  // Where this knowledge came from
   confidence  Float    @default(1.0)
   isActive    Boolean  @default(true)
@@ -409,7 +409,7 @@ model TeamMember {
   email       String?
   linkedIn    String?
   twitter     String?
-  specialties String[] // Areas of expertise
+  specialties String @db.Text // Areas of expertise
   isActive    Boolean  @default(true)
   displayOrder Int     @default(0) // For controlling display order
   createdAt   DateTime @default(now())

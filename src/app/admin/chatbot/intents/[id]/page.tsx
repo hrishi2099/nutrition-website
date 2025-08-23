@@ -73,7 +73,14 @@ export default function IntentDetailPage() {
       }
 
       const data = await response.json();
-      setIntent(data.intent);
+      const intent = data.intent;
+      if (intent && intent.examples) {
+        intent.examples = intent.examples.map((ex: any) => ({
+          ...ex,
+          keywords: typeof ex.keywords === 'string' ? JSON.parse(ex.keywords) : ex.keywords,
+        }));
+      }
+      setIntent(intent);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load intent details');
     } finally {
@@ -102,9 +109,18 @@ export default function IntentDetailPage() {
       }
 
       const data = await response.json();
+      const newExample = data.example;
+      if (newExample && typeof newExample.keywords === 'string') {
+        try {
+          newExample.keywords = JSON.parse(newExample.keywords);
+        } catch (e) {
+          console.error("Failed to parse keywords", e);
+          newExample.keywords = [];
+        }
+      }
       setIntent(prev => prev ? {
         ...prev,
-        examples: [data.example, ...prev.examples]
+        examples: [newExample, ...prev.examples]
       } : null);
       
       setShowExampleModal(false);

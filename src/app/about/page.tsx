@@ -26,7 +26,20 @@ export default function About() {
         const response = await fetch('/api/team');
         if (response.ok) {
           const data = await response.json();
-          setTeamMembers(data.teamMembers || []);
+          const teamMembers = data.teamMembers || [];
+          if (teamMembers) {
+            teamMembers.forEach((member: any) => {
+              if (typeof member.specialties === 'string') {
+                try {
+                  member.specialties = JSON.parse(member.specialties);
+                } catch (e) {
+                  console.error("Failed to parse specialties", e);
+                  member.specialties = [];
+                }
+              }
+            });
+          }
+          setTeamMembers(teamMembers);
         }
       } catch (error) {
         console.error('Failed to fetch team members:', error);

@@ -176,19 +176,26 @@ async function seedNutritionData() {
 
     // Insert nutrition facts
     for (const fact of nutritionFacts) {
-      await prisma.nutritionFact.create({ data: fact });
+      await prisma.nutritionFact.create({ data: { ...fact, tags: JSON.stringify(fact.tags) } });
     }
     console.log(`✅ Created ${nutritionFacts.length} nutrition facts`);
 
     // Insert foods
     for (const food of foods) {
-      await prisma.foodDatabase.create({ data: food });
+      await prisma.foodDatabase.create({ data: { ...food, tags: JSON.stringify(food.tags) } });
     }
     console.log(`✅ Created ${foods.length} food entries`);
 
     // Insert recipes
     for (const recipe of recipes) {
-      await prisma.recipeRecommendation.create({ data: recipe });
+      await prisma.recipeRecommendation.create({ 
+        data: { 
+          ...recipe, 
+          ingredients: JSON.stringify(recipe.ingredients),
+          dietaryTags: JSON.stringify(recipe.dietaryTags),
+          goalTags: JSON.stringify(recipe.goalTags),
+        }
+      });
     }
     console.log(`✅ Created ${recipes.length} recipe recommendations`);
 

@@ -630,7 +630,7 @@ async function queryNutritionKnowledge(message: string, userContext: UserContext
       where: {
         isActive: true,
         OR: [
-          { tags: { hasSome: keywords } },
+          ...keywords.map(keyword => ({ tags: { contains: keyword } })),
           { title: { contains: message.toLowerCase() } },
           { content: { contains: message.toLowerCase() } }
         ]
@@ -652,7 +652,7 @@ async function queryNutritionKnowledge(message: string, userContext: UserContext
         where: {
           OR: [
             { name: { contains: message.toLowerCase() } },
-            { tags: { hasSome: keywords } }
+            ...keywords.map(keyword => ({ tags: { contains: keyword } }))
           ]
         },
         take: 2,
@@ -677,8 +677,8 @@ async function queryNutritionKnowledge(message: string, userContext: UserContext
           isActive: true,
           OR: [
             { name: { contains: message.toLowerCase() } },
-            { dietaryTags: { hasSome: keywords } },
-            { goalTags: { hasSome: goalTags } }
+            ...keywords.map(keyword => ({ dietaryTags: { contains: keyword } })),
+            ...goalTags.map(goalTag => ({ goalTags: { contains: goalTag } }))
           ]
         },
         take: 2,

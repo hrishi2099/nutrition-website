@@ -58,9 +58,17 @@ class TrainingDataMatcher {
       orderBy: { priority: 'desc' }
     });
 
-    this.cachedIntents = intents;
+    const parsedIntents = intents.map(intent => ({
+      ...intent,
+      examples: intent.examples.map(example => ({
+        ...example,
+        keywords: typeof example.keywords === 'string' ? JSON.parse(example.keywords) : example.keywords,
+      })),
+    }));
+
+    this.cachedIntents = parsedIntents;
     this.lastCacheUpdate = now;
-    return intents;
+    return parsedIntents;
   }
 
   private normalizeText(text: string): string {

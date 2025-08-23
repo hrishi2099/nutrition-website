@@ -81,7 +81,7 @@ export async function POST(
     const example = await prisma.trainingExample.create({
       data: {
         userInput: userInput.trim(),
-        keywords,
+        keywords: JSON.stringify(keywords),
         confidence: confidence || 1.0,
         intentId
       }

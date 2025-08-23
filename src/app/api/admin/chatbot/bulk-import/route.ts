@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
                   data: {
                     intentId: createdIntent.id,
                     userInput: example.userInput,
-                    keywords: keywords,
+                    keywords: JSON.stringify(keywords),
                     confidence: example.confidence || 1.0,
                     isActive: true
                   }
