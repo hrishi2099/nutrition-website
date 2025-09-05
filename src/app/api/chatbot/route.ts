@@ -1056,23 +1056,12 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
   const needsSimple = message.includes('simple') || message.includes('easy') || message.includes('basic');
   
   // Current time for time-based responses
-  const currentHour = new Date().getHours();
-  const isEarlyMorning = currentHour < 7;
-  const isMealTime = (currentHour >= 7 && currentHour <= 9) || (currentHour >= 12 && currentHour <= 14) || (currentHour >= 18 && currentHour <= 20);
+  
   
   // Enhanced rule-based responses with comprehensive nutrition knowledge
   
   if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-    let response = greeting;
-    
-    // Time-based greeting
-    if (isEarlyMorning) {
-      response += "Good early morning! Starting your day with nutrition planning?";
-    } else if (isMealTime) {
-      response += "Perfect timing! Planning a nutritious meal?";
-    } else {
-      response += "I'm NutrisapBot, your nutrition assistant from NutriSap.";
-    }
+    let response = greeting + "I'm NutrisapBot, your nutrition assistant from NutriSap.";
     
     if (userContext) {
       if (userContext.enrolledPlan) {
@@ -1248,13 +1237,12 @@ function generateContextualDefaultResponse(
     seemsConfused: boolean;
     isUrgent: boolean;
     needsSimple: boolean;
-    isMealTime: boolean;
     greeting: string;
   }
 ): string {
   const { 
     hasDiscussedWeightLoss, hasDiscussedMuscle, hasDiscussedSupplements, 
-    hasDiscussedMealPlan, seemsConfused, isUrgent, needsSimple, isMealTime, greeting 
+    hasDiscussedMealPlan, seemsConfused, isUrgent, needsSimple, greeting 
   } = context;
 
   // Handle confused users with simpler approach
@@ -1284,10 +1272,7 @@ function generateContextualDefaultResponse(
     response += "I'm excited to help you with your nutrition questions! ";
   }
 
-  // Time-based suggestions
-  if (isMealTime) {
-    response += "Since it's meal time, would you like some quick meal ideas or recipe suggestions? ";
-  }
+  
 
   // Personalized suggestions based on user context
   if (userContext) {
