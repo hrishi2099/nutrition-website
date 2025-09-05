@@ -11,7 +11,7 @@ const sampleDietPlans = [
     duration: 12,
     calories: 1500,
     mealsPerDay: 4,
-    price: 89,
+    price: 7000,
     isActive: true,
     meals: []
   },
@@ -23,7 +23,7 @@ const sampleDietPlans = [
     duration: 16,
     calories: 2200,
     mealsPerDay: 5,
-    price: 109,
+    price: 8500,
     isActive: true,
     meals: []
   },
@@ -35,7 +35,7 @@ const sampleDietPlans = [
     duration: 8,
     calories: 1800,
     mealsPerDay: 3,
-    price: 69,
+    price: 5500,
     isActive: true,
     meals: []
   }

@@ -44,7 +44,7 @@ export default function DietPlansPage() {
     duration: 12,
     calories: 1500,
     mealsPerDay: 3,
-    price: 99,
+    price: 7500,
   });
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function DietPlansPage() {
         duration: 12,
         calories: 1500,
         mealsPerDay: 3,
-        price: 99,
+        price: 7500,
       });
     } catch (err) {
       alert('Failed to create diet plan: ' + (err instanceof Error ? err.message : 'Unknown error'));
@@ -251,7 +251,7 @@ export default function DietPlansPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-500 dark:text-gray-400">Price:</span>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">${plan.price}/month</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">₹{plan.price}/month</span>
                 </div>
               </div>
 
@@ -396,7 +396,7 @@ export default function DietPlansPage() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Price ($)
+                      Price (₹)
                     </label>
                     <input
                       type="number"
@@ -465,7 +465,7 @@ export default function DietPlansPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Price</label>
-                    <p className="text-gray-900 dark:text-white">${selectedPlan.price}/month</p>
+                    <p className="text-gray-900 dark:text-white">₹{selectedPlan.price}/month</p>
                   </div>
                 </div>
 

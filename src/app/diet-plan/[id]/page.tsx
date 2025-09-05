@@ -197,7 +197,7 @@ export default function DietPlanDetails() {
                   <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm sticky top-24">
                     <div className="text-center mb-6">
                       <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                        ${dietPlan.price}
+                        ₹{dietPlan.price}
                       </div>
                       <div className="text-gray-600 dark:text-gray-300">per month</div>
                     </div>
