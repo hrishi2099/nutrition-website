@@ -1218,7 +1218,6 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
     seemsConfused,
     isUrgent,
     needsSimple,
-    isMealTime,
     greeting
   });
 }
