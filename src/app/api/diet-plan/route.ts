@@ -4,6 +4,18 @@ import { prisma } from '@/lib/prisma';
 // Sample diet plans to use as fallback
 const sampleDietPlans = [
   {
+    id: 'sample-4',
+    name: '7-Day Healthy Eating Kickstart',
+    description: 'A one-week introductory plan to help you build healthy eating habits with simple, delicious recipes.',
+    type: 'WELLNESS',
+    duration: 1,
+    calories: 1600,
+    mealsPerDay: 3,
+    price: 0,
+    isActive: true,
+    meals: []
+  },
+  {
     id: 'sample-1',
     name: 'Balanced Weight Loss Plan',
     description: 'A scientifically-designed nutrition plan focused on sustainable weight loss through balanced meals and portion control.',

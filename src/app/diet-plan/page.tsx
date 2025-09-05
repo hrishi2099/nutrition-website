@@ -108,7 +108,8 @@ export default function DietPlan() {
                          plan.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = filterType === 'all' || plan.type.toLowerCase().includes(filterType.toLowerCase());
     const matchesPrice = priceRange === 'all' || 
-                        (priceRange === 'budget' && plan.price < 6000) ||
+                        (priceRange === 'free' && plan.price === 0) ||
+                        (priceRange === 'budget' && plan.price > 0 && plan.price < 6000) ||
                         (priceRange === 'premium' && plan.price >= 6000);
     
     return matchesSearch && matchesType && matchesPrice;
@@ -182,6 +183,7 @@ export default function DietPlan() {
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   >
                     <option value="all">All Prices</option>
+                    <option value="free">Free</option>
                     <option value="budget">Under ₹6000</option>
                     <option value="premium">₹6000+</option>
                   </select>
@@ -275,7 +277,7 @@ export default function DietPlan() {
                 </ul>
                 
                 <div className="text-2xl font-bold text-black dark:text-white mb-4">
-                  ₹{plan.price}/month
+                  {plan.price === 0 ? 'Free' : `₹${plan.price}/month`}
                 </div>
                 
                 <Link href={`/diet-plan/${plan.id}`}>
