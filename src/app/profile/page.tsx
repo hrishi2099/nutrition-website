@@ -259,36 +259,36 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Email
                       </label>
-                      <p className="text-lg text-gray-900">{profile.email}</p>
+                      <p className="text-lg text-gray-900 dark:text-white">{profile.email}</p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Age
                       </label>
-                      <p className="text-lg text-gray-900">
+                      <p className="text-lg text-gray-900 dark:text-white">
                         {profile.age ? `${profile.age} years` : 'Not specified'}
                       </p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Gender
                       </label>
-                      <p className="text-lg text-gray-900">
+                      <p className="text-lg text-gray-900 dark:text-white">
                         {profile.gender || 'Not specified'}
                       </p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Height
                       </label>
                       <div className="flex items-center space-x-3">
-                        <p className="text-lg text-gray-900">
+                        <p className="text-lg text-gray-900 dark:text-white">
                           {profile.height ? formatHeight(profile.height, heightUnit) : 'Not specified'}
                         </p>
                         {profile.height && (
@@ -319,19 +319,19 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Weight
                       </label>
-                      <p className="text-lg text-gray-900">
+                      <p className="text-lg text-gray-900 dark:text-white">
                         {profile.weight ? `${profile.weight} kg` : 'Not specified'}
                       </p>
                     </div>
 
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Activity Level
                       </label>
-                      <p className="text-lg text-gray-900">
+                      <p className="text-lg text-gray-900 dark:text-white">
                         {getActivityLevelDisplay(profile.activityLevel)}
                       </p>
                     </div>
@@ -342,7 +342,7 @@ export default function ProfilePage() {
               {/* Goals Section */}
               <FadeInSection>
                 <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
                     My Goals
                   </h2>
                   {profile.goals.length > 0 ? (
@@ -386,7 +386,7 @@ export default function ProfilePage() {
             <div className="lg:col-span-1">
               <FadeInSection>
                 <div className="bg-white rounded-lg shadow-lg p-6">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
                     My Enrolled Plans
                   </h2>
                   {enrollmentsLoading ? (

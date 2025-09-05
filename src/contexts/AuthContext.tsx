@@ -96,7 +96,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Signup failed');
+        if (response.status === 409) {
+          throw new Error('Email already exists. Please use a different email.');
+        } else if (response.status === 400) {
+          const errorData = await response.json();
+          const messages = errorData.details || ['Signup failed due to invalid data.'];
+          throw new Error(messages.join(', '));
+        } else {
+          throw new Error(data.error || 'Signup failed');
+        }
       }
 
       // After successful signup, log the user in

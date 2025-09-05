@@ -33,6 +33,7 @@ export default function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [signupError, setSignupError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -47,6 +48,9 @@ export default function Signup() {
         ...prev,
         [name]: ''
       }));
+    }
+    if (signupError) {
+      setSignupError('');
     }
   };
 
@@ -86,8 +90,8 @@ export default function Signup() {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.password)) {
+      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character';
     }
 
     // Confirm password validation
@@ -125,7 +129,11 @@ export default function Signup() {
       router.push('/'); // Redirect to home page after successful signup
     } catch (error) {
       console.error('Signup error:', error);
-      alert('Signup failed. Please try again.');
+      if (error instanceof Error) {
+        setSignupError(error.message);
+      } else {
+        setSignupError(String(error));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -197,6 +205,34 @@ export default function Signup() {
           className="mt-8 space-y-6 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg" 
           onSubmit={handleSubmit}
         >
+          {signupError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-md bg-red-50 p-4"
+            >
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg
+                    className="h-5 w-5 text-red-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">{signupError}</h3>
+                </div>
+              </div>
+            </motion.div>
+          )}
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <motion.div
