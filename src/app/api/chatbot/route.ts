@@ -1066,9 +1066,7 @@ async function generateEnhancedNutritionResponse(message: string, userContext: U
     if (userContext) {
       if (userContext.enrolledPlan) {
         response += ` I see you're on our ${userContext.enrolledPlan.name} plan - excellent choice!`;
-        if (isMealTime) {
-          response += ` Ready to explore some meal options from your plan?`;
-        }
+        
       } else {
         response += ' Have you considered one of our personalized diet plans? They can really help streamline your nutrition goals.';
       }
