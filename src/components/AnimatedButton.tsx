@@ -27,8 +27,8 @@ export default function AnimatedButton({
   `;
 
   const variantClasses = {
-    primary: 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 focus:ring-black dark:focus:ring-white',
-    secondary: 'border border-black dark:border-white text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 focus:ring-black dark:focus:ring-white'
+    primary: 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 focus:ring-black dark:focus:ring-white shadow-lg dark:shadow-gray-500/20',
+    secondary: 'border-2 border-black dark:border-white text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 focus:ring-black dark:focus:ring-white shadow-lg dark:shadow-gray-500/20'
   };
 
   return (

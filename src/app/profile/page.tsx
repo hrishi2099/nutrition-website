@@ -354,21 +354,21 @@ export default function ProfilePage() {
                         >
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="text-lg font-medium text-gray-900">
+                              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                                 {getGoalTypeDisplay(goal.type)}
                               </h3>
                               {goal.target && (
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 dark:text-gray-300">
                                   Target: {goal.target} kg
                                 </p>
                               )}
                               {goal.deadline && (
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 dark:text-gray-300">
                                   Deadline: {new Date(goal.deadline).toLocaleDateString()}
                                 </p>
                               )}
                             </div>
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
                               Created: {new Date(goal.createdAt).toLocaleDateString()}
                             </span>
                           </div>
@@ -376,7 +376,7 @@ export default function ProfilePage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-600">No goals set yet.</p>
+                    <p className="text-gray-600 dark:text-gray-300">No goals set yet.</p>
                   )}
                 </div>
               </FadeInSection>
@@ -401,30 +401,30 @@ export default function ProfilePage() {
                           className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
                         >
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="text-lg font-medium text-gray-900">
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                               {plan.name}
                             </h3>
-                            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                            <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
                               Active
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mb-3">
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                             {plan.description}
                           </p>
                           <div className="space-y-1 text-sm mb-4">
-                            <p className="text-gray-700">
+                            <p className="text-gray-700 dark:text-gray-300">
                               <span className="font-medium">Type:</span> {getPlanTypeDisplay(plan.type)}
                             </p>
-                            <p className="text-gray-700">
+                            <p className="text-gray-700 dark:text-gray-300">
                               <span className="font-medium">Duration:</span> {plan.duration} weeks
                             </p>
-                            <p className="text-gray-700">
+                            <p className="text-gray-700 dark:text-gray-300">
                               <span className="font-medium">Calories:</span> {plan.calories}/day
                             </p>
-                            <p className="text-gray-700">
+                            <p className="text-gray-700 dark:text-gray-300">
                               <span className="font-medium">Meals:</span> {plan.mealsPerDay}/day
                             </p>
-                            <p className="text-gray-700">
+                            <p className="text-gray-700 dark:text-gray-300">
                               <span className="font-medium">Price:</span> ${plan.price}/month
                             </p>
                           </div>
@@ -447,7 +447,7 @@ export default function ProfilePage() {
                     </div>
                   ) : (
                     <div className="text-center">
-                      <p className="text-gray-600 mb-4">No enrolled plans yet.</p>
+                      <p className="text-gray-600 dark:text-gray-300 mb-4">No enrolled plans yet.</p>
                       <AnimatedButton
                         onClick={() => router.push('/diet-plan')}
                         className="bg-green-600 hover:bg-green-700"

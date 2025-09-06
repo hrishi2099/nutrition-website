@@ -77,61 +77,61 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
                 Start Your Wellness Journey Today
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
                 Whether you&apos;re looking to lose weight, gain muscle, manage a health condition, 
                 or simply eat better, our comprehensive approach will guide you every step of the way.
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
-                  <span className="text-black mr-2">✓</span>
-                  Customized meal plans and recipes
+                  <span className="text-black dark:text-white mr-2">✓</span>
+                  <span className="text-gray-900 dark:text-white">Customized meal plans and recipes</span>
                 </li>
                 <li className="flex items-center">
-                  <span className="text-black mr-2">✓</span>
-                  Nutritional education and support
+                  <span className="text-black dark:text-white mr-2">✓</span>
+                  <span className="text-gray-900 dark:text-white">Nutritional education and support</span>
                 </li>
                 <li className="flex items-center">
-                  <span className="text-black mr-2">✓</span>
-                  Regular progress monitoring
+                  <span className="text-black dark:text-white mr-2">✓</span>
+                  <span className="text-gray-900 dark:text-white">Regular progress monitoring</span>
                 </li>
                 <li className="flex items-center">
-                  <span className="text-black mr-2">✓</span>
-                  24/7 access to our nutrition platform
+                  <span className="text-black dark:text-white mr-2">✓</span>
+                  <span className="text-gray-900 dark:text-white">24/7 access to our nutrition platform</span>
                 </li>
               </ul>
               <Link
                 href="/contact"
-                className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors inline-block"
+                className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors inline-block"
               >
                 Get Started Now
               </Link>
             </div>
             
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Ready to Begin?</h3>
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Ready to Begin?</h3>
               <div className="space-y-4">
-                <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <span className="text-2xl mr-4">1️⃣</span>
                   <div>
-                    <h4 className="font-semibold">Free Consultation</h4>
-                    <p className="text-gray-600">Schedule your initial assessment</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white">Free Consultation</h4>
+                    <p className="text-gray-600 dark:text-gray-300">Schedule your initial assessment</p>
                   </div>
                 </div>
-                <div className="flex items-center p-4 bg-gray-100 rounded-lg">
+                <div className="flex items-center p-4 bg-gray-100 dark:bg-gray-600 rounded-lg">
                   <span className="text-2xl mr-4">2️⃣</span>
                   <div>
-                    <h4 className="font-semibold">Custom Plan</h4>
-                    <p className="text-gray-600">Receive your personalized nutrition plan</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white">Custom Plan</h4>
+                    <p className="text-gray-600 dark:text-gray-300">Receive your personalized nutrition plan</p>
                   </div>
                 </div>
-                <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <span className="text-2xl mr-4">3️⃣</span>
                   <div>
-                    <h4 className="font-semibold">Achieve Goals</h4>
-                    <p className="text-gray-600">Transform your health with ongoing support</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white">Achieve Goals</h4>
+                    <p className="text-gray-600 dark:text-gray-300">Transform your health with ongoing support</p>
                   </div>
                 </div>
               </div>

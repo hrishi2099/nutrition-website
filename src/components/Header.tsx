@@ -35,7 +35,9 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <img src="/logo.svg" alt="NutriSap Logo" className="h-10" />
+              <div className="h-10 w-32 flex items-center justify-center bg-gradient-to-r from-green-600 to-blue-600 dark:from-green-400 dark:to-blue-400 rounded-lg">
+                <span className="text-white dark:text-gray-900 font-bold text-xl">NutriSap</span>
+              </div>
             </Link>
           </div>
           
