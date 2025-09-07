@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+
 import PageTransition from '@/components/PageTransition';
 import FadeInSection from '@/components/FadeInSection';
 import AnimatedButton from '@/components/AnimatedButton';
 import { useCart } from '@/contexts/CartContext';
 import { Product } from '@/types/product';
-import { ArrowLeft, Star, Truck, Shield, RotateCcw, Heart, Share2 } from 'lucide-react';
+import { ArrowLeft, Truck, Shield, RotateCcw, Heart, Share2 } from 'lucide-react';
 
 // Sample product data - in a real app, this would come from an API
 const sampleProducts: Product[] = [
@@ -17,8 +17,8 @@ const sampleProducts: Product[] = [
     id: '1',
     name: 'Premium Whey Protein Powder',
     description: 'High-quality whey protein isolate for muscle building and recovery. This premium formula contains 25g of protein per serving with minimal carbs and fat, making it perfect for post-workout recovery and muscle building goals.',
-    price: 4999,
-    originalPrice: 5999,
+    price: 499900,
+    originalPrice: 599900,
     image: '/api/placeholder/600/600',
     images: ['/api/placeholder/600/600', '/api/placeholder/600/600', '/api/placeholder/600/600'],
     category: {
@@ -89,9 +89,9 @@ export default function ProductDetailPage() {
   }, [params.id]);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
     }).format(price / 100);
   };
 
@@ -123,7 +123,7 @@ export default function ProductDetailPage() {
   };
 
   const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= product?.stockQuantity!) {
+    if (newQuantity >= 1 && newQuantity <= (product?.stockQuantity ?? 0)) {
       setQuantity(newQuantity);
     }
   };
@@ -137,7 +137,7 @@ export default function ProductDetailPage() {
               Product not found
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              The product you're looking for doesn't exist.
+              The product you&apos;re looking for doesn&apos;t exist.
             </p>
             <AnimatedButton onClick={() => router.push('/products')}>
               Back to Products

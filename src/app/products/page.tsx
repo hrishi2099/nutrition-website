@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+
 import PageTransition from '@/components/PageTransition';
 import FadeInSection from '@/components/FadeInSection';
 import ProductCard from '@/components/ProductCard';
 import Cart from '@/components/Cart';
 import { Product, ProductCategory, ProductFilter, ProductSort } from '@/types/product';
-import { Search, Filter, SortAsc, Grid, List, X } from 'lucide-react';
+import { Search, SortAsc, Grid, List } from 'lucide-react';
 
 // Sample data - in a real app, this would come from an API
 const sampleCategories: ProductCategory[] = [
@@ -53,8 +53,8 @@ const sampleProducts: Product[] = [
     id: '1',
     name: 'Premium Whey Protein Powder',
     description: 'High-quality whey protein isolate for muscle building and recovery',
-    price: 4999,
-    originalPrice: 5999,
+    price: 499900,
+    originalPrice: 599900,
     image: '/api/placeholder/400/400',
     category: sampleCategories[1],
     brand: 'NutriBrand',
@@ -94,7 +94,7 @@ const sampleProducts: Product[] = [
     id: '2',
     name: 'Organic Spirulina Powder',
     description: 'Pure organic spirulina powder rich in protein and nutrients',
-    price: 2999,
+    price: 299900,
     image: '/api/placeholder/400/400',
     category: sampleCategories[2],
     brand: 'NutriBrand',
@@ -123,7 +123,7 @@ const sampleProducts: Product[] = [
     id: '3',
     name: 'Multivitamin Complex',
     description: 'Complete multivitamin with essential vitamins and minerals',
-    price: 1999,
+    price: 199900,
     image: '/api/placeholder/400/400',
     category: sampleCategories[0],
     brand: 'NutriBrand',
@@ -152,7 +152,7 @@ const sampleProducts: Product[] = [
     id: '4',
     name: 'Plant-Based Protein Bar',
     description: 'Delicious plant-based protein bar with natural ingredients',
-    price: 399,
+    price: 39900,
     image: '/api/placeholder/400/400',
     category: sampleCategories[1],
     brand: 'NutriBrand',
@@ -181,7 +181,7 @@ const sampleProducts: Product[] = [
     id: '5',
     name: 'Omega-3 Fish Oil',
     description: 'High-potency omega-3 fish oil for heart and brain health',
-    price: 2499,
+    price: 249900,
     image: '/api/placeholder/400/400',
     category: sampleCategories[0],
     brand: 'NutriBrand',
@@ -210,7 +210,7 @@ const sampleProducts: Product[] = [
     id: '6',
     name: 'Green Tea Extract',
     description: 'Pure green tea extract with antioxidants and metabolism support',
-    price: 1599,
+    price: 159900,
     image: '/api/placeholder/400/400',
     category: sampleCategories[4],
     brand: 'NutriBrand',
@@ -238,12 +238,12 @@ const sampleProducts: Product[] = [
 ];
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(sampleProducts);
+  const [products] = useState<Product[]>(sampleProducts);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(sampleProducts);
   const [categories] = useState<ProductCategory[]>(sampleCategories);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [showFilters, setShowFilters] = useState(false);
+  
   
   const [filters, setFilters] = useState<ProductFilter>({
     category: undefined,
@@ -294,7 +294,7 @@ export default function ProductsPage() {
 
     // Apply sorting
     filtered.sort((a, b) => {
-      let aValue: any, bValue: any;
+      let aValue: string | number, bValue: string | number;
       
       switch (sorting.field) {
         case 'name':
