@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface ContactInfo {
   companyName: string;
@@ -53,7 +54,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-2xl font-bold text-white dark:text-gray-100 mb-4">
-              {contactInfo?.companyName || 'NutriSap'}
+              {contactInfo?.companyName ? (
+                contactInfo.companyName
+              ) : (
+                <span className="inline-block">
+                  <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} className="dark:hidden" />
+                  <Image src="/logoDark.svg" alt="NutriSap Logo" width={128} height={40} className="hidden dark:block" />
+                </span>
+              )}
             </h3>
             <p className="text-gray-300 dark:text-gray-300 mb-4">
               Your trusted partner in achieving optimal health through personalized nutrition and wellness guidance.
@@ -127,7 +135,14 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-gray-800 dark:border-gray-700 mt-8 pt-8 text-center text-gray-300 dark:text-gray-400">
-          <p>&copy; {new Date().getFullYear()} {contactInfo?.companyName || 'NutriSap'}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {contactInfo?.companyName ? (
+                contactInfo.companyName
+              ) : (
+                <span className="inline-block">
+                  <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} className="dark:hidden" />
+                  <Image src="/logoDark.svg" alt="NutriSap Logo" width={128} height={40} className="hidden dark:block" />
+                </span>
+              )}. All rights reserved.</p>
         </div>
       </div>
     </footer>

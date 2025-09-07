@@ -10,6 +10,9 @@ interface DashboardStats {
   totalDietPlans: number;
   totalMeals: number;
   activeEnrollments: number;
+  totalProducts: number;
+  totalOrders: number;
+  totalRevenue: number;
   recentUsers: Array<{
     id: string;
     firstName: string;
@@ -28,6 +31,17 @@ interface DashboardStats {
       name: string;
       price: number;
     };
+    createdAt: string;
+  }>;
+  recentOrders: Array<{
+    id: string;
+    customer: {
+      firstName: string;
+      lastName: string;
+      email: string;
+    };
+    totalAmount: number;
+    status: string;
     createdAt: string;
   }>;
 }
@@ -133,27 +147,27 @@ export default function AdminDashboard() {
             color="blue"
           />
           <StatCard
-            title="Diet Plans"
-            value={stats?.totalDietPlans || 0}
-            icon="🍎"
+            title="Products"
+            value={stats?.totalProducts || 0}
+            icon="🛍️"
             color="green"
           />
           <StatCard
-            title="Total Meals"
-            value={stats?.totalMeals || 0}
-            icon="🍽️"
-            color="yellow"
+            title="Orders"
+            value={stats?.totalOrders || 0}
+            icon="📦"
+            color="purple"
           />
           <StatCard
-            title="Active Enrollments"
-            value={stats?.activeEnrollments || 0}
-            icon="📊"
-            color="purple"
+            title="Revenue"
+            value={stats?.totalRevenue || 0}
+            icon="💰"
+            color="yellow"
           />
         </div>
 
         {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Users */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -182,11 +196,50 @@ export default function AdminDashboard() {
             </div>
           </motion.div>
 
-          {/* Recent Enrollments */}
+          {/* Recent Orders */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+          >
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Orders</h2>
+            <div className="space-y-3">
+              {stats?.recentOrders.map((order) => (
+                <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {order.customer.firstName} {order.customer.lastName}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Order #{order.id}</p>
+                    <p className="text-sm text-green-600 dark:text-green-400">${(order.totalAmount / 100).toFixed(2)}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      order.status === 'delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                      order.status === 'shipped' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                      order.status === 'processing' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                      'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                    }`}>
+                      {order.status}
+                    </span>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {(!stats?.recentOrders || stats.recentOrders.length === 0) && (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4">No recent orders</p>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Recent Enrollments */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
           >
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Enrollments</h2>

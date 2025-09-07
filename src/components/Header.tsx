@@ -3,12 +3,18 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ShoppingCart } from 'lucide-react';
+import Cart from './Cart';
+import Image from 'next/image';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+  const { cart } = useCart();
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -35,8 +41,9 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <div className="h-10 w-32 flex items-center justify-center bg-gradient-to-r from-green-600 to-blue-600 dark:from-green-400 dark:to-blue-400 rounded-lg">
-                <span className="text-white dark:text-gray-900 font-bold text-xl">NutriSap</span>
+              <div className="h-10 w-32 flex items-center justify-center rounded-lg">
+                <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} className="dark:hidden" />
+                <Image src="/logoDark.svg" alt="NutriSap Logo" width={128} height={40} className="hidden dark:block" />
               </div>
             </Link>
           </div>
@@ -52,6 +59,9 @@ export default function Header() {
               <Link href="/diet-plan" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
                 Diet Plans
               </Link>
+              <Link href="/products" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
+                Products
+              </Link>
               <Link href="/blog" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
                 Blog
               </Link>
@@ -62,6 +72,19 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
+            {/* Cart Icon */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+            >
+              <ShoppingCart size={24} />
+              {cart.totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.totalItems}
+                </span>
+              )}
+            </button>
+
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <span className="text-gray-600 dark:text-gray-300 text-sm">
@@ -154,6 +177,13 @@ export default function Header() {
                 Diet Plans
               </Link>
               <Link
+                href="/products"
+                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Products
+              </Link>
+              <Link
                 href="/blog"
                 className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
@@ -223,6 +253,9 @@ export default function Header() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Cart */}
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }

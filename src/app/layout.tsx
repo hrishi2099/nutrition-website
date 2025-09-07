@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
@@ -34,20 +35,22 @@ export default function RootLayout({
       >
         <ErrorBoundaryWrapper>
           <AuthProvider>
-            <ErrorBoundaryWrapper name="Header">
-              <Header />
-            </ErrorBoundaryWrapper>
-            <main className="pt-16 min-h-screen bg-white dark:bg-gray-900">
-              <ErrorBoundaryWrapper name="Page Content">
-                {children}
+            <CartProvider>
+              <ErrorBoundaryWrapper name="Header">
+                <Header />
               </ErrorBoundaryWrapper>
-            </main>
-            <ErrorBoundaryWrapper name="Footer">
-              <Footer />
-            </ErrorBoundaryWrapper>
-            <ErrorBoundaryWrapper name="Chatbot">
-              <Chatbot />
-            </ErrorBoundaryWrapper>
+              <main className="pt-16 min-h-screen bg-white dark:bg-gray-900">
+                <ErrorBoundaryWrapper name="Page Content">
+                  {children}
+                </ErrorBoundaryWrapper>
+              </main>
+              <ErrorBoundaryWrapper name="Footer">
+                <Footer />
+              </ErrorBoundaryWrapper>
+              <ErrorBoundaryWrapper name="Chatbot">
+                <Chatbot />
+              </ErrorBoundaryWrapper>
+            </CartProvider>
           </AuthProvider>
         </ErrorBoundaryWrapper>
       </body>

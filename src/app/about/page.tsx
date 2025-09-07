@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import AnimatedCard from '@/components/AnimatedCard';
+import Image from 'next/image';
 
 interface TeamMember {
   id: string;
@@ -84,7 +85,10 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              About <span className="text-black dark:text-gray-100">NutriSap</span>
+              About <span className="inline-block">
+                <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} className="dark:hidden" />
+                <Image src="/logoDark.svg" alt="NutriSap Logo" width={128} height={40} className="hidden dark:block" />
+              </span>
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               We&apos;re passionate about helping you achieve optimal health through evidence-based nutrition 
@@ -100,7 +104,10 @@ export default function About() {
             <div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Mission</h2>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                At NutriSap, we believe that proper nutrition is the foundation of a healthy, fulfilling life. 
+                At <span className="inline-block">
+                  <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} className="dark:hidden" />
+                  <Image src="/logoDark.svg" alt="NutriSap Logo" width={128} height={40} className="hidden dark:block" />
+                </span>, we believe that proper nutrition is the foundation of a healthy, fulfilling life. 
                 Our mission is to make personalized nutrition accessible, understandable, and sustainable for everyone.
               </p>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
