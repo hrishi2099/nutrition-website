@@ -12,14 +12,25 @@ export async function GET(request: NextRequest) {
       totalDietPlans,
       totalMeals,
       activeEnrollments,
+      totalProducts,
+      totalOrders,
+      totalRevenue,
       recentUsers,
-      recentEnrollments
+      recentEnrollments,
+      recentOrders
     ] = await Promise.all([
       prisma.user.count(),
       prisma.dietPlan.count(),
       prisma.meal.count(),
       prisma.dietPlan.count({
         where: { userId: { not: null } }
+      }),
+      prisma.product.count(),
+      prisma.order.count(),
+      prisma.order.aggregate({
+        _sum: {
+          totalAmount: true,
+        },
       }),
       prisma.user.findMany({
         select: {
@@ -49,6 +60,23 @@ export async function GET(request: NextRequest) {
         },
         orderBy: { updatedAt: 'desc' },
         take: 5,
+      }),
+      prisma.order.findMany({
+        select: {
+          id: true,
+          totalAmount: true,
+          status: true,
+          createdAt: true,
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
       })
     ]);
 
@@ -57,6 +85,9 @@ export async function GET(request: NextRequest) {
       totalDietPlans,
       totalMeals,
       activeEnrollments,
+      totalProducts,
+      totalOrders,
+      totalRevenue: totalRevenue._sum.totalAmount || 0,
       recentUsers,
       recentEnrollments: recentEnrollments.map(enrollment => ({
         id: enrollment.id,
@@ -66,6 +97,13 @@ export async function GET(request: NextRequest) {
           price: enrollment.price,
         },
         createdAt: enrollment.createdAt,
+      })),
+      recentOrders: recentOrders.map(order => ({
+        id: order.id,
+        customer: order.user,
+        totalAmount: order.totalAmount,
+        status: order.status,
+        createdAt: order.createdAt,
       })),
     };
 
