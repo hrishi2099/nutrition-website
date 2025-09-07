@@ -452,3 +452,4 @@ export default function ProductForm({ product, categories, onSave, onCancel, loa
   );
 }
 
+

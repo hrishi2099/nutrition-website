@@ -57,7 +57,7 @@ const sampleProducts: Product[] = [
     originalPrice: 5999,
     image: '/api/placeholder/400/400',
     category: sampleCategories[1],
-    brand: 'NutriSap',
+    brand: 'NutriBrand',
     inStock: true,
     stockQuantity: 25,
     rating: 4.8,
@@ -97,7 +97,7 @@ const sampleProducts: Product[] = [
     price: 2999,
     image: '/api/placeholder/400/400',
     category: sampleCategories[2],
-    brand: 'NutriSap',
+    brand: 'NutriBrand',
     inStock: true,
     stockQuantity: 15,
     rating: 4.6,
@@ -126,7 +126,7 @@ const sampleProducts: Product[] = [
     price: 1999,
     image: '/api/placeholder/400/400',
     category: sampleCategories[0],
-    brand: 'NutriSap',
+    brand: 'NutriBrand',
     inStock: true,
     stockQuantity: 50,
     rating: 4.7,
@@ -155,7 +155,7 @@ const sampleProducts: Product[] = [
     price: 399,
     image: '/api/placeholder/400/400',
     category: sampleCategories[1],
-    brand: 'NutriSap',
+    brand: 'NutriBrand',
     inStock: true,
     stockQuantity: 100,
     rating: 4.5,
@@ -184,7 +184,7 @@ const sampleProducts: Product[] = [
     price: 2499,
     image: '/api/placeholder/400/400',
     category: sampleCategories[0],
-    brand: 'NutriSap',
+    brand: 'NutriBrand',
     inStock: false,
     stockQuantity: 0,
     rating: 4.9,
@@ -213,7 +213,7 @@ const sampleProducts: Product[] = [
     price: 1599,
     image: '/api/placeholder/400/400',
     category: sampleCategories[4],
-    brand: 'NutriSap',
+    brand: 'NutriBrand',
     inStock: true,
     stockQuantity: 30,
     rating: 4.4,
@@ -571,4 +571,5 @@ export default function ProductsPage() {
     </PageTransition>
   );
 }
+
 
