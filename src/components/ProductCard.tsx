@@ -159,10 +159,10 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
               <AnimatedButton
                 onClick={handleAddToCart}
                 disabled={!product.inStock || isAdding}
-                className={`w-full ${
+                className={`w-full bg-gradient-to-r from-green-600 to-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ${
                   !product.inStock
                     ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                    : 'bg-green-600 hover:bg-green-700 text-white'
+                    : ''
                 }`}
               >
                 {isAdding ? 'Adding...' : !product.inStock ? 'Out of Stock' : 'Add to Cart'}
