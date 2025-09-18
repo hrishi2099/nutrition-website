@@ -70,6 +70,9 @@ export default function CheckoutPage() {
         const cart = JSON.parse(stored);
         setCartItems(cart.items || []);
         setCartTotal(cart.finalTotal || 0);
+      } else {
+        setCartItems([]);
+        setCartTotal(0);
       }
     } catch (error) {
       console.error('Error loading cart:', error);

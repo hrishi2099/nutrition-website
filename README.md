@@ -1,24 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NutriSap - Nutrition Website
 
-## Getting Started
+A comprehensive nutrition and wellness platform built with Next.js 15, featuring AI-powered chatbots, diet plans, e-commerce functionality, and a complete checkout system.
 
-First, run the development server:
+## 🚀 Features
 
+### Core Features
+- **AI-Powered Chatbot** - Nutrition advice and meal planning assistance
+- **Diet Plans** - Personalized nutrition plans with detailed meal guides
+- **E-commerce** - Product catalog with shopping cart functionality
+- **Complete Checkout System** - Multi-step checkout with payment gateway integration
+- **Blog System** - Nutrition articles and wellness content
+- **Admin Panel** - Content management and analytics
+- **User Authentication** - Secure login and profile management
+
+### E-commerce & Checkout
+- **3-Step Checkout Process** - Shipping → Payment → Review
+- **Multiple Payment Gateways** - Razorpay, Stripe, PayTM, PhonePe
+- **Order Management** - Order tracking and status updates
+- **Cart Functionality** - Add, remove, and modify cart items
+- **Responsive Design** - Mobile-friendly checkout experience
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Database**: MySQL with Prisma ORM
+- **Styling**: Tailwind CSS
+- **Animation**: Framer Motion
+- **Authentication**: JWT-based auth
+- **Payment**: Multi-gateway integration
+- **Deployment**: Vercel-ready
+
+## 📦 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- MySQL database (local or cloud)
+- Git
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone <your-repo-url>
+cd nutrition-website
+```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Set up environment variables**
+```bash
+cp .env.example .env.local
+# Edit .env.local with your configuration
+```
+
+4. **Set up the database**
+```bash
+npx prisma db push
+npm run db:seed
+```
+
+5. **Start the development server**
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 
