@@ -4,11 +4,11 @@ import { verifyAdminToken } from '@/lib/adminAuth';
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await verifyAdminToken(request);
-    const { id: mealId } = await context.params;
+    const { id: mealId } = await params;
 
     // Check if meal exists
     const meal = await prisma.meal.findUnique({
@@ -42,11 +42,11 @@ export async function DELETE(
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await verifyAdminToken(request);
-    const { id: mealId } = await context.params;
+    const { id: mealId } = await params;
 
     const meal = await prisma.meal.findUnique({
       where: { id: mealId },

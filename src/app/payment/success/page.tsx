@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import PageTransition from '@/components/PageTransition';
 import FadeInSection from '@/components/FadeInSection';
 import AnimatedButton from '@/components/AnimatedButton';
-import SuccessAnimation from '@/components/SuccessAnimation';
 import { usePayment } from '@/contexts/PaymentContext';
 import { formatPrice } from '@/utils/currency';
 import { CheckCircle, Package, Mail, ArrowRight, Home } from 'lucide-react';
@@ -46,7 +45,29 @@ export default function PaymentSuccessPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection>
             <div className="text-center mb-8">
-              <SuccessAnimation />
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", duration: 0.6 }}
+                className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+              >
+                <motion.svg
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ delay: 0.3, duration: 0.6, ease: "easeInOut" }}
+                  className="w-16 h-16 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <motion.path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </motion.svg>
+              </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

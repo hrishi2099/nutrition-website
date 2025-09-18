@@ -85,8 +85,9 @@ class OrderService {
       }
 
       this.saveOrders();
+      return order;
     }
-    return order;
+    return null;
   }
 
   updatePaymentStatus(orderId: string, paymentStatus: PaymentStatus, paymentId?: string): Order | null {
@@ -107,8 +108,9 @@ class OrderService {
       }
 
       this.saveOrders();
+      return order;
     }
-    return order;
+    return null;
   }
 
   getOrder(orderId: string): Order | null {
@@ -180,8 +182,9 @@ class OrderService {
       order.status = 'shipped';
       order.updatedAt = new Date();
       this.saveOrders();
+      return order;
     }
-    return order;
+    return null;
   }
 
   addOrderNotes(orderId: string, notes: string): Order | null {
@@ -190,8 +193,9 @@ class OrderService {
       order.notes = notes;
       order.updatedAt = new Date();
       this.saveOrders();
+      return order;
     }
-    return order;
+    return null;
   }
 
   deleteOrder(orderId: string): boolean {

@@ -3,10 +3,11 @@ import orderService from '@/lib/orders/orderService';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const order = orderService.getOrder(params.orderId);
+    const { orderId } = await params;
+    const order = orderService.getOrder(orderId);
 
     if (!order) {
       return NextResponse.json(
@@ -31,11 +32,12 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
+    const { orderId } = await params;
     const updates = await request.json();
-    let order = orderService.getOrder(params.orderId);
+    let order = orderService.getOrder(orderId);
 
     if (!order) {
       return NextResponse.json(
@@ -46,13 +48,13 @@ export async function PATCH(
 
     // Update order status
     if (updates.status) {
-      order = orderService.updateOrderStatus(params.orderId, updates.status);
+      order = orderService.updateOrderStatus(orderId, updates.status);
     }
 
     // Update payment status
     if (updates.paymentStatus) {
       order = orderService.updatePaymentStatus(
-        params.orderId,
+        orderId,
         updates.paymentStatus,
         updates.paymentId
       );
@@ -60,12 +62,12 @@ export async function PATCH(
 
     // Add tracking number
     if (updates.trackingNumber) {
-      order = orderService.addTrackingNumber(params.orderId, updates.trackingNumber);
+      order = orderService.addTrackingNumber(orderId, updates.trackingNumber);
     }
 
     // Add notes
     if (updates.notes) {
-      order = orderService.addOrderNotes(params.orderId, updates.notes);
+      order = orderService.addOrderNotes(orderId, updates.notes);
     }
 
     return NextResponse.json({
@@ -84,10 +86,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const success = orderService.deleteOrder(params.orderId);
+    const { orderId } = await params;
+    const success = orderService.deleteOrder(orderId);
 
     if (!success) {
       return NextResponse.json(

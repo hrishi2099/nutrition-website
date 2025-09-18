@@ -54,7 +54,21 @@ export const confirmStripePayment = async (paymentIntentId: string) => {
   }
 };
 
+// Stripe client-side loader (requires @stripe/stripe-js package)
+// Uncomment and install the package when needed: npm install @stripe/stripe-js
+/*
 export const loadStripe = async () => {
-  const { loadStripe } = await import('@stripe/stripe-js');
-  return loadStripe(paymentConfig.stripe.publishableKey);
+  try {
+    const stripeModule = await import('@stripe/stripe-js');
+    return stripeModule.loadStripe(paymentConfig.stripe.publishableKey);
+  } catch (error) {
+    console.warn('Stripe not installed. Install with: npm install @stripe/stripe-js');
+    return null;
+  }
+};
+*/
+
+export const loadStripe = async () => {
+  console.warn('Stripe client not configured. Install @stripe/stripe-js package to enable Stripe payments.');
+  return null;
 };

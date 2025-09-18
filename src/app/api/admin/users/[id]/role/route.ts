@@ -4,11 +4,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await verifyAdminToken(request);
-    const { id } = await context.params;
+    const { id } = await params;
     const { role } = await request.json();
 
     // Validate role

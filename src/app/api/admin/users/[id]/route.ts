@@ -4,11 +4,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await verifyAdminToken(request);
-    const { id } = await context.params;
+    const { id } = await params;
 
     // Check if user exists
     const user = await prisma.user.findUnique({
