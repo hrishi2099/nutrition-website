@@ -8,11 +8,26 @@ import FadeInSection from '@/components/FadeInSection';
 import AnimatedButton from '@/components/AnimatedButton';
 import { usePayment } from '@/contexts/PaymentContext';
 import { formatPrice } from '@/utils/currency';
-import { CheckCircle, Package, Mail, ArrowRight, Home } from 'lucide-react';
+import { Package, Mail, ArrowRight, Home } from 'lucide-react';
+
+interface OrderDetails {
+  orderId: string;
+  amount: number;
+  customerName: string;
+  customerEmail: string;
+  items: Array<{
+    product: {
+      name: string;
+      price: number;
+    };
+    quantity: number;
+  }>;
+  estimatedDelivery: string;
+}
 
 export default function PaymentSuccessPage() {
   const { paymentData, selectedGateway } = usePayment();
-  const [orderDetails, setOrderDetails] = useState<any>(null);
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
 
   useEffect(() => {
     // In a real app, you might fetch order details from an API using order ID
@@ -124,7 +139,7 @@ export default function PaymentSuccessPage() {
                     <div className="border-t pt-4">
                       <h3 className="font-medium text-gray-900 mb-3">Items Ordered</h3>
                       <div className="space-y-2">
-                        {orderDetails.items.map((item: any, index: number) => (
+                        {orderDetails.items.map((item, index: number) => (
                           <div key={index} className="flex justify-between text-sm">
                             <span className="text-gray-600">
                               {item.product.name} x {item.quantity}

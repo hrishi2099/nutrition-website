@@ -94,7 +94,7 @@ export default function PaymentFailedPage() {
                     <div className="border-t pt-4">
                       <h3 className="font-medium text-gray-900 mb-3">Items</h3>
                       <div className="space-y-2">
-                        {paymentData.items.map((item: any, index: number) => (
+                        {paymentData.items.map((item: { product: { name: string; price: number }; quantity: number }, index: number) => (
                           <div key={index} className="flex justify-between text-sm">
                             <span className="text-gray-600">
                               {item.product.name} x {item.quantity}
