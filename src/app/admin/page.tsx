@@ -89,12 +89,12 @@ export default function AdminDashboard() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+      className="bg-white rounded-lg shadow-md p-6"
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+          <p className="text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-2xl font-bold text-gray-900">{value}</p>
         </div>
         <div className={`p-3 rounded-full bg-${color}-100`}>
           <span className="text-2xl">{icon}</span>
@@ -117,11 +117,11 @@ export default function AdminDashboard() {
     return (
       <AdminSidebar>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={fetchDashboardStats}
-            className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Try Again
           </button>
@@ -134,8 +134,8 @@ export default function AdminDashboard() {
     <AdminSidebar>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-300">Welcome to the admin dashboard</p>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-600">Welcome to the admin dashboard</p>
         </div>
 
         {/* Stats Grid */}
@@ -173,25 +173,25 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Users</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Users</h2>
             <div className="space-y-3">
               {stats?.recentUsers.map((user) => (
-                <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-gray-900">
                       {user.firstName} {user.lastName}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">{user.email}</p>
+                    <p className="text-sm text-gray-600">{user.email}</p>
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="text-xs text-gray-500">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               ))}
               {(!stats?.recentUsers || stats.recentUsers.length === 0) && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">No recent users</p>
+                <p className="text-gray-500 text-center py-4">No recent users</p>
               )}
             </div>
           </motion.div>
@@ -201,36 +201,36 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Orders</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Orders</h2>
             <div className="space-y-3">
               {stats?.recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-gray-900">
                       {order.customer.firstName} {order.customer.lastName}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">Order #{order.id}</p>
-                    <p className="text-sm text-green-600 dark:text-green-400">${(order.totalAmount / 100).toFixed(2)}</p>
+                    <p className="text-sm text-gray-600">Order #{order.id}</p>
+                    <p className="text-sm text-green-600">${(order.totalAmount / 100).toFixed(2)}</p>
                   </div>
                   <div className="text-right">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      order.status === 'delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                      order.status === 'shipped' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
-                      order.status === 'processing' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                      'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                      order.status === 'delivered' ? 'bg-green-100 text-green-800  ' :
+                      order.status === 'shipped' ? 'bg-blue-100 text-blue-800  ' :
+                      order.status === 'processing' ? 'bg-yellow-100 text-yellow-800  ' :
+                      'bg-gray-100 text-gray-800  '
                     }`}>
                       {order.status}
                     </span>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <div className="text-xs text-gray-500 mt-1">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
               ))}
               {(!stats?.recentOrders || stats.recentOrders.length === 0) && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">No recent orders</p>
+                <p className="text-gray-500 text-center py-4">No recent orders</p>
               )}
             </div>
           </motion.div>
@@ -240,26 +240,26 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Enrollments</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Enrollments</h2>
             <div className="space-y-3">
               {stats?.recentEnrollments.map((enrollment) => (
-                <div key={enrollment.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                <div key={enrollment.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-gray-900">
                       {enrollment.user.firstName} {enrollment.user.lastName}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">{enrollment.dietPlan.name}</p>
-                    <p className="text-sm text-green-600 dark:text-green-400">${enrollment.dietPlan.price}/month</p>
+                    <p className="text-sm text-gray-600">{enrollment.dietPlan.name}</p>
+                    <p className="text-sm text-green-600">${enrollment.dietPlan.price}/month</p>
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="text-xs text-gray-500">
                     {new Date(enrollment.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               ))}
               {(!stats?.recentEnrollments || stats.recentEnrollments.length === 0) && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">No recent enrollments</p>
+                <p className="text-gray-500 text-center py-4">No recent enrollments</p>
               )}
             </div>
           </motion.div>

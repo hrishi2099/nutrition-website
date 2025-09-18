@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { ToastProvider } from "@/contexts/ToastContext";
+import { PaymentProvider } from "@/contexts/PaymentContext";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
@@ -31,27 +33,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900`}
       >
         <ErrorBoundaryWrapper>
-          <AuthProvider>
-            <CartProvider>
-              <ErrorBoundaryWrapper name="Header">
-                <Header />
-              </ErrorBoundaryWrapper>
-              <main className="pt-16 min-h-screen bg-white dark:bg-gray-900">
-                <ErrorBoundaryWrapper name="Page Content">
-                  {children}
-                </ErrorBoundaryWrapper>
-              </main>
-              <ErrorBoundaryWrapper name="Footer">
-                <Footer />
-              </ErrorBoundaryWrapper>
-              <ErrorBoundaryWrapper name="Chatbot">
-                <Chatbot />
-              </ErrorBoundaryWrapper>
-            </CartProvider>
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <CartProvider>
+                <PaymentProvider>
+                  <ErrorBoundaryWrapper name="Header">
+                    <Header />
+                  </ErrorBoundaryWrapper>
+                  <main className="pt-16 min-h-screen bg-white">
+                    <ErrorBoundaryWrapper name="Page Content">
+                      {children}
+                    </ErrorBoundaryWrapper>
+                  </main>
+                  <ErrorBoundaryWrapper name="Footer">
+                    <Footer />
+                  </ErrorBoundaryWrapper>
+                  <ErrorBoundaryWrapper name="Chatbot">
+                    <Chatbot />
+                  </ErrorBoundaryWrapper>
+                </PaymentProvider>
+              </CartProvider>
+            </AuthProvider>
+          </ToastProvider>
         </ErrorBoundaryWrapper>
       </body>
     </html>

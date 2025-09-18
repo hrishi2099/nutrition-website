@@ -36,36 +36,35 @@ export default function Header() {
   }, [isAuthenticated]);
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-md fixed w-full top-0 z-50">
+    <header className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <div className="h-10 w-32 flex items-center justify-center rounded-lg">
-                <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} className="dark:hidden" />
-                <Image src="/logoDark.svg" alt="NutriSap Logo" width={128} height={40} className="hidden dark:block" />
+                <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} />
               </div>
             </Link>
           </div>
           
           <nav className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
+              <Link href="/" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Home
               </Link>
-              <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
+              <Link href="/about" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 About
               </Link>
-              <Link href="/diet-plan" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
+              <Link href="/diet-plan" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Diet Plans
               </Link>
-              <Link href="/products" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
+              <Link href="/products" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Products
               </Link>
-              <Link href="/blog" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
+              <Link href="/blog" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Blog
               </Link>
-              <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors">
+              <Link href="/contact" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Contact
               </Link>
             </div>
@@ -75,7 +74,7 @@ export default function Header() {
             {/* Cart Icon */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+              className="relative p-2 text-gray-600 hover:text-black transition-colors"
             >
               <ShoppingCart size={24} />
               {cart.totalItems > 0 && (
@@ -87,12 +86,12 @@ export default function Header() {
 
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-gray-600 dark:text-gray-300 text-sm">
+                <span className="text-gray-600 text-sm">
                   Welcome, {user?.firstName}
                 </span>
                 <Link
                   href="/profile"
-                  className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                  className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors"
                 >
                   Profile
                 </Link>
@@ -106,7 +105,7 @@ export default function Header() {
                 )}
                 <button
                   onClick={logout}
-                  className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                  className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors"
                 >
                   Sign Out
                 </button>
@@ -115,13 +114,13 @@ export default function Header() {
               <>
                 <Link
                   href="/login"
-                  className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+                  className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                  className="bg-black text-white px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   Sign Up
                 </Link>
@@ -132,7 +131,7 @@ export default function Header() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-900 dark:text-gray-100 hover:text-black dark:hover:text-white focus:outline-none focus:text-black dark:focus:text-white"
+              className="text-gray-900 hover:text-black focus:outline-none focus:text-black"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMenuOpen ? (
@@ -154,58 +153,58 @@ export default function Header() {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
               <Link
                 href="/"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/about"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link
                 href="/diet-plan"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Diet Plans
               </Link>
               <Link
                 href="/products"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Products
               </Link>
               <Link
                 href="/blog"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link
                 href="/contact"
-                className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
               </Link>
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+              <div className="border-t border-gray-200 pt-4 mt-4">
                 {isAuthenticated ? (
                   <>
-                    <div className="px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300">
+                    <div className="px-3 py-2 text-base font-medium text-gray-600">
                       Welcome, {user?.firstName}
                     </div>
                     <Link
                       href="/profile"
-                      className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                      className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Profile
@@ -224,7 +223,7 @@ export default function Header() {
                         logout();
                         setIsMenuOpen(false);
                       }}
-                      className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors w-full text-left"
+                      className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors w-full text-left"
                     >
                       Sign Out
                     </button>
@@ -233,14 +232,14 @@ export default function Header() {
                   <>
                     <Link
                       href="/login"
-                      className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium transition-colors"
+                      className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Sign In
                     </Link>
                     <Link
                       href="/signup"
-                      className="bg-black dark:bg-white text-white dark:text-black block px-3 py-2 text-base font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors mt-2"
+                      className="bg-black text-white block px-3 py-2 text-base font-medium rounded-lg hover:bg-gray-800 transition-colors mt-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Sign Up

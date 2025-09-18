@@ -133,11 +133,11 @@ export default function UsersPage() {
     return (
       <AdminSidebar>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={fetchUsers}
-            className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Try Again
           </button>
@@ -151,63 +151,63 @@ export default function UsersPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Users</h1>
-            <p className="text-gray-600 dark:text-gray-300">Manage all users in the system</p>
+            <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+            <p className="text-gray-600">Manage all users in the system</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-sm">
-            <span className="text-sm text-gray-600 dark:text-gray-300">Total Users: </span>
-            <span className="font-semibold text-gray-900 dark:text-white">{users.length}</span>
+          <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
+            <span className="text-sm text-gray-600">Total Users: </span>
+            <span className="font-semibold text-gray-900">{users.length}</span>
           </div>
         </div>
 
         {/* Search */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+        <div className="bg-white rounded-lg shadow-sm p-4">
           <input
             type="text"
             placeholder="Search users by name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
           />
         </div>
 
         {/* Users Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Enrolled Plans
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Joined
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white divide-y divide-gray-200">
                 {filteredUsers.map((user) => (
                   <motion.tr
                     key={user.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                    className="hover:bg-gray-50"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                        <div className="text-sm font-medium text-gray-900">
                           {user.firstName} {user.lastName}
                         </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
+                        <div className="text-sm text-gray-500">{user.email}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -219,28 +219,28 @@ export default function UsersPage() {
                         {user.role}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {user.dietPlans.length}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => setSelectedUser(user)}
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
+                        className="text-blue-600 hover:text-blue-900"
                       >
                         View
                       </button>
                       <button
                         onClick={() => toggleUserRole(user.id, user.role)}
-                        className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-900 dark:hover:text-yellow-300"
+                        className="text-yellow-600 hover:text-yellow-900"
                       >
                         {user.role === 'USER' ? 'Make Admin' : 'Make User'}
                       </button>
                       <button
                         onClick={() => deleteUser(user.id)}
-                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                        className="text-red-600 hover:text-red-900"
                       >
                         Delete
                       </button>
@@ -255,12 +255,12 @@ export default function UsersPage() {
         {/* User Details Modal */}
         {selectedUser && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-96 overflow-y-auto">
+            <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-96 overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">User Details</h2>
+                <h2 className="text-xl font-bold text-gray-900">User Details</h2>
                 <button
                   onClick={() => setSelectedUser(null)}
-                  className="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100"
+                  className="text-gray-400 hover:text-gray-600"
                 >
                   ✕
                 </button>
@@ -269,62 +269,62 @@ export default function UsersPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-                    <p className="text-gray-900 dark:text-white">{selectedUser.firstName} {selectedUser.lastName}</p>
+                    <label className="block text-sm font-medium text-gray-700">Name</label>
+                    <p className="text-gray-900">{selectedUser.firstName} {selectedUser.lastName}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                    <p className="text-gray-900 dark:text-white">{selectedUser.email}</p>
+                    <label className="block text-sm font-medium text-gray-700">Email</label>
+                    <p className="text-gray-900">{selectedUser.email}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>
-                    <p className="text-gray-900 dark:text-white">{selectedUser.role}</p>
+                    <label className="block text-sm font-medium text-gray-700">Role</label>
+                    <p className="text-gray-900">{selectedUser.role}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Age</label>
-                    <p className="text-gray-900 dark:text-white">{selectedUser.age || 'Not specified'}</p>
+                    <label className="block text-sm font-medium text-gray-700">Age</label>
+                    <p className="text-gray-900">{selectedUser.age || 'Not specified'}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Height</label>
-                    <p className="text-gray-900 dark:text-white">{selectedUser.height ? `${selectedUser.height} cm` : 'Not specified'}</p>
+                    <label className="block text-sm font-medium text-gray-700">Height</label>
+                    <p className="text-gray-900">{selectedUser.height ? `${selectedUser.height} cm` : 'Not specified'}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Weight</label>
-                    <p className="text-gray-900 dark:text-white">{selectedUser.weight ? `${selectedUser.weight} kg` : 'Not specified'}</p>
+                    <label className="block text-sm font-medium text-gray-700">Weight</label>
+                    <p className="text-gray-900">{selectedUser.weight ? `${selectedUser.weight} kg` : 'Not specified'}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Enrolled Diet Plans</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Enrolled Diet Plans</label>
                   {selectedUser.dietPlans.length > 0 ? (
                     <div className="space-y-2">
                       {selectedUser.dietPlans.map((plan) => (
-                        <div key={plan.id} className="bg-gray-50 dark:bg-gray-700 p-3 rounded">
-                          <p className="font-medium text-gray-900 dark:text-white">{plan.name}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">${plan.price}/month</p>
+                        <div key={plan.id} className="bg-gray-50 p-3 rounded">
+                          <p className="font-medium text-gray-900">{plan.name}</p>
+                          <p className="text-sm text-gray-600">${plan.price}/month</p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400">No enrolled plans</p>
+                    <p className="text-gray-500">No enrolled plans</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Goals</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Goals</label>
                   {selectedUser.goals.length > 0 ? (
                     <div className="space-y-2">
                       {selectedUser.goals.map((goal) => (
-                        <div key={goal.id} className="bg-gray-50 dark:bg-gray-700 p-3 rounded">
-                          <p className="font-medium text-gray-900 dark:text-white">{goal.type}</p>
+                        <div key={goal.id} className="bg-gray-50 p-3 rounded">
+                          <p className="font-medium text-gray-900">{goal.type}</p>
                           {goal.target && (
-                            <p className="text-sm text-gray-600 dark:text-gray-300">Target: {goal.target}</p>
+                            <p className="text-sm text-gray-600">Target: {goal.target}</p>
                           )}
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400">No goals set</p>
+                    <p className="text-gray-500">No goals set</p>
                   )}
                 </div>
               </div>

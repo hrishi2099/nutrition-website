@@ -54,7 +54,9 @@ const sampleDietPlans = [
 ];
 
 export async function GET() {
+  // Always try to return sample plans first to avoid database connection issues
   try {
+    // Try to connect to database
     const dietPlans = await prisma.dietPlan.findMany({
       where: {
         isActive: true,
@@ -72,25 +74,20 @@ export async function GET() {
       },
     });
 
-    // If no diet plans found in database, return sample plans
-    if (!dietPlans || dietPlans.length === 0) {
+    // If database plans found, return them
+    if (dietPlans && dietPlans.length > 0) {
       return NextResponse.json({
         success: true,
-        dietPlans: sampleDietPlans,
+        dietPlans,
       });
     }
-
-    return NextResponse.json({
-      success: true,
-      dietPlans,
-    });
   } catch (error) {
-    console.error('Error fetching diet plans:', error);
-    
-    // Return sample diet plans in case of database error
-    return NextResponse.json({
-      success: true,
-      dietPlans: sampleDietPlans,
-    });
+    console.error('Database error, falling back to sample plans:', error);
   }
+
+  // Always return sample plans as fallback
+  return NextResponse.json({
+    success: true,
+    dietPlans: sampleDietPlans,
+  });
 }

@@ -346,9 +346,9 @@ export default function ProductsPage() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <section className="bg-gradient-to-r from-green-600 to-blue-600 dark:from-green-700 dark:to-blue-700 py-16">
+        <section className="bg-gradient-to-r from-green-600 to-blue-600 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInSection className="text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -365,15 +365,15 @@ export default function ProductsPage() {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar Filters */}
             <div className="lg:w-64 flex-shrink-0">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sticky top-8">
+              <div className="bg-white rounded-lg shadow-lg p-6 sticky top-8">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <h2 className="text-lg font-semibold text-gray-900">
                     Filters
                   </h2>
                   {activeFiltersCount > 0 && (
                     <button
                       onClick={clearFilters}
-                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      className="text-sm text-blue-600 hover:underline"
                     >
                       Clear all
                     </button>
@@ -382,7 +382,7 @@ export default function ProductsPage() {
 
                 {/* Search */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Search
                   </label>
                   <div className="relative">
@@ -392,20 +392,20 @@ export default function ProductsPage() {
                       value={filters.search || ''}
                       onChange={(e) => handleFilterChange({ search: e.target.value })}
                       placeholder="Search products..."
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                     />
                   </div>
                 </div>
 
                 {/* Category Filter */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Category
                   </label>
                   <select
                     value={filters.category || ''}
                     onChange={(e) => handleFilterChange({ category: e.target.value || undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                   >
                     <option value="">All Categories</option>
                     {categories.map(category => (
@@ -418,7 +418,7 @@ export default function ProductsPage() {
 
                 {/* Price Range */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Price Range
                   </label>
                   <div className="space-y-2">
@@ -427,14 +427,14 @@ export default function ProductsPage() {
                       placeholder="Min price"
                       value={filters.minPrice || ''}
                       onChange={(e) => handleFilterChange({ minPrice: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                     />
                     <input
                       type="number"
                       placeholder="Max price"
                       value={filters.maxPrice || ''}
                       onChange={(e) => handleFilterChange({ maxPrice: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                     />
                   </div>
                 </div>
@@ -448,7 +448,7 @@ export default function ProductsPage() {
                       onChange={(e) => handleFilterChange({ inStock: e.target.checked || undefined })}
                       className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                     />
-                    <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="ml-2 text-sm text-gray-700">
                       In Stock Only
                     </span>
                   </label>
@@ -456,13 +456,13 @@ export default function ProductsPage() {
 
                 {/* Rating Filter */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Minimum Rating
                   </label>
                   <select
                     value={filters.rating || ''}
                     onChange={(e) => handleFilterChange({ rating: e.target.value ? Number(e.target.value) : undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                   >
                     <option value="">Any Rating</option>
                     <option value="4">4+ Stars</option>
@@ -478,11 +478,11 @@ export default function ProductsPage() {
               {/* Toolbar */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
                 <div className="flex items-center space-x-4">
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600">
                     Showing {filteredProducts.length} of {products.length} products
                   </p>
                   {activeFiltersCount > 0 && (
-                    <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-xs">
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
                       {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''} applied
                     </span>
                   )}
@@ -498,7 +498,7 @@ export default function ProductsPage() {
                         const [field, direction] = e.target.value.split('-') as [ProductSort['field'], ProductSort['direction']];
                         setSorting({ field, direction });
                       }}
-                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                     >
                       <option value="name-asc">Name A-Z</option>
                       <option value="name-desc">Name Z-A</option>
@@ -510,16 +510,16 @@ export default function ProductsPage() {
                   </div>
 
                   {/* View Mode */}
-                  <div className="flex border border-gray-300 dark:border-gray-600 rounded-lg">
+                  <div className="flex border border-gray-300 rounded-lg">
                     <button
                       onClick={() => setViewMode('grid')}
-                      className={`p-2 ${viewMode === 'grid' ? 'bg-green-600 text-white' : 'text-gray-600 dark:text-gray-400'}`}
+                      className={`p-2 ${viewMode === 'grid' ? 'bg-green-600 text-white' : 'text-gray-600 '}`}
                     >
                       <Grid size={20} />
                     </button>
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`p-2 ${viewMode === 'list' ? 'bg-green-600 text-white' : 'text-gray-600 dark:text-gray-400'}`}
+                      className={`p-2 ${viewMode === 'list' ? 'bg-green-600 text-white' : 'text-gray-600 '}`}
                     >
                       <List size={20} />
                     </button>
@@ -530,13 +530,13 @@ export default function ProductsPage() {
               {/* Products Grid */}
               {filteredProducts.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-gray-400 dark:text-gray-600 mb-4">
+                  <div className="text-gray-400 mb-4">
                     <Search size={64} className="mx-auto" />
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
                     No products found
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  <p className="text-gray-600 mb-6">
                     Try adjusting your filters or search terms
                   </p>
                   <button

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
 import { motion } from 'framer-motion';
 import { Order } from '@/types/product';
-import { 
-  Search, 
-  Filter, 
-  Eye, 
+import { formatPrice } from '@/utils/currency';
+import {
+  Search,
+  Eye,
   Package,
   Truck,
   CheckCircle,
@@ -178,11 +178,7 @@ export default function AdminOrdersPage() {
   const [sortBy, setSortBy] = useState<string>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  useEffect(() => {
-    filterAndSortOrders();
-  }, [searchTerm, statusFilter, sortBy, sortOrder, orders]);
-
-  const filterAndSortOrders = () => {
+  const filterAndSortOrders = useCallback(() => {
     let filtered = [...orders];
 
     // Filter by search term
@@ -235,14 +231,12 @@ export default function AdminOrdersPage() {
     });
 
     setFilteredOrders(filtered);
-  };
+  }, [searchTerm, statusFilter, sortBy, sortOrder, orders]);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price / 100);
-  };
+  useEffect(() => {
+    filterAndSortOrders();
+  }, [filterAndSortOrders]);
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -274,17 +268,17 @@ export default function AdminOrdersPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+        return 'bg-yellow-100 text-yellow-800  ';
       case 'processing':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+        return 'bg-blue-100 text-blue-800  ';
       case 'shipped':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+        return 'bg-purple-100 text-purple-800  ';
       case 'delivered':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        return 'bg-green-100 text-green-800  ';
       case 'cancelled':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+        return 'bg-red-100 text-red-800  ';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+        return 'bg-gray-100 text-gray-800  ';
     }
   };
 
@@ -306,8 +300,8 @@ export default function AdminOrdersPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Orders</h1>
-          <p className="text-gray-600 dark:text-gray-300">Manage customer orders and fulfillment</p>
+          <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+          <p className="text-gray-600">Manage customer orders and fulfillment</p>
         </div>
 
         {/* Stats Cards */}
@@ -315,15 +309,15 @@ export default function AdminOrdersPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
+            className="bg-white rounded-lg shadow-md p-4"
           >
             <div className="flex items-center">
-              <div className="p-2 rounded-full bg-gray-100 dark:bg-gray-700">
-                <Package className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              <div className="p-2 rounded-full bg-gray-100">
+                <Package className="w-5 h-5 text-gray-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{statusCounts.total}</p>
+                <p className="text-sm font-medium text-gray-600">Total</p>
+                <p className="text-xl font-bold text-gray-900">{statusCounts.total}</p>
               </div>
             </div>
           </motion.div>
@@ -332,15 +326,15 @@ export default function AdminOrdersPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
+            className="bg-white rounded-lg shadow-md p-4"
           >
             <div className="flex items-center">
-              <div className="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900">
-                <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-300" />
+              <div className="p-2 rounded-full bg-yellow-100">
+                <Clock className="w-5 h-5 text-yellow-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Pending</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{statusCounts.pending}</p>
+                <p className="text-sm font-medium text-gray-600">Pending</p>
+                <p className="text-xl font-bold text-gray-900">{statusCounts.pending}</p>
               </div>
             </div>
           </motion.div>
@@ -349,15 +343,15 @@ export default function AdminOrdersPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
+            className="bg-white rounded-lg shadow-md p-4"
           >
             <div className="flex items-center">
-              <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900">
-                <Package className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+              <div className="p-2 rounded-full bg-blue-100">
+                <Package className="w-5 h-5 text-blue-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Processing</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{statusCounts.processing}</p>
+                <p className="text-sm font-medium text-gray-600">Processing</p>
+                <p className="text-xl font-bold text-gray-900">{statusCounts.processing}</p>
               </div>
             </div>
           </motion.div>
@@ -366,15 +360,15 @@ export default function AdminOrdersPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
+            className="bg-white rounded-lg shadow-md p-4"
           >
             <div className="flex items-center">
-              <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900">
-                <Truck className="w-5 h-5 text-purple-600 dark:text-purple-300" />
+              <div className="p-2 rounded-full bg-purple-100">
+                <Truck className="w-5 h-5 text-purple-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Shipped</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{statusCounts.shipped}</p>
+                <p className="text-sm font-medium text-gray-600">Shipped</p>
+                <p className="text-xl font-bold text-gray-900">{statusCounts.shipped}</p>
               </div>
             </div>
           </motion.div>
@@ -383,15 +377,15 @@ export default function AdminOrdersPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
+            className="bg-white rounded-lg shadow-md p-4"
           >
             <div className="flex items-center">
-              <div className="p-2 rounded-full bg-green-100 dark:bg-green-900">
-                <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-300" />
+              <div className="p-2 rounded-full bg-green-100">
+                <CheckCircle className="w-5 h-5 text-green-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Delivered</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{statusCounts.delivered}</p>
+                <p className="text-sm font-medium text-gray-600">Delivered</p>
+                <p className="text-xl font-bold text-gray-900">{statusCounts.delivered}</p>
               </div>
             </div>
           </motion.div>
@@ -400,22 +394,22 @@ export default function AdminOrdersPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
+            className="bg-white rounded-lg shadow-md p-4"
           >
             <div className="flex items-center">
-              <div className="p-2 rounded-full bg-red-100 dark:bg-red-900">
-                <XCircle className="w-5 h-5 text-red-600 dark:text-red-300" />
+              <div className="p-2 rounded-full bg-red-100">
+                <XCircle className="w-5 h-5 text-red-600" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Cancelled</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{statusCounts.cancelled}</p>
+                <p className="text-sm font-medium text-gray-600">Cancelled</p>
+                <p className="text-xl font-bold text-gray-900">{statusCounts.cancelled}</p>
               </div>
             </div>
           </motion.div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
               {/* Search */}
@@ -426,7 +420,7 @@ export default function AdminOrdersPage() {
                   placeholder="Search orders..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white w-full sm:w-64"
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 w-full sm:w-64"
                 />
               </div>
 
@@ -434,7 +428,7 @@ export default function AdminOrdersPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -452,7 +446,7 @@ export default function AdminOrdersPage() {
                   setSortBy(field);
                   setSortOrder(direction);
                 }}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
               >
                 <option value="createdAt-desc">Newest First</option>
                 <option value="createdAt-asc">Oldest First</option>
@@ -468,72 +462,72 @@ export default function AdminOrdersPage() {
         </div>
 
         {/* Orders Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Order ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Items
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Total
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white divide-y divide-gray-200">
                 {filteredOrders.map((order, index) => (
                   <motion.tr
                     key={order.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                    className="hover:bg-gray-50"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      <div className="text-sm font-medium text-gray-900">
                         {order.id}
                       </div>
                       {order.trackingNumber && (
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                        <div className="text-sm text-gray-500">
                           Track: {order.trackingNumber}
                         </div>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      <div className="text-sm font-medium text-gray-900">
                         {order.shippingAddress.firstName} {order.shippingAddress.lastName}
                       </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="text-sm text-gray-500">
                         {order.shippingAddress.email}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white">
+                      <div className="text-sm text-gray-900">
                         {order.items.length} item{order.items.length > 1 ? 's' : ''}
                       </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="text-sm text-gray-500">
                         {order.items[0]?.product.name}
                         {order.items.length > 1 && ` +${order.items.length - 1} more`}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      <div className="text-sm font-medium text-gray-900">
                         {formatPrice(order.totalAmount)}
                       </div>
                     </td>
@@ -544,16 +538,16 @@ export default function AdminOrdersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white">
+                      <div className="text-sm text-gray-900">
                         {formatDate(order.createdAt)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                        <button className="text-blue-600 hover:text-blue-900">
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                        <button className="text-gray-600 hover:text-gray-900">
                           <MoreVertical className="w-4 h-4" />
                         </button>
                       </div>
@@ -566,9 +560,9 @@ export default function AdminOrdersPage() {
 
           {filteredOrders.length === 0 && (
             <div className="text-center py-12">
-              <Package className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No orders found</h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <Package className="mx-auto h-12 w-12 text-gray-400" />
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+              <p className="mt-1 text-sm text-gray-500">
                 {searchTerm || statusFilter !== 'all'
                   ? 'Try adjusting your search or filter criteria.'
                   : 'No orders have been placed yet.'

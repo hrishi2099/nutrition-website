@@ -158,8 +158,8 @@ export default function NeuralNetworkPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading neural network data...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading neural network data...</p>
         </div>
       </div>
     );
@@ -168,11 +168,11 @@ export default function NeuralNetworkPage() {
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Neural Network Management
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Manage and monitor the chatbot's neural network for intent classification
+        <p className="text-gray-600">
+          Manage and monitor the chatbot&apos;s neural network for intent classification
         </p>
       </div>
 
@@ -180,9 +180,9 @@ export default function NeuralNetworkPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+        className="bg-white rounded-lg shadow-lg p-6"
       >
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900">
           Training Status
         </h2>
         
@@ -194,7 +194,7 @@ export default function NeuralNetworkPage() {
                 status.stage === 'completed' ? 'bg-green-500' :
                 status.stage === 'error' ? 'bg-red-500' : 'bg-gray-400'
               }`}></div>
-              <span className="text-gray-700 dark:text-gray-300">
+              <span className="text-gray-700">
                 {status.isTraining ? `Training: ${status.stage}` : 
                  status.stage === 'completed' ? 'Training Completed' :
                  status.stage === 'error' ? 'Training Failed' : 'Ready'}
@@ -202,7 +202,7 @@ export default function NeuralNetworkPage() {
             </div>
 
             {status.isTraining && (
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${status.progress}%` }}
@@ -211,22 +211,22 @@ export default function NeuralNetworkPage() {
             )}
 
             {status.error && (
-              <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg p-4">
-                <p className="text-red-700 dark:text-red-300">{status.error}</p>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-red-700">{status.error}</p>
               </div>
             )}
 
             {status.accuracy && status.loss && (
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-green-50 dark:bg-green-900 rounded-lg p-4">
-                  <p className="text-sm text-green-600 dark:text-green-400">Accuracy</p>
-                  <p className="text-xl font-bold text-green-700 dark:text-green-300">
+                <div className="bg-green-50 rounded-lg p-4">
+                  <p className="text-sm text-green-600">Accuracy</p>
+                  <p className="text-xl font-bold text-green-700">
                     {(status.accuracy * 100).toFixed(2)}%
                   </p>
                 </div>
-                <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
-                  <p className="text-sm text-blue-600 dark:text-blue-400">Loss</p>
-                  <p className="text-xl font-bold text-blue-700 dark:text-blue-300">
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <p className="text-sm text-blue-600">Loss</p>
+                  <p className="text-xl font-bold text-blue-700">
                     {status.loss.toFixed(4)}
                   </p>
                 </div>
@@ -234,7 +234,7 @@ export default function NeuralNetworkPage() {
             )}
           </div>
         ) : (
-          <p className="text-gray-500 dark:text-gray-400">No training status available</p>
+          <p className="text-gray-500">No training status available</p>
         )}
       </motion.div>
 
@@ -244,41 +244,41 @@ export default function NeuralNetworkPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+          className="bg-white rounded-lg shadow-lg p-6"
         >
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">
             Model Metrics
           </h2>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Accuracy</p>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <p className="text-sm text-gray-600">Accuracy</p>
+              <p className="text-2xl font-bold text-green-600">
                 {(metrics.accuracy * 100).toFixed(1)}%
               </p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Training Examples</p>
-              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              <p className="text-sm text-gray-600">Training Examples</p>
+              <p className="text-2xl font-bold text-blue-600">
                 {metrics.totalTrainingExamples}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Intents</p>
-              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              <p className="text-sm text-gray-600">Intents</p>
+              <p className="text-2xl font-bold text-purple-600">
                 {metrics.totalIntents}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Vocabulary Size</p>
-              <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+              <p className="text-sm text-gray-600">Vocabulary Size</p>
+              <p className="text-2xl font-bold text-orange-600">
                 {metrics.vocabularySize.toLocaleString()}
               </p>
             </div>
           </div>
 
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex justify-between items-center text-sm text-gray-600">
               <span>Model Size: {metrics.modelSize}</span>
               <span>Last Training: {new Date(metrics.lastTrainingDate).toLocaleDateString()}</span>
             </div>
@@ -291,9 +291,9 @@ export default function NeuralNetworkPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+        className="bg-white rounded-lg shadow-lg p-6"
       >
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900">
           Actions
         </h2>
         
@@ -315,8 +315,8 @@ export default function NeuralNetworkPage() {
           </button>
           
           {shouldRetrain && (
-            <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
-              <p className="text-yellow-700 dark:text-yellow-300 font-medium">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p className="text-yellow-700 font-medium">
                 🔄 Model should be retrained due to new training data
               </p>
             </div>
@@ -329,9 +329,9 @@ export default function NeuralNetworkPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+        className="bg-white rounded-lg shadow-lg p-6"
       >
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900">
           Test Prediction
         </h2>
         
@@ -342,7 +342,7 @@ export default function NeuralNetworkPage() {
               value={testInput}
               onChange={(e) => setTestInput(e.target.value)}
               placeholder="Enter text to test neural network prediction..."
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               onKeyPress={(e) => e.key === 'Enter' && handleTest()}
             />
             <button
@@ -355,8 +355,8 @@ export default function NeuralNetworkPage() {
           </div>
 
           {testResult && (
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <h3 className="font-medium text-gray-900 dark:text-white mb-2">Prediction Result:</h3>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-medium text-gray-900 mb-2">Prediction Result:</h3>
               
               {testResult.neuralPrediction ? (
                 <div className="space-y-2">
@@ -388,7 +388,7 @@ export default function NeuralNetworkPage() {
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-600">
                   No neural network prediction (using fallback method)
                 </p>
               )}
@@ -403,22 +403,22 @@ export default function NeuralNetworkPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+          className="bg-white rounded-lg shadow-lg p-6"
         >
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">
             Prediction Statistics
           </h2>
           
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Predictions</p>
-              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              <p className="text-sm text-gray-600">Total Predictions</p>
+              <p className="text-2xl font-bold text-blue-600">
                 {predictionStats.totalPredictions.toLocaleString()}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Average Confidence</p>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <p className="text-sm text-gray-600">Average Confidence</p>
+              <p className="text-2xl font-bold text-green-600">
                 {(predictionStats.averageConfidence * 100).toFixed(1)}%
               </p>
             </div>
@@ -426,12 +426,12 @@ export default function NeuralNetworkPage() {
 
           {predictionStats.intentDistribution.length > 0 && (
             <div>
-              <h3 className="font-medium text-gray-900 dark:text-white mb-3">Intent Distribution</h3>
+              <h3 className="font-medium text-gray-900 mb-3">Intent Distribution</h3>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {predictionStats.intentDistribution.slice(0, 10).map((intent, index) => (
-                  <div key={index} className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                  <div key={index} className="flex justify-between items-center p-2 bg-gray-50 rounded">
                     <span className="text-sm font-medium">{intent.intentName}</span>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-gray-600">
                       {intent.count} predictions ({(intent.avgConfidence * 100).toFixed(1)}% avg)
                     </div>
                   </div>

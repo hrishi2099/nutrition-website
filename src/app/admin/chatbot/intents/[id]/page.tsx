@@ -215,11 +215,11 @@ export default function IntentDetailPage() {
     return (
       <AdminSidebar>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{error || 'Intent not found'}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
+          <p className="text-gray-600 mb-6">{error || 'Intent not found'}</p>
           <button
             onClick={() => window.history.back()}
-            className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Go Back
           </button>
@@ -237,13 +237,13 @@ export default function IntentDetailPage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => window.history.back()}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-gray-500 hover:text-gray-700"
               >
                 ← Back
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{intent.name}</h1>
-                <p className="text-gray-600 dark:text-gray-300">
+                <h1 className="text-2xl font-bold text-gray-900">{intent.name}</h1>
+                <p className="text-gray-600">
                   {intent.description || 'No description provided'}
                 </p>
               </div>
@@ -252,12 +252,12 @@ export default function IntentDetailPage() {
           <div className="flex items-center space-x-2">
             <span className={`px-3 py-1 rounded-full text-sm font-medium ${
               intent.isActive 
-                ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300' 
-                : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'
+                ? 'bg-green-100 text-green-800 ' 
+                : 'bg-red-100 text-red-800 '
             }`}>
               {intent.isActive ? 'Active' : 'Inactive'}
             </span>
-            <span className="px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+            <span className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
               {intent.category || 'General'}
             </span>
           </div>
@@ -268,14 +268,14 @@ export default function IntentDetailPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Training Examples</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{intent.examples.length}</p>
+                <p className="text-sm font-medium text-gray-600">Training Examples</p>
+                <p className="text-2xl font-bold text-gray-900">{intent.examples.length}</p>
               </div>
-              <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+              <div className="p-3 rounded-full bg-blue-100">
                 <span className="text-2xl">📝</span>
               </div>
             </div>
@@ -285,14 +285,14 @@ export default function IntentDetailPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Response Options</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{intent.responses.length}</p>
+                <p className="text-sm font-medium text-gray-600">Response Options</p>
+                <p className="text-2xl font-bold text-gray-900">{intent.responses.length}</p>
               </div>
-              <div className="p-3 rounded-full bg-green-100 dark:bg-green-900">
+              <div className="p-3 rounded-full bg-green-100">
                 <span className="text-2xl">💬</span>
               </div>
             </div>
@@ -302,14 +302,14 @@ export default function IntentDetailPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Priority Level</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{intent.priority}</p>
+                <p className="text-sm font-medium text-gray-600">Priority Level</p>
+                <p className="text-2xl font-bold text-gray-900">{intent.priority}</p>
               </div>
-              <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+              <div className="p-3 rounded-full bg-purple-100">
                 <span className="text-2xl">🎯</span>
               </div>
             </div>
@@ -317,15 +317,15 @@ export default function IntentDetailPage() {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <div className="border-b dark:border-gray-700">
+        <div className="bg-white rounded-lg shadow-sm">
+          <div className="border-b">
             <nav className="flex space-x-8 px-6" aria-label="Tabs">
               <button
                 onClick={() => setActiveTab('examples')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'examples'
-                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'border-blue-500 text-blue-600 '
+                    : 'border-transparent text-gray-500 hover:text-gray-700  '
                 }`}
               >
                 Training Examples ({intent.examples.length})
@@ -334,8 +334,8 @@ export default function IntentDetailPage() {
                 onClick={() => setActiveTab('responses')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'responses'
-                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'border-blue-500 text-blue-600 '
+                    : 'border-transparent text-gray-500 hover:text-gray-700  '
                 }`}
               >
                 Response Options ({intent.responses.length})
@@ -347,10 +347,10 @@ export default function IntentDetailPage() {
             {activeTab === 'examples' && (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">Training Examples</h3>
+                  <h3 className="text-lg font-medium text-gray-900">Training Examples</h3>
                   <button
                     onClick={() => setShowExampleModal(true)}
-                    className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                   >
                     Add Example
                   </button>
@@ -358,10 +358,10 @@ export default function IntentDetailPage() {
 
                 {intent.examples.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500 dark:text-gray-400 mb-4">No training examples yet</p>
+                    <p className="text-gray-500 mb-4">No training examples yet</p>
                     <button
                       onClick={() => setShowExampleModal(true)}
-                      className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
                       Add First Example
                     </button>
@@ -371,11 +371,11 @@ export default function IntentDetailPage() {
                     {intent.examples.map((example) => (
                       <div
                         key={example.id}
-                        className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 flex justify-between items-start"
+                        className="bg-gray-50 rounded-lg p-4 flex justify-between items-start"
                       >
                         <div className="flex-1">
-                          <p className="text-gray-900 dark:text-white font-medium">{example.userInput}</p>
-                          <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-gray-900 font-medium">{example.userInput}</p>
+                          <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
                             <span>Confidence: {(example.confidence * 100).toFixed(0)}%</span>
                             <span>Keywords: {example.keywords.length}</span>
                             <span className={`${example.isActive ? 'text-green-600' : 'text-red-600'}`}>
@@ -385,7 +385,7 @@ export default function IntentDetailPage() {
                         </div>
                         <button
                           onClick={() => deleteExample(example.id)}
-                          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 ml-4"
+                          className="text-red-600 hover:text-red-800 ml-4"
                         >
                           Delete
                         </button>
@@ -399,10 +399,10 @@ export default function IntentDetailPage() {
             {activeTab === 'responses' && (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">Response Options</h3>
+                  <h3 className="text-lg font-medium text-gray-900">Response Options</h3>
                   <button
                     onClick={() => setShowResponseModal(true)}
-                    className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                   >
                     Add Response
                   </button>
@@ -410,10 +410,10 @@ export default function IntentDetailPage() {
 
                 {intent.responses.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500 dark:text-gray-400 mb-4">No response options yet</p>
+                    <p className="text-gray-500 mb-4">No response options yet</p>
                     <button
                       onClick={() => setShowResponseModal(true)}
-                      className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
                       Add First Response
                     </button>
@@ -423,11 +423,11 @@ export default function IntentDetailPage() {
                     {intent.responses.map((response) => (
                       <div
                         key={response.id}
-                        className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 flex justify-between items-start"
+                        className="bg-gray-50 rounded-lg p-4 flex justify-between items-start"
                       >
                         <div className="flex-1">
-                          <p className="text-gray-900 dark:text-white font-medium">{response.response}</p>
-                          <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-gray-900 font-medium">{response.response}</p>
+                          <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
                             <span>Type: {response.responseType}</span>
                             <span>Priority: {response.priority}</span>
                             <span>Used: {response.usageCount} times</span>
@@ -438,7 +438,7 @@ export default function IntentDetailPage() {
                         </div>
                         <button
                           onClick={() => deleteResponse(response.id)}
-                          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 ml-4"
+                          className="text-red-600 hover:text-red-800 ml-4"
                         >
                           Delete
                         </button>
@@ -454,12 +454,12 @@ export default function IntentDetailPage() {
         {/* Add Example Modal */}
         {showExampleModal && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add Training Example</h2>
+                <h2 className="text-xl font-bold text-gray-900">Add Training Example</h2>
                 <button
                   onClick={() => setShowExampleModal(false)}
-                  className="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100"
+                  className="text-gray-400 hover:text-gray-600"
                 >
                   ✕
                 </button>
@@ -467,13 +467,13 @@ export default function IntentDetailPage() {
               
               <form onSubmit={addExample} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     User Input Example
                   </label>
                   <textarea
                     value={exampleForm.userInput}
                     onChange={(e) => setExampleForm({ ...exampleForm, userInput: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
                     rows={3}
                     placeholder="What would a user say to trigger this intent?"
                     required
@@ -481,14 +481,14 @@ export default function IntentDetailPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Confidence (0.0 - 1.0)
                   </label>
                   <input
                     type="number"
                     value={exampleForm.confidence}
                     onChange={(e) => setExampleForm({ ...exampleForm, confidence: parseFloat(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
                     min="0"
                     max="1"
                     step="0.1"
@@ -498,14 +498,14 @@ export default function IntentDetailPage() {
                 <div className="flex space-x-3">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                   >
                     Add Example
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowExampleModal(false)}
-                    className="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
+                    className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
                   >
                     Cancel
                   </button>
@@ -518,12 +518,12 @@ export default function IntentDetailPage() {
         {/* Add Response Modal */}
         {showResponseModal && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add Response Option</h2>
+                <h2 className="text-xl font-bold text-gray-900">Add Response Option</h2>
                 <button
                   onClick={() => setShowResponseModal(false)}
-                  className="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-100"
+                  className="text-gray-400 hover:text-gray-600"
                 >
                   ✕
                 </button>
@@ -531,13 +531,13 @@ export default function IntentDetailPage() {
               
               <form onSubmit={addResponse} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Response Text
                   </label>
                   <textarea
                     value={responseForm.response}
                     onChange={(e) => setResponseForm({ ...responseForm, response: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
                     rows={4}
                     placeholder="How should the bot respond?"
                     required
@@ -545,13 +545,13 @@ export default function IntentDetailPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Response Type
                   </label>
                   <select
                     value={responseForm.responseType}
                     onChange={(e) => setResponseForm({ ...responseForm, responseType: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
                   >
                     <option value="text">Text</option>
                     <option value="template">Template</option>
@@ -560,18 +560,18 @@ export default function IntentDetailPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Priority
                   </label>
                   <input
                     type="number"
                     value={responseForm.priority}
                     onChange={(e) => setResponseForm({ ...responseForm, priority: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
                     min="0"
                     max="10"
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-gray-500 mt-1">
                     Higher priority responses are used first
                   </p>
                 </div>
@@ -579,14 +579,14 @@ export default function IntentDetailPage() {
                 <div className="flex space-x-3">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                   >
                     Add Response
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowResponseModal(false)}
-                    className="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
+                    className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
                   >
                     Cancel
                   </button>

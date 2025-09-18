@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import AdminSidebar from '@/components/AdminSidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -31,33 +31,31 @@ export default function AdminBlogPosts() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all');
 
-  useEffect(() => {
-    fetchPosts();
-  }, [filter]);
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
       if (filter === 'published') params.append('published', 'true');
       if (filter === 'draft') params.append('published', 'false');
 
-      const response = await fetch(`/api/blog/posts?${params}`, {
+      const response = await fetch(`/api/blog/posts?${params.toString()}`, {
         credentials: 'include',
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch posts');
-      }
+      if (!response.ok) throw new Error('Failed to fetch posts');
 
       const data = await response.json();
       setPosts(data.posts || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load posts');
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
 
   const deletePost = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;

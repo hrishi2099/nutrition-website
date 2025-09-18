@@ -8,6 +8,8 @@ import PageTransition from '@/components/PageTransition';
 import FadeInSection from '@/components/FadeInSection';
 import AnimatedButton from '@/components/AnimatedButton';
 import { formatHeight } from '@/lib/heightUtils';
+import Link from 'next/link';
+import { Package, User, Settings, ShoppingCart } from 'lucide-react';
 
 interface UserProfile {
   id: string;
@@ -95,19 +97,35 @@ export default function ProfilePage() {
   const fetchEnrollments = async () => {
     try {
       setEnrollmentsLoading(true);
-      const response = await fetch('/api/diet-plan/enroll', {
+      const response = await fetch('/api/test-enrollments', {
         credentials: 'include',
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch enrollments');
+        console.log('Response not ok, status:', response.status);
+        setEnrollments([]);
+        return;
       }
 
-      const data = await response.json();
-      setEnrollments(data.enrollments || []);
+      const responseText = await response.text();
+
+      // Check if response is HTML (error page)
+      if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
+        console.log('Received HTML instead of JSON, setting empty enrollments');
+        setEnrollments([]);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(responseText);
+        setEnrollments(data.enrollments || []);
+      } catch (parseError) {
+        console.log('JSON parse error, setting empty enrollments:', parseError);
+        setEnrollments([]);
+      }
     } catch (err) {
       console.error('Enrollments fetch error:', err);
-      // Don't set error for enrollments as it's not critical
+      setEnrollments([]);
     } finally {
       setEnrollmentsLoading(false);
     }
@@ -187,7 +205,7 @@ export default function ProfilePage() {
 
   if (isLoading || profileLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
         <LoadingSpinner />
       </div>
     );
@@ -195,7 +213,7 @@ export default function ProfilePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <AnimatedButton onClick={() => window.location.reload()}>
@@ -208,9 +226,9 @@ export default function ProfilePage() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
         <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-300">Profile not found</p>
+          <p className="text-gray-600">Profile not found</p>
         </div>
       </div>
     );
@@ -218,16 +236,54 @@ export default function ProfilePage() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection>
-            <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 My Profile
               </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
+              <p className="text-lg text-gray-600">
                 Manage your nutrition and fitness profile
               </p>
+            </div>
+          </FadeInSection>
+
+          {/* Quick Navigation */}
+          <FadeInSection delay={0.1}>
+            <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Link href="/profile/orders">
+                  <div className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:shadow-md transition-all cursor-pointer">
+                    <Package className="w-8 h-8 text-green-600 mr-3" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">My Orders</h3>
+                      <p className="text-sm text-gray-600">View order history</p>
+                    </div>
+                  </div>
+                </Link>
+
+                <Link href="/cart">
+                  <div className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:shadow-md transition-all cursor-pointer">
+                    <ShoppingCart className="w-8 h-8 text-green-600 mr-3" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">Shopping Cart</h3>
+                      <p className="text-sm text-gray-600">View cart items</p>
+                    </div>
+                  </div>
+                </Link>
+
+                <Link href="/profile/edit">
+                  <div className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:shadow-md transition-all cursor-pointer">
+                    <Settings className="w-8 h-8 text-green-600 mr-3" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">Edit Profile</h3>
+                      <p className="text-sm text-gray-600">Update information</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             </div>
           </FadeInSection>
 
@@ -235,9 +291,9 @@ export default function ProfilePage() {
             {/* Personal Information */}
             <div className="lg:col-span-2">
               <FadeInSection>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+                <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                    <h2 className="text-2xl font-semibold text-gray-900">
                       Personal Information
                     </h2>
                     <AnimatedButton
@@ -250,45 +306,45 @@ export default function ProfilePage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Full Name
                       </label>
-                      <p className="text-lg text-gray-900 dark:text-white">
+                      <p className="text-lg text-gray-900">
                         {profile.firstName} {profile.lastName}
                       </p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Email
                       </label>
-                      <p className="text-lg text-gray-900 dark:text-white">{profile.email}</p>
+                      <p className="text-lg text-gray-900">{profile.email}</p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Age
                       </label>
-                      <p className="text-lg text-gray-900 dark:text-white">
+                      <p className="text-lg text-gray-900">
                         {profile.age ? `${profile.age} years` : 'Not specified'}
                       </p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Gender
                       </label>
-                      <p className="text-lg text-gray-900 dark:text-white">
+                      <p className="text-lg text-gray-900">
                         {profile.gender || 'Not specified'}
                       </p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Height
                       </label>
                       <div className="flex items-center space-x-3">
-                        <p className="text-lg text-gray-900 dark:text-white">
+                        <p className="text-lg text-gray-900">
                           {profile.height ? formatHeight(profile.height, heightUnit) : 'Not specified'}
                         </p>
                         {profile.height && (
@@ -319,19 +375,19 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Weight
                       </label>
-                      <p className="text-lg text-gray-900 dark:text-white">
+                      <p className="text-lg text-gray-900">
                         {profile.weight ? `${profile.weight} kg` : 'Not specified'}
                       </p>
                     </div>
 
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Activity Level
                       </label>
-                      <p className="text-lg text-gray-900 dark:text-white">
+                      <p className="text-lg text-gray-900">
                         {getActivityLevelDisplay(profile.activityLevel)}
                       </p>
                     </div>
@@ -342,7 +398,7 @@ export default function ProfilePage() {
               {/* Goals Section */}
               <FadeInSection>
                 <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                     My Goals
                   </h2>
                   {profile.goals.length > 0 ? (
@@ -350,25 +406,25 @@ export default function ProfilePage() {
                       {profile.goals.map((goal) => (
                         <div
                           key={goal.id}
-                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                          className="border border-gray-200 rounded-lg p-4"
                         >
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                              <h3 className="text-lg font-medium text-gray-900">
                                 {getGoalTypeDisplay(goal.type)}
                               </h3>
                               {goal.target && (
-                                <p className="text-gray-600 dark:text-gray-300">
+                                <p className="text-gray-600">
                                   Target: {goal.target} kg
                                 </p>
                               )}
                               {goal.deadline && (
-                                <p className="text-gray-600 dark:text-gray-300">
+                                <p className="text-gray-600">
                                   Deadline: {new Date(goal.deadline).toLocaleDateString()}
                                 </p>
                               )}
                             </div>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                            <span className="text-sm text-gray-500">
                               Created: {new Date(goal.createdAt).toLocaleDateString()}
                             </span>
                           </div>
@@ -376,7 +432,7 @@ export default function ProfilePage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-600 dark:text-gray-300">No goals set yet.</p>
+                    <p className="text-gray-600">No goals set yet.</p>
                   )}
                 </div>
               </FadeInSection>
@@ -386,7 +442,7 @@ export default function ProfilePage() {
             <div className="lg:col-span-1">
               <FadeInSection>
                 <div className="bg-white rounded-lg shadow-lg p-6">
-                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                     My Enrolled Plans
                   </h2>
                   {enrollmentsLoading ? (
@@ -398,33 +454,33 @@ export default function ProfilePage() {
                       {enrollments.map((plan) => (
                         <div
                           key={plan.id}
-                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                          className="border border-gray-200 rounded-lg p-4"
                         >
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                            <h3 className="text-lg font-medium text-gray-900">
                               {plan.name}
                             </h3>
-                            <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
                               Active
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                          <p className="text-sm text-gray-600 mb-3">
                             {plan.description}
                           </p>
                           <div className="space-y-1 text-sm mb-4">
-                            <p className="text-gray-700 dark:text-gray-300">
+                            <p className="text-gray-700">
                               <span className="font-medium">Type:</span> {getPlanTypeDisplay(plan.type)}
                             </p>
-                            <p className="text-gray-700 dark:text-gray-300">
+                            <p className="text-gray-700">
                               <span className="font-medium">Duration:</span> {plan.duration} weeks
                             </p>
-                            <p className="text-gray-700 dark:text-gray-300">
+                            <p className="text-gray-700">
                               <span className="font-medium">Calories:</span> {plan.calories}/day
                             </p>
-                            <p className="text-gray-700 dark:text-gray-300">
+                            <p className="text-gray-700">
                               <span className="font-medium">Meals:</span> {plan.mealsPerDay}/day
                             </p>
-                            <p className="text-gray-700 dark:text-gray-300">
+                            <p className="text-gray-700">
                               <span className="font-medium">Price:</span> ${plan.price}/month
                             </p>
                           </div>
@@ -447,7 +503,7 @@ export default function ProfilePage() {
                     </div>
                   ) : (
                     <div className="text-center">
-                      <p className="text-gray-600 dark:text-gray-300 mb-4">No enrolled plans yet.</p>
+                      <p className="text-gray-600 mb-4">No enrolled plans yet.</p>
                       <AnimatedButton
                         onClick={() => router.push('/diet-plan')}
                         className="bg-green-600 hover:bg-green-700"

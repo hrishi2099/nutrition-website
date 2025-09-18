@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 interface ContactInfo {
   id: string;

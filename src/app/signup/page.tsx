@@ -164,7 +164,7 @@ export default function Signup() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -177,7 +177,7 @@ export default function Signup() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="mt-6 text-3xl font-bold text-gray-900 dark:text-white"
+                className="mt-6 text-3xl font-bold text-gray-900"
               >
                 Create your account
               </motion.h2>
@@ -185,12 +185,12 @@ export default function Signup() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="mt-2 text-sm text-gray-600 dark:text-gray-300"
+                className="mt-2 text-sm text-gray-600"
               >
                 Already have an account?{' '}
                 <Link
                   href="/login"
-                  className="font-medium text-black dark:text-white hover:text-gray-800 dark:hover:text-gray-300 transition-colors"
+                  className="font-medium text-black hover:text-gray-800 transition-colors"
                 >
                   Sign in here
                 </Link>
@@ -202,7 +202,7 @@ export default function Signup() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-8 space-y-6 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg" 
+          className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-lg" 
           onSubmit={handleSubmit}
         >
           {signupError && (
@@ -240,7 +240,7 @@ export default function Signup() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                   First name
                 </label>
                 <input
@@ -250,8 +250,8 @@ export default function Signup() {
                   autoComplete="given-name"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                  className={`mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 bg-white text-gray-900 ${
+                    errors.firstName ? 'border-red-500' : 'border-gray-300 '
                   }`}
                   placeholder="First name"
                 />
@@ -548,7 +548,7 @@ export default function Signup() {
             >
               <motion.button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all duration-200"
                 whileHover={{ scale: 1.02, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -563,7 +563,7 @@ export default function Signup() {
 
               <motion.button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all duration-200"
                 whileHover={{ scale: 1.02, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
                 whileTap={{ scale: 0.98 }}
               >

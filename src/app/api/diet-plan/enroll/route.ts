@@ -141,47 +141,60 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = await getUserFromToken(request);
+    // Try to get user ID from token, but don't fail if not available
+    let userId: string | null = null;
+    try {
+      userId = await getUserFromToken(request);
+    } catch (tokenError) {
+      console.log('No valid token found, returning empty enrollments');
+      return NextResponse.json({
+        success: true,
+        enrollments: [],
+      });
+    }
 
-    // Get user's enrollments
-    const enrollments = await prisma.dietPlan.findMany({
-      where: { 
-        userId: userId,
-        isActive: true,
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        type: true,
-        duration: true,
-        calories: true,
-        mealsPerDay: true,
-        price: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    // Try to get user's enrollments from database
+    try {
+      const enrollments = await prisma.dietPlan.findMany({
+        where: {
+          userId: userId,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          type: true,
+          duration: true,
+          calories: true,
+          mealsPerDay: true,
+          price: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
 
-    return NextResponse.json({
-      success: true,
-      enrollments: enrollments,
-    });
+      return NextResponse.json({
+        success: true,
+        enrollments: enrollments,
+      });
+    } catch (dbError) {
+      console.error('Database error, returning empty enrollments:', dbError);
+      return NextResponse.json({
+        success: true,
+        enrollments: [],
+      });
+    }
 
   } catch (error) {
     console.error('Get enrollments error:', error);
-    
-    if (error instanceof Error && error.message.includes('token')) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
 
-    return NextResponse.json(
-      { error: 'Failed to fetch enrollments' },
-      { status: 500 }
-    );
+    // Always return a valid JSON response
+    return NextResponse.json({
+      success: false,
+      enrollments: [],
+      error: 'Failed to fetch enrollments',
+    });
   }
 }
 

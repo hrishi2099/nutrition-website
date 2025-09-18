@@ -129,11 +129,11 @@ export default function ChatbotAnalyticsPage() {
     return (
       <AdminSidebar>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={fetchAnalytics}
-            className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Try Again
           </button>
@@ -148,8 +148,8 @@ export default function ChatbotAnalyticsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Training Analytics</h1>
-            <p className="text-gray-600 dark:text-gray-300">Monitor chatbot training performance and test responses</p>
+            <h1 className="text-2xl font-bold text-gray-900">Training Analytics</h1>
+            <p className="text-gray-600">Monitor chatbot training performance and test responses</p>
           </div>
           <button
             onClick={refreshCache}
@@ -157,7 +157,7 @@ export default function ChatbotAnalyticsPage() {
             className={`px-4 py-2 rounded text-white ${
               refreshing 
                 ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800'
+                : 'bg-green-600 hover:bg-green-700 '
             }`}
           >
             {refreshing ? 'Refreshing...' : 'Refresh Cache'}
@@ -165,33 +165,33 @@ export default function ChatbotAnalyticsPage() {
         </div>
 
         {/* System Status */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">System Status</h2>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">System Status</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center space-x-2">
               <div className={`w-3 h-3 rounded-full ${analytics?.system_status.cache_active ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className="text-gray-900 dark:text-white">
+              <span className="text-gray-900">
                 Cache Status: {analytics?.system_status.cache_active ? 'Active' : 'Inactive'}
               </span>
             </div>
-            <div className="text-gray-600 dark:text-gray-300">
+            <div className="text-gray-600">
               Last Updated: {analytics?.system_status.last_updated ? new Date(analytics.system_status.last_updated).toLocaleString() : 'Unknown'}
             </div>
           </div>
         </div>
 
         {/* Test Training System */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Test Training System</h2>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Test Training System</h2>
           <form onSubmit={testTrainingMatch} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Test Message
               </label>
               <textarea
                 value={testMessage}
                 onChange={(e) => setTestMessage(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
                 rows={3}
                 placeholder="Enter a message to test against your training data..."
                 required
@@ -203,7 +203,7 @@ export default function ChatbotAnalyticsPage() {
               className={`px-4 py-2 rounded text-white ${
                 testLoading 
                   ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800'
+                  : 'bg-blue-600 hover:bg-blue-700 '
               }`}
             >
               {testLoading ? 'Testing...' : 'Test Message'}
@@ -215,9 +215,9 @@ export default function ChatbotAnalyticsPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
+              className="mt-6 p-4 bg-gray-50 rounded-lg"
             >
-              <h3 className="font-medium text-gray-900 dark:text-white mb-2">Match Result:</h3>
+              <h3 className="font-medium text-gray-900 mb-2">Match Result:</h3>
               <div className="space-y-2 text-sm">
                 <p><strong>Intent:</strong> {testResult.intentName}</p>
                 <p><strong>Confidence:</strong> {(testResult.confidence * 100).toFixed(1)}%</p>
@@ -225,7 +225,7 @@ export default function ChatbotAnalyticsPage() {
                 <p><strong>Matched Keywords:</strong> {testResult.matchedKeywords.join(', ') || 'None'}</p>
                 <div>
                   <strong>Response:</strong>
-                  <div className="mt-1 p-2 bg-white dark:bg-gray-600 rounded border">
+                  <div className="mt-1 p-2 bg-white rounded border">
                     {testResult.response}
                   </div>
                 </div>
@@ -234,60 +234,60 @@ export default function ChatbotAnalyticsPage() {
           )}
 
           {testMessage && !testResult && !testLoading && (
-            <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-              <p className="text-yellow-800 dark:text-yellow-300">No training match found for this message. The chatbot would fall back to AI or rule-based responses.</p>
+            <div className="mt-6 p-4 bg-yellow-50 /20 rounded-lg">
+              <p className="text-yellow-800">No training match found for this message. The chatbot would fall back to AI or rule-based responses.</p>
             </div>
           )}
         </div>
 
         {/* Training Statistics */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <div className="px-6 py-4 border-b dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Training Performance</h2>
+        <div className="bg-white rounded-lg shadow-sm">
+          <div className="px-6 py-4 border-b">
+            <h2 className="text-lg font-semibold text-gray-900">Training Performance</h2>
           </div>
           
           {analytics?.statistics.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">📊</div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No analytics data yet</h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No analytics data yet</h3>
+              <p className="text-gray-600">
                 Training analytics will appear here once users start interacting with the chatbot
               </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Intent
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Match Count
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Avg. Confidence
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Performance
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {analytics?.statistics.map((stat) => (
                     <tr key={stat.intentId}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {stat.intentName}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {stat.matchCount}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {(stat.avgConfidence * 100).toFixed(1)}%
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                          <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div
                               className={`h-2 rounded-full ${
                                 stat.avgConfidence > 0.8 ? 'bg-green-500' :
@@ -296,7 +296,7 @@ export default function ChatbotAnalyticsPage() {
                               style={{ width: `${stat.avgConfidence * 100}%` }}
                             ></div>
                           </div>
-                          <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                          <span className="ml-2 text-xs text-gray-500">
                             {stat.avgConfidence > 0.8 ? 'Excellent' :
                              stat.avgConfidence > 0.6 ? 'Good' : 'Needs Improvement'}
                           </span>

@@ -8,6 +8,8 @@ import { Product } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import AnimatedButton from './AnimatedButton';
 import FadeInSection from './FadeInSection';
+import { formatPrice } from '@/utils/currency';
+import { useToast } from '@/contexts/ToastContext';
 
 interface ProductCardProps {
   product: Product;
@@ -18,32 +20,28 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
   const { addToCart, isInCart, getItemQuantity } = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
+  const { showToast } = useToast();
 
   const handleAddToCart = async () => {
     setIsAdding(true);
     try {
       addToCart(product, 1);
-      // You could add a toast notification here
+      showToast(`${product.name} added to cart!`, 'success', 3000);
     } catch (error) {
       console.error('Error adding to cart:', error);
+      showToast('Failed to add item to cart', 'error');
     } finally {
       setIsAdding(false);
     }
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-    }).format(price / 100);
-  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <span
         key={i}
         className={`text-sm ${
-          i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'
+          i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300 '
         }`}
       >
         ★
@@ -54,7 +52,7 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
   return (
     <FadeInSection delay={delay}>
       <motion.div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+        className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
         whileHover={{ y: -5 }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -93,12 +91,12 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
         {/* Product Info */}
         <div className="p-4">
           {/* Category */}
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="text-xs text-gray-500 mb-1">
             {product.category.name}
           </div>
 
           {/* Product Name */}
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
             {product.name}
           </h3>
 
@@ -107,7 +105,7 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
             <div className="flex items-center">
               {renderStars(product.rating)}
             </div>
-            <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+            <span className="text-xs text-gray-500 ml-2">
               ({product.reviewCount})
             </span>
           </div>
@@ -115,23 +113,23 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
           {/* Price */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
-              <span className="text-lg font-bold text-gray-900 dark:text-white">
+              <span className="text-lg font-bold text-gray-900">
                 {formatPrice(product.price)}
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-sm text-gray-500 dark:text-gray-400 line-through">
+                <span className="text-sm text-gray-500 line-through">
                   {formatPrice(product.originalPrice)}
                 </span>
               )}
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-xs text-gray-500">
               {product.weight}
             </div>
           </div>
 
           {/* Benefits */}
           <div className="mb-3">
-            <ul className="text-xs text-gray-600 dark:text-gray-300 space-y-1">
+            <ul className="text-xs text-gray-600 space-y-1">
               {product.benefits.slice(0, 2).map((benefit, index) => (
                 <li key={index} className="flex items-start">
                   <span className="text-green-500 mr-1">✓</span>
@@ -145,12 +143,12 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
           <div className="space-y-2">
             {isInCart(product.id) ? (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-green-600 dark:text-green-400 font-medium">
+                <span className="text-sm text-green-600 font-medium">
                   In Cart ({getItemQuantity(product.id)})
                 </span>
                 <Link
                   href="/cart"
-                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-sm text-blue-600 hover:underline"
                 >
                   View Cart
                 </Link>
@@ -161,7 +159,7 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
                 disabled={!product.inStock || isAdding}
                 className={`w-full bg-gradient-to-r from-green-600 to-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ${
                   !product.inStock
-                    ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : ''
                 }`}
               >
@@ -172,7 +170,7 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
 
           {/* Stock Status */}
           {product.inStock && product.stockQuantity < 10 && (
-            <div className="text-xs text-orange-600 dark:text-orange-400 mt-2">
+            <div className="text-xs text-orange-600 mt-2">
               Only {product.stockQuantity} left in stock!
             </div>
           )}
@@ -182,15 +180,15 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
       {/* Quick View Modal */}
       {showQuickView && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-bold text-gray-900">
                   {product.name}
                 </h2>
                 <button
                   onClick={() => setShowQuickView(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  className="text-gray-500 hover:text-gray-700"
                 >
                   ✕
                 </button>
@@ -207,20 +205,20 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
                 </div>
                 
                 <div>
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                  <div className="text-3xl font-bold text-gray-900 mb-4">
                     {formatPrice(product.price)}
                   </div>
                   
                   <div className="mb-4">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Description</h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
+                    <p className="text-gray-600 text-sm">
                       {product.description}
                     </p>
                   </div>
 
                   <div className="mb-4">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Key Benefits</h3>
-                    <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                    <h3 className="font-semibold text-gray-900 mb-2">Key Benefits</h3>
+                    <ul className="text-sm text-gray-600 space-y-1">
                       {product.benefits.map((benefit, index) => (
                         <li key={index} className="flex items-start">
                           <span className="text-green-500 mr-2">✓</span>

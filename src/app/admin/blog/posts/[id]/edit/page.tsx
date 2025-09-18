@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -49,47 +49,35 @@ export default function EditBlogPost() {
     coverImage: '',
     categoryId: '',
     published: false,
+    tags: [] as string[],
   });
 
-  useEffect(() => {
-    if (postId) {
-      fetchPost();
-      fetchCategories();
-      fetchTags();
-    }
-  }, [postId]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const response = await fetch(`/api/blog/posts/${postId}`);
       const data = await response.json();
-      
+
       if (data.success) {
         const postData = data.post;
         setPost(postData);
         setFormData({
-          title: postData.title,
-          content: postData.content,
+          title: postData.title || '',
+          content: postData.content || '',
           excerpt: postData.excerpt || '',
           coverImage: postData.coverImage || '',
+          published: postData.published || false,
           categoryId: postData.categoryId || '',
-          published: postData.published,
+          tags: postData.tags?.map((tag: any) => tag.id) || [],
         });
-        setSelectedTags(postData.tags.map((t: { tag: { id: string } }) => t.tag.id));
-      } else {
-        alert('Post not found');
-        router.push('/admin/blog/posts');
       }
     } catch (error) {
       console.error('Error fetching post:', error);
-      alert('Failed to load post');
-      router.push('/admin/blog/posts');
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch('/api/blog/categories');
       const data = await response.json();
@@ -99,9 +87,9 @@ export default function EditBlogPost() {
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
-  };
+  }, []);
 
-  const fetchTags = async () => {
+  const fetchTags = useCallback(async () => {
     try {
       const response = await fetch('/api/blog/tags');
       const data = await response.json();
@@ -111,7 +99,16 @@ export default function EditBlogPost() {
     } catch (error) {
       console.error('Error fetching tags:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (postId) {
+      fetchPost();
+      fetchCategories();
+      fetchTags();
+    }
+  }, [postId, fetchPost, fetchCategories, fetchTags]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

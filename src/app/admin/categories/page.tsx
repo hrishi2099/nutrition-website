@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
 import { motion } from 'framer-motion';
 import { ProductCategory } from '@/types/product';
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  FolderOpen,
-  MoreVertical
+import Image from 'next/image';
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  FolderOpen
 } from 'lucide-react';
 
 // Sample data - in a real app, this would come from an API
@@ -59,11 +59,7 @@ export default function AdminCategoriesPage() {
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<ProductCategory | null>(null);
 
-  useEffect(() => {
-    filterCategories();
-  }, [searchTerm, categories]);
-
-  const filterCategories = () => {
+  const filterCategories = useCallback(() => {
     let filtered = [...categories];
 
     if (searchTerm) {
@@ -74,7 +70,11 @@ export default function AdminCategoriesPage() {
     }
 
     setFilteredCategories(filtered);
-  };
+  }, [searchTerm, categories]);
+
+  useEffect(() => {
+    filterCategories();
+  }, [filterCategories]);
 
   const handleDeleteCategory = (categoryId: string) => {
     if (confirm('Are you sure you want to delete this category?')) {
@@ -113,11 +113,11 @@ export default function AdminCategoriesPage() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full"
+        className="bg-white rounded-lg shadow-xl max-w-md w-full"
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900">
               {editingCategory ? 'Edit Category' : 'Add New Category'}
             </h2>
             <button
@@ -125,7 +125,7 @@ export default function AdminCategoriesPage() {
                 setShowCategoryForm(false);
                 setEditingCategory(null);
               }}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              className="text-gray-400 hover:text-gray-600"
             >
               ✕
             </button>
@@ -143,7 +143,7 @@ export default function AdminCategoriesPage() {
             handleSaveCategory(categoryData);
           }} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Category Name *
               </label>
               <input
@@ -151,12 +151,12 @@ export default function AdminCategoriesPage() {
                 name="name"
                 required
                 defaultValue={editingCategory?.name || ''}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Slug *
               </label>
               <input
@@ -164,12 +164,12 @@ export default function AdminCategoriesPage() {
                 name="slug"
                 required
                 defaultValue={editingCategory?.slug || ''}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Description *
               </label>
               <textarea
@@ -177,19 +177,19 @@ export default function AdminCategoriesPage() {
                 required
                 rows={3}
                 defaultValue={editingCategory?.description || ''}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Image URL
               </label>
               <input
                 type="url"
                 name="image"
                 defaultValue={editingCategory?.image || ''}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
               />
             </div>
 
@@ -200,7 +200,7 @@ export default function AdminCategoriesPage() {
                   setShowCategoryForm(false);
                   setEditingCategory(null);
                 }}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
                 Cancel
               </button>
@@ -223,8 +223,8 @@ export default function AdminCategoriesPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Categories</h1>
-            <p className="text-gray-600 dark:text-gray-300">Manage product categories</p>
+            <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
+            <p className="text-gray-600">Manage product categories</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <button 
@@ -242,15 +242,15 @@ export default function AdminCategoriesPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
             <div className="flex items-center">
-              <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
-                <FolderOpen className="w-6 h-6 text-blue-600 dark:text-blue-300" />
+              <div className="p-3 rounded-full bg-blue-100">
+                <FolderOpen className="w-6 h-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Categories</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{categories.length}</p>
+                <p className="text-sm font-medium text-gray-600">Total Categories</p>
+                <p className="text-2xl font-bold text-gray-900">{categories.length}</p>
               </div>
             </div>
           </motion.div>
@@ -259,15 +259,15 @@ export default function AdminCategoriesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
             <div className="flex items-center">
-              <div className="p-3 rounded-full bg-green-100 dark:bg-green-900">
-                <FolderOpen className="w-6 h-6 text-green-600 dark:text-green-300" />
+              <div className="p-3 rounded-full bg-green-100">
+                <FolderOpen className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Categories</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{categories.length}</p>
+                <p className="text-sm font-medium text-gray-600">Active Categories</p>
+                <p className="text-2xl font-bold text-gray-900">{categories.length}</p>
               </div>
             </div>
           </motion.div>
@@ -276,22 +276,22 @@ export default function AdminCategoriesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+            className="bg-white rounded-lg shadow-md p-6"
           >
             <div className="flex items-center">
-              <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                <FolderOpen className="w-6 h-6 text-purple-600 dark:text-purple-300" />
+              <div className="p-3 rounded-full bg-purple-100">
+                <FolderOpen className="w-6 h-6 text-purple-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Products per Category</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+                <p className="text-sm font-medium text-gray-600">Products per Category</p>
+                <p className="text-2xl font-bold text-gray-900">12</p>
               </div>
             </div>
           </motion.div>
         </div>
 
         {/* Search */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
@@ -299,7 +299,7 @@ export default function AdminCategoriesPage() {
               placeholder="Search categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white w-full"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 w-full"
             />
           </div>
         </div>
@@ -312,36 +312,37 @@ export default function AdminCategoriesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="aspect-video bg-gray-200 dark:bg-gray-700">
-                <img
+              <div className="aspect-video bg-gray-200 relative">
+                <Image
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {category.name}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                   {category.description}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-gray-500">
                     Slug: {category.slug}
                   </span>
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleEditCategory(category)}
-                      className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                      className="text-blue-600 hover:text-blue-800"
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteCategory(category.id)}
-                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                      className="text-red-600 hover:text-red-800"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -354,9 +355,9 @@ export default function AdminCategoriesPage() {
 
         {filteredCategories.length === 0 && (
           <div className="text-center py-12">
-            <FolderOpen className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No categories found</h3>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No categories found</h3>
+            <p className="mt-1 text-sm text-gray-500">
               {searchTerm 
                 ? 'Try adjusting your search criteria.'
                 : 'Get started by adding a new category.'

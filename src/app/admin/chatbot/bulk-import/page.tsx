@@ -94,24 +94,24 @@ export default function BulkImportPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bulk Import Training Data</h1>
-            <p className="text-gray-600 dark:text-gray-300">Import multiple intents, examples, and responses at once</p>
+            <h1 className="text-2xl font-bold text-gray-900">Bulk Import Training Data</h1>
+            <p className="text-gray-600">Import multiple intents, examples, and responses at once</p>
           </div>
           <button
             onClick={() => window.history.back()}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="text-gray-500 hover:text-gray-700"
           >
             ← Back
           </button>
         </div>
 
         {/* Instructions */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">Import Format</h3>
-          <p className="text-blue-800 dark:text-blue-200 mb-4">
+        <div className="bg-blue-50 /20 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">Import Format</h3>
+          <p className="text-blue-800 mb-4">
             Import data should be a JSON array of intent objects. Each intent should include:
           </p>
-          <ul className="list-disc list-inside text-blue-800 dark:text-blue-200 space-y-1">
+          <ul className="list-disc list-inside text-blue-800 space-y-1">
             <li><strong>intent</strong>: Name of the intent</li>
             <li><strong>description</strong>: Optional description</li>
             <li><strong>category</strong>: nutrition, fitness, general, health, or recipes</li>
@@ -121,23 +121,23 @@ export default function BulkImportPage() {
           </ul>
           <button
             onClick={loadSample}
-            className="mt-4 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800"
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Load Sample Template
           </button>
         </div>
 
         {/* Import Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 JSON Import Data
               </label>
               <textarea
                 value={importData}
                 onChange={(e) => setImportData(e.target.value)}
-                className="w-full h-96 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm"
+                className="w-full h-96 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 font-mono text-sm"
                 placeholder="Paste your JSON data here..."
               />
             </div>
@@ -146,7 +146,7 @@ export default function BulkImportPage() {
               <button
                 onClick={handleImport}
                 disabled={importing || !importData.trim()}
-                className="bg-green-600 dark:bg-green-700 text-white px-6 py-2 rounded hover:bg-green-700 dark:hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
               >
                 {importing ? (
                   <>
@@ -162,7 +162,7 @@ export default function BulkImportPage() {
               </button>
               <button
                 onClick={() => setImportData('')}
-                className="bg-gray-500 dark:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-600 dark:hover:bg-gray-700"
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
               >
                 Clear
               </button>
@@ -175,14 +175,14 @@ export default function BulkImportPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
+            className="bg-white rounded-lg shadow-sm p-6"
           >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Import Results</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Import Results</h3>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <span className="text-green-600 dark:text-green-400">✅</span>
-                <span className="text-gray-900 dark:text-white">
+                <span className="text-green-600">✅</span>
+                <span className="text-gray-900">
                   Successfully imported {results.success} intents
                 </span>
               </div>
@@ -190,13 +190,13 @@ export default function BulkImportPage() {
               {results.errors.length > 0 && (
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <span className="text-red-600 dark:text-red-400">❌</span>
-                    <span className="text-gray-900 dark:text-white">
+                    <span className="text-red-600">❌</span>
+                    <span className="text-gray-900">
                       {results.errors.length} errors occurred:
                     </span>
                   </div>
-                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded p-4">
-                    <ul className="list-disc list-inside text-red-800 dark:text-red-200 space-y-1">
+                  <div className="bg-red-50 /20 border border-red-200 rounded p-4">
+                    <ul className="list-disc list-inside text-red-800 space-y-1">
                       {results.errors.map((error, index) => (
                         <li key={index}>{error}</li>
                       ))}
