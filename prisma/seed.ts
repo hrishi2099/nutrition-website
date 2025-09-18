@@ -385,6 +385,37 @@ async function main() {
     },
   });
 
+  // Create sample products
+  const product1 = await prisma.product.create({
+    data: {
+      name: 'Premium Whey Protein',
+      description: 'High-quality whey protein isolate for muscle building and recovery',
+      price: 5999, // ₹59.99 in paisa
+      imageUrl: '/api/placeholder/400/400',
+      stock: 50,
+    },
+  });
+
+  const product2 = await prisma.product.create({
+    data: {
+      name: 'Multivitamin Complex',
+      description: 'Complete daily multivitamin with essential vitamins and minerals',
+      price: 2999, // ₹29.99 in paisa
+      imageUrl: '/api/placeholder/400/400',
+      stock: 75,
+    },
+  });
+
+  const product3 = await prisma.product.create({
+    data: {
+      name: 'Omega-3 Fish Oil',
+      description: 'Pure omega-3 fatty acids for heart and brain health',
+      price: 3499, // ₹34.99 in paisa
+      imageUrl: '/api/placeholder/400/400',
+      stock: 30,
+    },
+  });
+
   // Create default contact info
   const contactInfo = await prisma.contactInfo.create({
     data: {
@@ -408,6 +439,7 @@ async function main() {
   console.log(`Created admin user: ${adminUser.email} (password: password123)`);
   console.log(`Created diet plans: ${weightLossPlan.name}, ${muscleGainPlan.name}`);
   console.log(`Created blog posts: ${post1.title}, ${post2.title}, ${post3.title}`);
+  console.log(`Created products: ${product1.name}, ${product2.name}, ${product3.name}`);
   console.log(`Created contact info for: ${contactInfo.companyName}`);
 }
 

@@ -1,6 +1,95 @@
-# Database Setup Guide
+# MySQL Database Setup Instructions
 
-This guide will help you set up a production PostgreSQL database for your nutrition website.
+## Step 1: Update Environment Variables
+
+**IMPORTANT: You need to do this step manually!**
+
+1. Open `.env.local` and replace `your_actual_password` with your actual MySQL root password:
+   ```
+   DATABASE_URL="mysql://root:YOUR_MYSQL_PASSWORD@localhost:3306/nutrition_db"
+   ```
+
+   **Current state:** `DATABASE_URL="mysql://root:your_actual_password@localhost:3306/nutrition_db"`
+   **Example:** `DATABASE_URL="mysql://root:mypassword123@localhost:3306/nutrition_db"`
+
+2. If you're using a different MySQL user, update the format accordingly:
+   ```
+   DATABASE_URL="mysql://username:password@host:port/database_name"
+   ```
+
+## Step 2: Create Database
+
+1. Open MySQL command line or MySQL Workbench
+2. Run the SQL from `create-database.sql`:
+   ```sql
+   CREATE DATABASE IF NOT EXISTS nutrition_db
+   CHARACTER SET utf8mb4
+   COLLATE utf8mb4_unicode_ci;
+   ```
+
+## Step 3: Run Migration
+
+After updating your DATABASE_URL, run:
+```bash
+npx prisma db push
+```
+
+This will create all the tables in your MySQL database.
+
+## Step 4: Seed Database
+
+```bash
+npm run db:seed
+```
+
+This will populate your database with:
+- Sample users (including admin@nutrisap.com)
+- Diet plans and meals
+- Blog posts and categories
+- Contact information
+- Sample products for the shopping cart
+
+## Step 5: Test Connection
+
+```bash
+npx prisma studio
+```
+
+This opens a visual database browser to verify your data.
+
+## Quick Commands Summary
+
+```bash
+# 1. Make sure your DATABASE_URL is correct in .env.local
+# 2. Push schema to database
+npx prisma db push
+
+# 3. Seed with sample data
+npm run db:seed
+
+# 4. View your data
+npx prisma studio
+```
+
+## Troubleshooting
+
+- **Connection refused**: Make sure MySQL server is running
+- **Access denied**: Check username/password in DATABASE_URL
+- **Database doesn't exist**: Run the CREATE DATABASE command first
+- **Port issues**: Default MySQL port is 3306, adjust if different
+
+## Alternative: Quick Test
+
+To test if your MySQL connection works:
+```bash
+npx prisma db pull
+```
+
+This will attempt to connect and pull the current schema.
+
+---
+
+# Previous PostgreSQL Setup Guide (for reference)
 
 ## Option 1: Neon Database (Recommended - Free Tier Available)
 
