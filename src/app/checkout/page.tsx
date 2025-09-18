@@ -54,11 +54,25 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (cart.items.length === 0) {
+    if (!cart || cart.items.length === 0) {
       router.push('/products');
       return;
     }
-  }, [isAuthenticated, cart.items.length, router]);
+  }, [isAuthenticated, cart, router]);
+
+  // Show loading state if cart is not yet loaded
+  if (!cart) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading checkout...</p>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
 
   const handleShippingSubmit = (e: React.FormEvent) => {

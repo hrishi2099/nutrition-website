@@ -60,5 +60,10 @@ export const availableGateways = (): PaymentGateway[] => {
   if (paymentConfig.paytm.enabled) gateways.push('paytm');
   if (paymentConfig.phonepe.enabled) gateways.push('phonepe');
 
+  // For demo purposes, always have at least Razorpay available
+  if (gateways.length === 0) {
+    gateways.push('razorpay');
+  }
+
   return gateways;
 };
