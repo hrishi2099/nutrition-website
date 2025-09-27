@@ -108,9 +108,9 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className="lg:pl-64 flex flex-col min-h-screen">
         {/* Top header */}
-        <div className="sticky top-0 z-10 bg-white shadow-sm border-b">
+        <div className="sticky top-0 z-10 bg-white shadow-sm border-b flex-shrink-0">
           <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -139,7 +139,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
         </div>
 
         {/* Page content */}
-        <main className="p-6">
+        <main className="flex-1 overflow-y-auto p-6">
           {children}
         </main>
       </div>
