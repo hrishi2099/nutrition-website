@@ -25,6 +25,7 @@ interface CartItem {
     price: number;
     image: string;
     category: string;
+    type?: 'physical' | 'digital' | 'pdf';
   };
   quantity: number;
 }
@@ -225,6 +226,38 @@ export default function CheckoutPage() {
           paymentId: `pay_${Date.now()}`,
         }),
       });
+
+      // Process PDF purchases if any
+      const pdfItems = paymentData.items.filter(item => item.product.type === 'pdf');
+      if (pdfItems.length > 0) {
+        for (const item of pdfItems) {
+          try {
+            const pdfPurchaseResponse = await fetch('/api/pdf/purchase', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                userId: 'demo-user-id', // In real app, get from auth context
+                productId: item.product.id,
+                orderId: order.orderId,
+                product: item.product,
+                customerEmail: paymentData.customerEmail,
+                customerName: paymentData.customerName,
+              }),
+            });
+
+            if (pdfPurchaseResponse.ok) {
+              const pdfResult = await pdfPurchaseResponse.json();
+              console.log('PDF purchase created:', pdfResult);
+            } else {
+              console.error('Failed to create PDF purchase for product:', item.product.id);
+            }
+          } catch (pdfError) {
+            console.error('Error processing PDF purchase:', pdfError);
+          }
+        }
+      }
 
       setPaymentStatus('success');
       clearCart();

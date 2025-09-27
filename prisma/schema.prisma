@@ -26,6 +26,7 @@ model User {
   blogPosts     BlogPost[]
   chatSessions  ChatSession[]
   orders        Order[]
+  pdfPurchases  PdfPurchase[]
 
   @@index([email])
   @@index([role])
@@ -426,9 +427,20 @@ model Product {
   price       Int
   imageUrl    String?
   stock       Int       @default(0)
+  productType String    @default("physical") // physical, digital, pdf
+  // PDF-specific fields (only used when productType = "pdf")
+  pdfFilePath String?
+  pdfFileName String?
+  pdfFileSize Int?
+  pdfPageCount Int?
+  pdfDownloadLimit Int?
+  pdfExpiryDays Int?
+  pdfAuthor   String?
+  pdfLanguage String?   @default("English")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   orderItems  OrderItem[]
+  pdfPurchases PdfPurchase[]
 
   @@map("products")
 }
@@ -468,4 +480,52 @@ model NeuralNetworkLog {
   @@index([eventType])
   @@index([createdAt])
   @@map("neural_network_logs")
+}
+
+model PdfPurchase {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderId      String    // Reference to the order that created this purchase
+  downloadLink String    // Unique download URL
+  downloadCount Int      @default(0)
+  maxDownloads Int       @default(5)
+  purchaseDate DateTime  @default(now())
+  expiryDate   DateTime? // When the download access expires
+  status       String    @default("active") // active, expired, revoked
+  emailSent    Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  emailDeliveries EmailDelivery[]
+
+  @@index([userId])
+  @@index([productId])
+  @@index([orderId])
+  @@index([status])
+  @@index([purchaseDate])
+  @@map("pdf_purchases")
+}
+
+model EmailDelivery {
+  id             String      @id @default(cuid())
+  purchaseId     String
+  purchase       PdfPurchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  recipientEmail String
+  subject        String
+  content        String      @db.Text
+  attachments    Json?       // Array of attachment info
+  status         String      @default("pending") // pending, sent, failed, retrying
+  sentAt         DateTime?
+  failureReason  String?
+  retryCount     Int         @default(0)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([purchaseId])
+  @@index([status])
+  @@index([recipientEmail])
+  @@index([createdAt])
+  @@map("email_deliveries")
 }

@@ -11,6 +11,7 @@ const navigation = [
   { name: 'Products', href: '/admin/products', icon: '🛍️' },
   { name: 'Categories', href: '/admin/categories', icon: '📂' },
   { name: 'Orders', href: '/admin/orders', icon: '📦' },
+  { name: 'PDF Purchases', href: '/admin/pdfs', icon: '📄' },
   { name: 'Diet Plans', href: '/admin/diet-plans', icon: '🍎' },
   { name: 'Meals', href: '/admin/meals', icon: '🍽️' },
   { name: 'Chatbot Training', href: '/admin/chatbot', icon: '🤖' },

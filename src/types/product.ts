@@ -14,6 +14,7 @@ export interface Product {
   rating: number;
   reviewCount: number;
   tags: string[];
+  type: 'physical' | 'digital' | 'pdf';
   nutritionInfo?: NutritionInfo;
   benefits: string[];
   ingredients: string[];
@@ -29,6 +30,7 @@ export interface Product {
     estimatedDelivery: string;
     weight: number;
   };
+  pdfInfo?: PdfProductInfo;
   createdAt: string;
   updatedAt: string;
 }
@@ -121,6 +123,57 @@ export interface ProductFilter {
 export interface ProductSort {
   field: 'name' | 'price' | 'rating' | 'createdAt';
   direction: 'asc' | 'desc';
+}
+
+export interface PdfProductInfo {
+  filePath: string;
+  fileName: string;
+  fileSize: number;
+  pageCount: number;
+  downloadLimit?: number;
+  expiryDays?: number;
+  preview?: string;
+  author?: string;
+  language?: string;
+  format: 'pdf';
+}
+
+export interface PdfPurchase {
+  id: string;
+  userId: string;
+  productId: string;
+  orderId: string;
+  downloadLink: string;
+  downloadCount: number;
+  maxDownloads: number;
+  purchaseDate: string;
+  expiryDate?: string;
+  status: 'active' | 'expired' | 'revoked';
+  emailSent: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmailDelivery {
+  id: string;
+  purchaseId: string;
+  recipientEmail: string;
+  subject: string;
+  content: string;
+  attachments: EmailAttachment[];
+  status: 'pending' | 'sent' | 'failed' | 'retrying';
+  sentAt?: string;
+  failureReason?: string;
+  retryCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmailAttachment {
+  fileName: string;
+  filePath: string;
+  mimeType: string;
+  size: number;
 }
 
 
