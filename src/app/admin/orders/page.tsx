@@ -16,167 +16,16 @@ import {
   MoreVertical
 } from 'lucide-react';
 
-// Sample data - in a real app, this would come from an API
-const sampleOrders: Order[] = [
-  {
-    id: 'ORD-001',
-    userId: 'user-1',
-    items: [
-      {
-        product: {
-          id: '1',
-          name: 'Premium Whey Protein Powder',
-          description: 'High-quality whey protein isolate',
-          price: 4999,
-          image: '/api/placeholder/100/100',
-          category: { id: '2', name: 'Protein', slug: 'protein', description: 'Protein products', image: '' },
-          brand: 'NutriSap',
-          inStock: true,
-          stockQuantity: 25,
-          rating: 4.8,
-          reviewCount: 124,
-          tags: ['protein'],
-          benefits: ['Muscle building'],
-          ingredients: ['Whey Protein'],
-          weight: '1kg',
-          shippingInfo: { freeShipping: true, estimatedDelivery: '2-3 days', weight: 1.2 },
-          createdAt: '2024-01-01',
-          updatedAt: '2024-01-01',
-        },
-        quantity: 2,
-      }
-    ],
-    shippingAddress: {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@example.com',
-      phone: '+1234567890',
-      address: '123 Main St',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
-      country: 'United States',
-    },
-    paymentMethod: {
-      type: 'card',
-      cardNumber: '****1234',
-      expiryDate: '12/25',
-      cardholderName: 'John Doe',
-    },
-    status: 'processing',
-    totalAmount: 9998,
-    createdAt: '2024-01-15T10:30:00Z',
-    updatedAt: '2024-01-15T10:30:00Z',
-    trackingNumber: 'TRK123456789',
-  },
-  {
-    id: 'ORD-002',
-    userId: 'user-2',
-    items: [
-      {
-        product: {
-          id: '2',
-          name: 'Organic Spirulina Powder',
-          description: 'Pure organic spirulina powder',
-          price: 2999,
-          image: '/api/placeholder/100/100',
-          category: { id: '3', name: 'Superfoods', slug: 'superfoods', description: 'Superfoods', image: '' },
-          brand: 'NutriSap',
-          inStock: true,
-          stockQuantity: 15,
-          rating: 4.6,
-          reviewCount: 89,
-          tags: ['superfood'],
-          benefits: ['Immune support'],
-          ingredients: ['Spirulina'],
-          weight: '250g',
-          shippingInfo: { freeShipping: false, estimatedDelivery: '3-5 days', weight: 0.3 },
-          createdAt: '2024-01-01',
-          updatedAt: '2024-01-01',
-        },
-        quantity: 1,
-      }
-    ],
-    shippingAddress: {
-      firstName: 'Jane',
-      lastName: 'Smith',
-      email: 'jane@example.com',
-      phone: '+1234567891',
-      address: '456 Oak Ave',
-      city: 'Los Angeles',
-      state: 'CA',
-      zipCode: '90210',
-      country: 'United States',
-    },
-    paymentMethod: {
-      type: 'paypal',
-    },
-    status: 'shipped',
-    totalAmount: 2999,
-    createdAt: '2024-01-14T14:20:00Z',
-    updatedAt: '2024-01-16T09:15:00Z',
-    trackingNumber: 'TRK987654321',
-  },
-  {
-    id: 'ORD-003',
-    userId: 'user-3',
-    items: [
-      {
-        product: {
-          id: '3',
-          name: 'Multivitamin Complex',
-          description: 'Complete multivitamin',
-          price: 1999,
-          image: '/api/placeholder/100/100',
-          category: { id: '1', name: 'Supplements', slug: 'supplements', description: 'Supplements', image: '' },
-          brand: 'NutriSap',
-          inStock: true,
-          stockQuantity: 50,
-          rating: 4.7,
-          reviewCount: 203,
-          tags: ['vitamins'],
-          benefits: ['Overall health'],
-          ingredients: ['Vitamins'],
-          weight: '120 tablets',
-          shippingInfo: { freeShipping: true, estimatedDelivery: '2-3 days', weight: 0.2 },
-          createdAt: '2024-01-01',
-          updatedAt: '2024-01-01',
-        },
-        quantity: 3,
-      }
-    ],
-    shippingAddress: {
-      firstName: 'Bob',
-      lastName: 'Johnson',
-      email: 'bob@example.com',
-      phone: '+1234567892',
-      address: '789 Pine St',
-      city: 'Chicago',
-      state: 'IL',
-      zipCode: '60601',
-      country: 'United States',
-    },
-    paymentMethod: {
-      type: 'card',
-      cardNumber: '****5678',
-      expiryDate: '06/26',
-      cardholderName: 'Bob Johnson',
-    },
-    status: 'delivered',
-    totalAmount: 5997,
-    createdAt: '2024-01-10T08:45:00Z',
-    updatedAt: '2024-01-12T16:30:00Z',
-    trackingNumber: 'TRK456789123',
-  },
-];
 
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>(sampleOrders);
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>(sampleOrders);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const filterAndSortOrders = useCallback(() => {
     let filtered = [...orders];
@@ -234,8 +83,38 @@ export default function AdminOrdersPage() {
   }, [searchTerm, statusFilter, sortBy, sortOrder, orders]);
 
   useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  useEffect(() => {
     filterAndSortOrders();
   }, [filterAndSortOrders]);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch('/api/orders', {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
+      }
+
+      const data = await response.json();
+      setOrders(data.orders || []);
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load orders');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshOrders = () => {
+    fetchOrders();
+  };
 
 
   const formatDate = (dateString: string) => {
@@ -299,9 +178,21 @@ export default function AdminOrdersPage() {
     <AdminSidebar>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
-          <p className="text-gray-600">Manage customer orders and fulfillment</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+            <p className="text-gray-600">Manage customer orders and fulfillment</p>
+          </div>
+          <button
+            onClick={refreshOrders}
+            disabled={loading}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+          >
+            <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>{loading ? 'Refreshing...' : 'Refresh'}</span>
+          </button>
         </div>
 
         {/* Stats Cards */}
@@ -463,112 +354,133 @@ export default function AdminOrdersPage() {
 
         {/* Orders Table */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Order ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Customer
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Items
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Total
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredOrders.map((order, index) => (
-                  <motion.tr
-                    key={order.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="hover:bg-gray-50"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {order.id}
-                      </div>
-                      {order.trackingNumber && (
-                        <div className="text-sm text-gray-500">
-                          Track: {order.trackingNumber}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {order.shippingAddress.firstName} {order.shippingAddress.lastName}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {order.shippingAddress.email}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {order.items.length} item{order.items.length > 1 ? 's' : ''}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {order.items[0]?.product.name}
-                        {order.items.length > 1 && ` +${order.items.length - 1} more`}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {formatPrice(order.totalAmount)}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                        {getStatusIcon(order.status)}
-                        <span className="ml-1 capitalize">{order.status}</span>
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {formatDate(order.createdAt)}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900">
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button className="text-gray-600 hover:text-gray-900">
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {filteredOrders.length === 0 && (
-            <div className="text-center py-12">
-              <Package className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                {searchTerm || statusFilter !== 'all'
-                  ? 'Try adjusting your search or filter criteria.'
-                  : 'No orders have been placed yet.'
-                }
-              </p>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+              <span className="ml-2 text-gray-600">Loading orders...</span>
             </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <XCircle className="mx-auto h-12 w-12 text-red-400" />
+              <h3 className="mt-2 text-sm font-medium text-gray-900">Error loading orders</h3>
+              <p className="mt-1 text-sm text-gray-500">{error}</p>
+              <button
+                onClick={refreshOrders}
+                className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Order ID
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Customer
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Items
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Date
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredOrders.map((order, index) => (
+                      <motion.tr
+                        key={order.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="hover:bg-gray-50"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {order.id}
+                          </div>
+                          {order.trackingNumber && (
+                            <div className="text-sm text-gray-500">
+                              Track: {order.trackingNumber}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {order.shippingAddress.firstName} {order.shippingAddress.lastName}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {order.shippingAddress.email}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {order.items.length} item{order.items.length > 1 ? 's' : ''}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {order.items[0]?.product.name}
+                            {order.items.length > 1 && ` +${order.items.length - 1} more`}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {formatPrice(order.totalAmount)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                            {getStatusIcon(order.status)}
+                            <span className="ml-1 capitalize">{order.status}</span>
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {formatDate(order.createdAt)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex items-center justify-end space-x-2">
+                            <button className="text-blue-600 hover:text-blue-900">
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            <button className="text-gray-600 hover:text-gray-900">
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {filteredOrders.length === 0 && !loading && (
+                <div className="text-center py-12">
+                  <Package className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {searchTerm || statusFilter !== 'all'
+                      ? 'Try adjusting your search or filter criteria.'
+                      : 'No orders have been placed yet.'
+                    }
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
