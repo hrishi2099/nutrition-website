@@ -34,6 +34,7 @@ const sampleProducts: Product[] = [
     rating: 4.8,
     reviewCount: 124,
     tags: ['protein', 'muscle-building', 'recovery'],
+    type: 'physical' as const,
     nutritionInfo: {
       calories: 120,
       protein: 25,
