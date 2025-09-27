@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { signJWT } from '@/lib/jwt';
+import { createJWT } from '@/lib/jwt';
 
 /**
  * Demo Login API - Works without database
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create JWT token
-    const token = await signJWT({
+    const token = await createJWT({
       userId: 'demo-user-id',
       email: user.email,
       role: user.role,
