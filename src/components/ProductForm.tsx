@@ -23,6 +23,7 @@ export default function ProductForm({ product, categories, onSave, onCancel, loa
     images: product?.images || [],
     categoryId: product?.category.id || '',
     brand: product?.brand || '',
+    type: product?.type || 'physical' as 'physical' | 'digital' | 'pdf',
     inStock: product?.inStock ?? true,
     stockQuantity: product?.stockQuantity || 0,
     rating: product?.rating || 0,
@@ -100,6 +101,7 @@ export default function ProductForm({ product, categories, onSave, onCancel, loa
       images: formData.images,
       category: selectedCategory,
       brand: formData.brand,
+      type: formData.type,
       inStock: formData.inStock,
       stockQuantity: formData.stockQuantity,
       rating: formData.rating,
@@ -222,8 +224,8 @@ export default function ProductForm({ product, categories, onSave, onCancel, loa
               </div>
             </div>
 
-            {/* Category and Stock */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Category, Type and Stock */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Category *
@@ -240,6 +242,22 @@ export default function ProductForm({ product, categories, onSave, onCancel, loa
                       {category.name}
                     </option>
                   ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Product Type *
+                </label>
+                <select
+                  required
+                  value={formData.type}
+                  onChange={(e) => handleInputChange('type', e.target.value as 'physical' | 'digital' | 'pdf')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                >
+                  <option value="physical">Physical Product</option>
+                  <option value="digital">Digital Product</option>
+                  <option value="pdf">PDF Document</option>
                 </select>
               </div>
 
