@@ -65,7 +65,7 @@ export default function CheckoutPage() {
 
   const loadCartFromStorage = () => {
     try {
-      const stored = localStorage.getItem('cart');
+      const stored = localStorage.getItem('nutrition-cart');
       if (stored) {
         const cart = JSON.parse(stored);
         setCartItems(cart.items || []);
@@ -82,7 +82,7 @@ export default function CheckoutPage() {
   };
 
   const clearCart = () => {
-    localStorage.removeItem('cart');
+    localStorage.removeItem('nutrition-cart');
     setCartItems([]);
     setCartTotal(0);
   };
