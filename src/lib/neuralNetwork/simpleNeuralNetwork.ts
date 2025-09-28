@@ -371,16 +371,16 @@ export class SimpleNeuralNetwork {
         return false;
       }
 
-      const modelData = modelLog.metadata as any;
+      const modelData = modelLog.metadata as Record<string, unknown>;
       
       // Restore model state
-      this.weights = modelData.weights || [];
-      this.biases = modelData.biases || [];
-      this.isModelTrained = modelData.isModelTrained || false;
+      this.weights = (modelData.weights as number[][]) || [];
+      this.biases = (modelData.biases as number[]) || [];
+      this.isModelTrained = (modelData.isModelTrained as boolean) || false;
       
       // Restore mappings
       if (modelData.vocabulary) {
-        this.textProcessor.importVocabulary(modelData.vocabulary);
+        this.textProcessor.importVocabulary(modelData.vocabulary as Record<string, number>);
       }
       if (modelData.intentMap) {
         this.intentMap = new Map(Object.entries(modelData.intentMap).map(([k, v]) => [k, v as number]));
@@ -391,7 +391,7 @@ export class SimpleNeuralNetwork {
 
       devLog('Model loaded successfully');
       return true;
-    } catch (error) {
+    } catch {
       devLog('Failed to load model');
       return false;
     }

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Product, ProductCategory, NutritionInfo } from '@/types/product';
-import { X, Upload, Plus, Trash2 } from 'lucide-react';
+import { Product, ProductCategory } from '@/types/product';
+import { X, Plus, Trash2 } from 'lucide-react';
 
 interface ProductFormProps {
   product?: Product;
@@ -51,12 +51,10 @@ export default function ProductForm({ product, categories, onSave, onCancel, loa
     },
   });
 
-  const [newTag, setNewTag] = useState('');
   const [newBenefit, setNewBenefit] = useState('');
   const [newIngredient, setNewIngredient] = useState('');
-  const [newAllergen, setNewAllergen] = useState('');
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string | number | boolean | string[] | Record<string, unknown>) => {
     setFormData(prev => ({
       ...prev,
       [field]: value

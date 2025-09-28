@@ -1,4 +1,4 @@
-import { PdfPurchase, PdfProductInfo, Product, EmailDelivery } from '@/types/product';
+import { PdfPurchase, Product, EmailDelivery } from '@/types/product';
 
 class PdfService {
   private purchases: Map<string, PdfPurchase> = new Map();
@@ -91,7 +91,7 @@ class PdfService {
     recipientEmail: string,
     subject: string,
     content: string,
-    attachments: any[] = []
+    attachments: Array<Record<string, unknown>> = []
   ): EmailDelivery {
     const emailId = `email_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -101,7 +101,7 @@ class PdfService {
       recipientEmail,
       subject,
       content,
-      attachments,
+      attachments: attachments as unknown as Array<{ fileName: string; filePath: string; mimeType: string; size: number }>,
       status: 'pending',
       retryCount: 0,
       createdAt: new Date().toISOString(),
@@ -187,4 +187,5 @@ class PdfService {
   }
 }
 
-export default new PdfService();
+const pdfService = new PdfService();
+export default pdfService;

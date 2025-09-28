@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pdfService from '@/lib/pdf/pdfService';
 import emailService from '@/lib/email/emailService';
-import { Product } from '@/types/product';
 
 export async function POST(request: NextRequest) {
   try {

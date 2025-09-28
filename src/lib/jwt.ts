@@ -7,7 +7,7 @@ const getJwtSecret = () => {
 
 export const JWT_SECRET = getJwtSecret();
 
-export async function createJWT(payload: Record<string, any>, expirationTime = '24h') {
+export async function createJWT(payload: Record<string, unknown>, expirationTime = '24h') {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()

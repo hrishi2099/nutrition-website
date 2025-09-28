@@ -67,7 +67,7 @@ export default function EditBlogPost() {
           coverImage: postData.coverImage || '',
           published: postData.published || false,
           categoryId: postData.categoryId || '',
-          tags: postData.tags?.map((tag: any) => tag.id) || [],
+          tags: postData.tags?.map((tag: { id: string }) => tag.id) || [],
         });
       }
     } catch (error) {

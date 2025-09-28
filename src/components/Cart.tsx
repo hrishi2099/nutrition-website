@@ -26,8 +26,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     try {
       updateQuantity(productId, newQuantity);
       showToast('Cart updated successfully', 'success', 3000);
-    } catch (error) {
-      console.error('Error updating quantity:', error);
+    } catch {
       showToast('Failed to update cart', 'error');
     } finally {
       setIsUpdating(null);
@@ -38,7 +37,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     try {
       removeFromCart(productId);
       showToast('Item removed from cart', 'info', 3000);
-    } catch (error) {
+    } catch {
       showToast('Failed to remove item', 'error');
     }
   };

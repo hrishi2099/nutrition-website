@@ -4,8 +4,17 @@ interface ConversationContext {
   userId?: string;
   sessionId: string;
   firstName?: string;
-  enrolledPlan?: any;
-  goals?: any[];
+  enrolledPlan?: {
+    id: string;
+    name: string;
+    type: string;
+  };
+  goals?: Array<{
+    id: string;
+    type: string;
+    target?: number;
+    deadline?: Date;
+  }>;
   previousMessages: Array<{ role: string; content: string; timestamp: Date }>;
 }
 
@@ -90,17 +99,17 @@ export class ConversationManager {
 
     // Handle small talk
     if (this.matchesPatterns(normalizedMessage, this.smallTalkPatterns)) {
-      return this.generateSmallTalk(normalizedMessage, context);
+      return this.generateSmallTalk(normalizedMessage);
     }
 
     // Handle conversational fillers
     if (this.matchesPatterns(normalizedMessage, this.conversationalFillers)) {
-      return this.generateFillerResponse(normalizedMessage, context);
+      return this.generateFillerResponse(normalizedMessage);
     }
 
     // Handle questions
     if (this.matchesPatterns(normalizedMessage, this.questionPatterns)) {
-      return this.generateQuestionResponse(message, context);
+      return this.generateQuestionResponse(message);
     }
 
     // Check for follow-up opportunities
@@ -186,7 +195,7 @@ export class ConversationManager {
     };
   }
 
-  private generateSmallTalk(message: string, context: ConversationContext): SmartResponse {
+  private generateSmallTalk(message: string): SmartResponse {
     // How are you responses
     if (/how are you|what's up|how's it going/.test(message)) {
       const response = this.getRandomItem(this.casualResponses);
@@ -252,7 +261,7 @@ export class ConversationManager {
     };
   }
 
-  private generateFillerResponse(message: string, context: ConversationContext): SmartResponse {
+  private generateFillerResponse(message: string): SmartResponse {
     if (/^(ok|okay|alright|cool|nice|great|awesome)/.test(message)) {
       const responses = [
         "Glad to hear it! What nutrition topic would you like to dive into?",
@@ -293,7 +302,7 @@ export class ConversationManager {
     };
   }
 
-  private generateQuestionResponse(message: string, context: ConversationContext): SmartResponse {
+  private generateQuestionResponse(message: string): SmartResponse {
     // This will be handled by the main chatbot logic for nutrition-specific questions
     // But we can provide some guidance for very general questions
     
@@ -391,7 +400,7 @@ export class ConversationManager {
             confidence: response.confidence,
             userId: context.userId,
             hasEnrolledPlan: !!context.enrolledPlan
-          } as any
+          }
         }
       });
     } catch (error) {

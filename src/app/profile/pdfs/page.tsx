@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import PageTransition from '@/components/PageTransition';
 import FadeInSection from '@/components/FadeInSection';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,7 +13,6 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  Eye,
   Calendar,
   RefreshCw
 } from 'lucide-react';
@@ -23,13 +23,7 @@ export default function UserPdfsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      fetchPdfPurchases();
-    }
-  }, [user]);
-
-  const fetchPdfPurchases = async () => {
+  const fetchPdfPurchases = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -50,7 +44,13 @@ export default function UserPdfsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (user) {
+      fetchPdfPurchases();
+    }
+  }, [user, fetchPdfPurchases]);
 
   const handleDownload = async (purchaseId: string) => {
     try {
@@ -184,14 +184,14 @@ export default function UserPdfsPage() {
                 <FileText className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">No PDFs found</h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  You haven't purchased any PDF products yet.
+                  You haven&apos;t purchased any PDF products yet.
                 </p>
-                <a
+                <Link
                   href="/products"
                   className="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
                 >
                   Browse Products
-                </a>
+                </Link>
               </div>
             </FadeInSection>
           ) : (

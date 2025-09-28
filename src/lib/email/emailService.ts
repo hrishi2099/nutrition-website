@@ -1,4 +1,4 @@
-import { EmailDelivery, EmailAttachment, PdfPurchase, Product } from '@/types/product';
+import { EmailDelivery, PdfPurchase, Product } from '@/types/product';
 
 interface EmailConfig {
   smtp: {
@@ -160,7 +160,7 @@ Thank you for choosing NutriSap!
     customerName: string
   ): Promise<{ success: boolean; messageId?: string; error?: string }> {
     try {
-      const { subject, html, text } = this.generatePdfPurchaseEmail(purchase, product, customerName);
+      const { subject } = this.generatePdfPurchaseEmail(purchase, product, customerName);
 
       // In a real implementation, you would use a service like Nodemailer, SendGrid, or AWS SES
       // For now, we'll simulate the email sending process
@@ -196,9 +196,8 @@ Thank you for choosing NutriSap!
 
   // Send order confirmation email
   async sendOrderConfirmationEmail(
-    order: any,
-    customerEmail: string,
-    customerName: string
+    order: Record<string, unknown>,
+    customerEmail: string
   ): Promise<{ success: boolean; messageId?: string; error?: string }> {
     try {
       const subject = `Order Confirmation #${order.id} - NutriSap`;
@@ -253,4 +252,5 @@ Thank you for choosing NutriSap!
   }
 }
 
-export default new EmailService();
+const emailService = new EmailService();
+export default emailService;

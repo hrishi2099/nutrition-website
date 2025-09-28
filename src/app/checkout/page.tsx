@@ -137,8 +137,20 @@ export default function CheckoutPage() {
       // Generate order ID
       const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      // Prepare payment data
-      const paymentData = {
+      // Prepare payment data for context (with type conversion)
+      const paymentDataForContext = {
+        orderId,
+        amount: cartTotal,
+        currency: 'INR',
+        customerName: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+        customerEmail: shippingAddress.email,
+        customerPhone: shippingAddress.phone,
+        shippingAddress: shippingAddress as unknown as Record<string, unknown>,
+        items: cartItems as unknown as Array<Record<string, unknown>>,
+      };
+
+      // Prepare payment data for processing (with original types)
+      const paymentDataForProcessing = {
         orderId,
         amount: cartTotal,
         currency: 'INR',
@@ -149,10 +161,10 @@ export default function CheckoutPage() {
         items: cartItems,
       };
 
-      setPaymentData(paymentData);
+      setPaymentData(paymentDataForContext);
 
       // Process payment
-      await processPayment(selectedGateway, paymentData);
+      await processPayment(selectedGateway, paymentDataForProcessing);
 
     } catch (error) {
       console.error('Payment processing error:', error);

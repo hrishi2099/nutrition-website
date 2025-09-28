@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import PageTransition from '@/components/PageTransition';
 import FadeInSection from '@/components/FadeInSection';
 import AnimatedButton from '@/components/AnimatedButton';
@@ -9,7 +8,6 @@ import { useToast } from '@/contexts/ToastContext';
 import { User, Shield, Database, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function DemoPage() {
-  const router = useRouter();
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 

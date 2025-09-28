@@ -2,6 +2,7 @@ import { simpleNeuralNetwork, SimpleNeuralNetwork, IntentPrediction } from './si
 import { simpleTextProcessor } from './simpleTextProcessor';
 import { prisma } from '@/lib/prisma';
 import { devLog, logError } from '@/lib/logger';
+import { Prisma } from '@prisma/client';
 
 export interface TrainingStatus {
   isTraining: boolean;
@@ -86,7 +87,7 @@ export class NeuralNetworkManager {
       this.trainingStatus.progress = 10;
 
       // Train the model
-      const history = await this.classifier.trainModel(epochs);
+      await this.classifier.trainModel(epochs);
       
       this.trainingStatus.progress = 80;
       this.trainingStatus.stage = 'evaluating_model';
@@ -282,7 +283,7 @@ export class NeuralNetworkManager {
       await prisma.neuralNetworkLog.create({
         data: {
           eventType,
-          metadata: metadata as any,
+          metadata: metadata as Prisma.InputJsonValue,
           createdAt: new Date()
         }
       });
@@ -304,7 +305,7 @@ export class NeuralNetworkManager {
             intentId: prediction.intentId,
             intentName: prediction.intentName,
             confidence: prediction.confidence
-          } as any,
+          } as Prisma.InputJsonValue,
           createdAt: new Date()
         }
       });
@@ -397,7 +398,8 @@ export class NeuralNetworkManager {
 
       // Calculate average confidence
       const totalConfidence = predictions.reduce((sum, pred) => {
-        const confidence = (pred.metadata as any)?.confidence || 0;
+        const metadata = pred.metadata as Record<string, unknown>;
+        const confidence = (typeof metadata?.confidence === 'number') ? metadata.confidence : 0;
         return sum + confidence;
       }, 0);
       const averageConfidence = totalConfidence / totalPredictions;
@@ -406,9 +408,9 @@ export class NeuralNetworkManager {
       const intentMap = new Map<string, { count: number; totalConfidence: number }>();
       
       predictions.forEach(pred => {
-        const metadata = pred.metadata as any;
-        const intentName = metadata?.intentName || 'Unknown';
-        const confidence = metadata?.confidence || 0;
+        const metadata = pred.metadata as Record<string, unknown>;
+        const intentName = (metadata?.intentName as string) || 'Unknown';
+        const confidence = (metadata?.confidence as number) || 0;
         
         if (!intentMap.has(intentName)) {
           intentMap.set(intentName, { count: 0, totalConfidence: 0 });

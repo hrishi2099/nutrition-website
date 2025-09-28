@@ -10,8 +10,8 @@ export interface PaymentData {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  shippingAddress: any;
-  items: any[];
+  shippingAddress: Record<string, unknown>;
+  items: Array<Record<string, unknown>>;
 }
 
 interface PaymentContextType {

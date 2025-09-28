@@ -75,7 +75,7 @@ export default function IntentDetailPage() {
       const data = await response.json();
       const intent = data.intent;
       if (intent && intent.examples) {
-        intent.examples = intent.examples.map((ex: any) => ({
+        intent.examples = intent.examples.map((ex: TrainingExample & { keywords: string | string[] }) => ({
           ...ex,
           keywords: typeof ex.keywords === 'string' ? JSON.parse(ex.keywords) : ex.keywords,
         }));

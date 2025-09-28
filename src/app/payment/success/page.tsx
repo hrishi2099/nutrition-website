@@ -37,7 +37,13 @@ export default function PaymentSuccessPage() {
         amount: paymentData.amount,
         customerName: paymentData.customerName,
         customerEmail: paymentData.customerEmail,
-        items: paymentData.items,
+        items: paymentData.items as unknown as Array<{
+          product: {
+            name: string;
+            price: number;
+          };
+          quantity: number;
+        }>,
         estimatedDelivery: getEstimatedDelivery(),
       });
     }

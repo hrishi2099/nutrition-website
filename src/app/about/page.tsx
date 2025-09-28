@@ -29,7 +29,7 @@ export default function About() {
           const data = await response.json();
           const teamMembers = data.teamMembers || [];
           if (teamMembers) {
-            teamMembers.forEach((member: any) => {
+            teamMembers.forEach((member: TeamMember & { specialties: string | string[] }) => {
               if (typeof member.specialties === 'string') {
                 try {
                   member.specialties = JSON.parse(member.specialties);

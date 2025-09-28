@@ -16,7 +16,7 @@ class OrderService {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
         try {
-          this.orders = JSON.parse(stored).map((order: any) => ({
+          this.orders = JSON.parse(stored).map((order: Record<string, unknown> & { createdAt: string; updatedAt: string; estimatedDelivery?: string }) => ({
             ...order,
             createdAt: new Date(order.createdAt),
             updatedAt: new Date(order.updatedAt),

@@ -3,21 +3,17 @@
 import { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
 import { motion } from 'framer-motion';
-import { PdfPurchase, EmailDelivery } from '@/types/product';
+import { PdfPurchase } from '@/types/product';
 import {
   FileText,
-  Download,
   Mail,
-  User,
-  Calendar,
-  Eye,
   MoreVertical,
   CheckCircle,
   XCircle,
   Clock,
   RefreshCw,
   Search,
-  Filter
+  Eye
 } from 'lucide-react';
 
 export default function AdminPdfsPage() {

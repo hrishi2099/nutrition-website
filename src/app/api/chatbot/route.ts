@@ -191,7 +191,12 @@ async function generateIntelligentResponse(
       sessionId,
       firstName: userContext?.firstName,
       enrolledPlan: userContext?.enrolledPlan,
-      goals: userContext?.goals,
+      goals: userContext?.goals?.map(goal => ({
+        id: goal.id,
+        type: goal.type,
+        target: goal.target ?? undefined,
+        deadline: undefined // Could be added later if needed
+      })),
       previousMessages: history.map(msg => ({
         role: msg.role,
         content: msg.content,

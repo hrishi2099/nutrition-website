@@ -61,12 +61,12 @@ export const verifyRazorpayPayment = async (paymentData: RazorpayResponse) => {
   }
 };
 
-export const initializeRazorpay = (): Promise<any> => {
+export const initializeRazorpay = (): Promise<unknown> => {
   return new Promise((resolve) => {
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.onload = () => {
-      resolve((window as any).Razorpay);
+      resolve((window as unknown as { Razorpay: unknown }).Razorpay);
     };
     document.body.appendChild(script);
   });

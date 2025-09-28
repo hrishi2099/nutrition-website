@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { paymentConfig } from '@/lib/payment/config';
+import { createHmac } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,9 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify the signature using crypto
-    const crypto = require('crypto');
-    const expectedSignature = crypto
-      .createHmac('sha256', paymentConfig.razorpay.keySecret || 'demo_secret')
+    const expectedSignature = createHmac('sha256', paymentConfig.razorpay.keySecret || 'demo_secret')
       .update(razorpay_order_id + '|' + razorpay_payment_id)
       .digest('hex');
 

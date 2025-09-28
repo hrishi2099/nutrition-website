@@ -9,7 +9,7 @@ import FadeInSection from '@/components/FadeInSection';
 import AnimatedButton from '@/components/AnimatedButton';
 import { formatHeight } from '@/lib/heightUtils';
 import Link from 'next/link';
-import { Package, User, Settings, ShoppingCart } from 'lucide-react';
+import { Package, Settings, ShoppingCart } from 'lucide-react';
 
 interface UserProfile {
   id: string;

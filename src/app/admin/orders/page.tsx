@@ -47,7 +47,7 @@ export default function AdminOrdersPage() {
 
     // Sort orders
     filtered.sort((a, b) => {
-      let aValue: any, bValue: any;
+      let aValue: string | number, bValue: string | number;
       
       switch (sortBy) {
         case 'id':

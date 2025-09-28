@@ -68,14 +68,14 @@ export function validateName(name: string, fieldName: string = 'Name'): Validati
   };
 }
 
-export function validateNumber(value: any, fieldName: string, min?: number, max?: number): ValidationResult {
+export function validateNumber(value: unknown, fieldName: string, min?: number, max?: number): ValidationResult {
   const errors: string[] = [];
   
   if (value === null || value === undefined || value === '') {
     errors.push(`${fieldName} is required`);
   } else {
-    const num = typeof value === 'string' ? parseFloat(value) : value;
-    
+    const num = typeof value === 'string' ? parseFloat(value) : (value as number);
+
     if (isNaN(num)) {
       errors.push(`${fieldName} must be a valid number`);
     } else {
@@ -138,16 +138,16 @@ export function validateChatMessage(message: string): ValidationResult {
   };
 }
 
-export function validateBlogPost(data: any): ValidationResult {
+export function validateBlogPost(data: Record<string, unknown>): ValidationResult {
   const errors: string[] = [];
   
-  const titleValidation = validateString(data.title, 'Title', 3, 200);
-  const contentValidation = validateString(data.content, 'Content', 10, 50000);
+  const titleValidation = validateString(data.title as string, 'Title', 3, 200);
+  const contentValidation = validateString(data.content as string, 'Content', 10, 50000);
   
   errors.push(...titleValidation.errors);
   errors.push(...contentValidation.errors);
   
-  if (data.excerpt && data.excerpt.length > 500) {
+  if (data.excerpt && (data.excerpt as string).length > 500) {
     errors.push('Excerpt must be no more than 500 characters');
   }
   

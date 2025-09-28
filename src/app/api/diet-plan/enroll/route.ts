@@ -145,7 +145,7 @@ export async function GET(request: NextRequest) {
     let userId: string | null = null;
     try {
       userId = await getUserFromToken(request);
-    } catch (tokenError) {
+    } catch {
       console.log('No valid token found, returning empty enrollments');
       return NextResponse.json({
         success: true,

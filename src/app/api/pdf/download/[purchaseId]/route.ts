@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pdfService from '@/lib/pdf/pdfService';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 
 export async function GET(
   request: NextRequest,

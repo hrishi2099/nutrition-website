@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { amount, currency, orderId, customerName, customerEmail, customerPhone } = await request.json();
+    const { amount, currency, orderId } = await request.json();
 
     // Validate required fields
     if (!amount || !currency || !orderId) {

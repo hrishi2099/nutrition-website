@@ -41,7 +41,16 @@ export default function NeuralNetworkPage() {
   const [shouldRetrain, setShouldRetrain] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [testInput, setTestInput] = useState('');
-  const [testResult, setTestResult] = useState<any>(null);
+  const [testResult, setTestResult] = useState<{
+    neuralPrediction?: {
+      intentName: string;
+      confidence: number;
+    };
+    topPredictions: Array<{
+      intentName: string;
+      confidence: number;
+    }>;
+  } | null>(null);
   const [isTraining, setIsTraining] = useState(false);
 
   const loadData = async () => {
@@ -377,7 +386,7 @@ export default function NeuralNetworkPage() {
                     <div>
                       <p className="text-sm font-medium mt-2">Top Predictions:</p>
                       <ul className="text-xs space-y-1 mt-1">
-                        {testResult.topPredictions.slice(0, 3).map((pred: any, index: number) => (
+                        {testResult.topPredictions.slice(0, 3).map((pred, index: number) => (
                           <li key={index} className="flex justify-between">
                             <span>{pred.intentName}</span>
                             <span>{(pred.confidence * 100).toFixed(1)}%</span>
