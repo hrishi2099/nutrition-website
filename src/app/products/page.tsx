@@ -485,16 +485,17 @@ export default function ProductsPage() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50/30">
         {/* Header */}
-        <section className="bg-gradient-to-r from-green-600 to-blue-600 py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative bg-gradient-to-br from-green-50 via-white to-green-50 py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-emerald-600/5"></div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInSection className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Nutrition Products
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                Premium Nutrition Products
               </h1>
-              <p className="text-xl text-green-100 max-w-3xl mx-auto">
-                Discover our premium selection of nutrition supplements, superfoods, and wellness products
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Discover our curated selection of premium supplements, superfoods, and wellness products designed to optimize your health journey
               </p>
             </FadeInSection>
           </div>
@@ -504,7 +505,7 @@ export default function ProductsPage() {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar Filters */}
             <div className="lg:w-64 flex-shrink-0">
-              <div className="bg-white rounded-lg shadow-lg p-6 sticky top-8">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 sticky top-24">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-semibold text-gray-900">
                     Filters
@@ -512,7 +513,7 @@ export default function ProductsPage() {
                   {activeFiltersCount > 0 && (
                     <button
                       onClick={clearFilters}
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
                     >
                       Clear all
                     </button>
@@ -531,7 +532,7 @@ export default function ProductsPage() {
                       value={filters.search || ''}
                       onChange={(e) => handleFilterChange({ search: e.target.value })}
                       placeholder="Search products..."
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white/50 backdrop-blur-sm text-gray-900 transition-all placeholder-gray-500"
                     />
                   </div>
                 </div>
@@ -544,7 +545,7 @@ export default function ProductsPage() {
                   <select
                     value={filters.category || ''}
                     onChange={(e) => handleFilterChange({ category: e.target.value || undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white/50 backdrop-blur-sm text-gray-900 transition-all"
                   >
                     <option value="">All Categories</option>
                     {categories.map(category => (
@@ -566,14 +567,14 @@ export default function ProductsPage() {
                       placeholder="Min price"
                       value={filters.minPrice || ''}
                       onChange={(e) => handleFilterChange({ minPrice: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white/50 backdrop-blur-sm text-gray-900 transition-all placeholder-gray-500"
                     />
                     <input
                       type="number"
                       placeholder="Max price"
                       value={filters.maxPrice || ''}
                       onChange={(e) => handleFilterChange({ maxPrice: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white/50 backdrop-blur-sm text-gray-900 transition-all placeholder-gray-500"
                     />
                   </div>
                 </div>
@@ -601,7 +602,7 @@ export default function ProductsPage() {
                   <select
                     value={filters.rating || ''}
                     onChange={(e) => handleFilterChange({ rating: e.target.value ? Number(e.target.value) : undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white/50 backdrop-blur-sm text-gray-900 transition-all"
                   >
                     <option value="">Any Rating</option>
                     <option value="4">4+ Stars</option>
@@ -621,7 +622,7 @@ export default function ProductsPage() {
                     Showing {filteredProducts.length} of {products.length} products
                   </p>
                   {activeFiltersCount > 0 && (
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
                       {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''} applied
                     </span>
                   )}
@@ -637,7 +638,7 @@ export default function ProductsPage() {
                         const [field, direction] = e.target.value.split('-') as [ProductSort['field'], ProductSort['direction']];
                         setSorting({ field, direction });
                       }}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                      className="px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white/80 backdrop-blur-sm text-gray-900 transition-all"
                     >
                       <option value="name-asc">Name A-Z</option>
                       <option value="name-desc">Name Z-A</option>
@@ -649,16 +650,16 @@ export default function ProductsPage() {
                   </div>
 
                   {/* View Mode */}
-                  <div className="flex border border-gray-300 rounded-lg">
+                  <div className="flex border border-gray-200 rounded-xl bg-white/50 backdrop-blur-sm overflow-hidden">
                     <button
                       onClick={() => setViewMode('grid')}
-                      className={`p-2 ${viewMode === 'grid' ? 'bg-green-600 text-white' : 'text-gray-600 '}`}
+                      className={`p-3 transition-all ${viewMode === 'grid' ? 'bg-green-600 text-white shadow-sm' : 'text-gray-600 hover:bg-green-50 hover:text-green-600'}`}
                     >
                       <Grid size={20} />
                     </button>
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`p-2 ${viewMode === 'list' ? 'bg-green-600 text-white' : 'text-gray-600 '}`}
+                      className={`p-3 transition-all ${viewMode === 'list' ? 'bg-green-600 text-white shadow-sm' : 'text-gray-600 hover:bg-green-50 hover:text-green-600'}`}
                     >
                       <List size={20} />
                     </button>
@@ -680,7 +681,7 @@ export default function ProductsPage() {
                   </p>
                   <button
                     onClick={clearFilters}
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
                   >
                     Clear Filters
                   </button>
