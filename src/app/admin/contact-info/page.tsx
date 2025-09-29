@@ -503,7 +503,23 @@ export default function AdminContactInfo() {
 
           {/* Social Media */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Social Media</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Social Media</h3>
+              <button
+                type="button"
+                onClick={() => handlePartialSave('social', {
+                  facebookUrl: formData.facebookUrl,
+                  twitterUrl: formData.twitterUrl,
+                  instagramUrl: formData.instagramUrl,
+                  linkedinUrl: formData.linkedinUrl
+                })}
+                disabled={savingSections.social}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm"
+              >
+                {savingSections.social && <LoadingSpinner />}
+                {savingSections.social ? 'Saving...' : 'Save Section'}
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
