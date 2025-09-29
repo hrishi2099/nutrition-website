@@ -38,7 +38,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-        <div className="relative flex flex-col w-64 bg-white shadow-xl">
+        <div className="relative flex flex-col w-64 bg-white shadow-xl h-full">
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-semibold text-gray-900">Admin Panel</h2>
             <button
@@ -48,7 +48,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
               ✕
             </button>
           </div>
-          <nav className="flex-1 px-4 py-4 space-y-2">
+          <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -70,11 +70,11 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-1 bg-white shadow-lg">
+        <div className="flex flex-col flex-1 bg-white shadow-lg overflow-hidden">
           <div className="flex items-center justify-center p-6 border-b">
             <h2 className="text-xl font-bold text-gray-900">Admin Panel</h2>
           </div>
-          <nav className="flex-1 px-4 py-4 space-y-2">
+          <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
             {navigation.map((item) => (
               <Link
                 key={item.name}

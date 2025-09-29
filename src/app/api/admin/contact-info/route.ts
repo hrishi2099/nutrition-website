@@ -129,3 +129,78 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    // First verify admin authentication
+    const user = await verifyAdminToken(request);
+    console.log('Admin user attempting partial update of contact info:', user.email);
+
+    const body = await request.json();
+    console.log('Contact info partial update request:', body);
+
+    // Check database connection
+    console.log('DATABASE_URL configured:', !!process.env.DATABASE_URL);
+
+    // Get existing contact info or create minimal record
+    let existingInfo = await prisma.contactInfo.findFirst();
+
+    if (!existingInfo) {
+      // Create minimal record with defaults if none exists
+      existingInfo = await prisma.contactInfo.create({
+        data: {
+          companyName: 'NutriSap',
+          email: 'info@nutrisap.com',
+          phone: '+1 (555) 123-4567',
+          address: '123 Wellness Street',
+          city: 'Health City',
+          state: 'HC',
+          zipCode: '12345',
+        },
+      });
+    }
+
+    // Only update fields that are provided in the request
+    const updateData: any = {};
+    const allowedFields = [
+      'companyName', 'email', 'supportEmail', 'phone', 'phoneHours',
+      'address', 'city', 'state', 'zipCode', 'mondayFridayHours',
+      'saturdayHours', 'sundayHours', 'facebookUrl', 'twitterUrl',
+      'instagramUrl', 'linkedinUrl'
+    ];
+
+    allowedFields.forEach(field => {
+      if (body[field] !== undefined) {
+        updateData[field] = body[field];
+      }
+    });
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json(
+        { error: 'No valid fields provided for update' },
+        { status: 400 }
+      );
+    }
+
+    // Update existing record with only the provided fields
+    console.log('Partially updating contact info record with fields:', Object.keys(updateData));
+    const contactInfo = await prisma.contactInfo.update({
+      where: { id: existingInfo.id },
+      data: updateData,
+    });
+
+    console.log('Contact info partially updated successfully:', contactInfo.id);
+
+    return NextResponse.json({
+      success: true,
+      contactInfo,
+      updatedFields: Object.keys(updateData),
+    });
+  } catch (error) {
+    console.error('Error partially updating contact info:', error);
+    return NextResponse.json(
+      { error: 'Failed to update contact info', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
+}

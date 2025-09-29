@@ -29,6 +29,7 @@ export default function AdminContactInfo() {
   const [, setContactInfo] = useState<ContactInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingSections, setSavingSections] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -96,7 +97,7 @@ export default function AdminContactInfo() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.email || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.zipCode) {
       setError('Please fill in all required fields');
       return;
@@ -129,6 +130,78 @@ export default function AdminContactInfo() {
       setError(err instanceof Error ? err.message : 'Failed to save contact info');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const validateSectionData = (sectionName: string, sectionData: Partial<typeof formData>): string | null => {
+    switch (sectionName) {
+      case 'contact':
+        if (!sectionData.email || !sectionData.phone) {
+          return 'Email and phone are required for contact details';
+        }
+        if (sectionData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sectionData.email)) {
+          return 'Please enter a valid email address';
+        }
+        break;
+      case 'address':
+        if (!sectionData.address || !sectionData.city || !sectionData.state || !sectionData.zipCode) {
+          return 'All address fields are required';
+        }
+        break;
+      case 'company':
+        if (!sectionData.companyName) {
+          return 'Company name is required';
+        }
+        break;
+    }
+    return null;
+  };
+
+  const handlePartialSave = async (sectionName: string, sectionData: Partial<typeof formData>) => {
+    // Validate section data
+    const validationError = validateSectionData(sectionName, sectionData);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setSavingSections(prev => ({ ...prev, [sectionName]: true }));
+    setError(null);
+
+    try {
+      const response = await fetch('/api/admin/contact-info', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(sectionData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to save ${sectionName}`);
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setContactInfo(data.contactInfo);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+
+        // Update form data with the returned data
+        const updatedFormData = { ...formData };
+        data.updatedFields.forEach((field: string) => {
+          if (data.contactInfo[field] !== undefined) {
+            (updatedFormData as any)[field] = data.contactInfo[field];
+          }
+        });
+        setFormData(updatedFormData);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : `Failed to save ${sectionName}`);
+    } finally {
+      setSavingSections(prev => ({ ...prev, [sectionName]: false }));
     }
   };
 
@@ -180,7 +253,18 @@ export default function AdminContactInfo() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Company Information */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Company Information</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Company Information</h3>
+              <button
+                type="button"
+                onClick={() => handlePartialSave('company', { companyName: formData.companyName })}
+                disabled={savingSections.company}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm"
+              >
+                {savingSections.company && <LoadingSpinner />}
+                {savingSections.company ? 'Saving...' : 'Save Section'}
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -200,7 +284,23 @@ export default function AdminContactInfo() {
 
           {/* Contact Details */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Contact Details</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Contact Details</h3>
+              <button
+                type="button"
+                onClick={() => handlePartialSave('contact', {
+                  email: formData.email,
+                  supportEmail: formData.supportEmail,
+                  phone: formData.phone,
+                  phoneHours: formData.phoneHours
+                })}
+                disabled={savingSections.contact}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm"
+              >
+                {savingSections.contact && <LoadingSpinner />}
+                {savingSections.contact ? 'Saving...' : 'Save Section'}
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -261,7 +361,23 @@ export default function AdminContactInfo() {
 
           {/* Address */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Address</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Address</h3>
+              <button
+                type="button"
+                onClick={() => handlePartialSave('address', {
+                  address: formData.address,
+                  city: formData.city,
+                  state: formData.state,
+                  zipCode: formData.zipCode
+                })}
+                disabled={savingSections.address}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm"
+              >
+                {savingSections.address && <LoadingSpinner />}
+                {savingSections.address ? 'Saving...' : 'Save Section'}
+              </button>
+            </div>
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -326,7 +442,22 @@ export default function AdminContactInfo() {
 
           {/* Business Hours */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Business Hours</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Business Hours</h3>
+              <button
+                type="button"
+                onClick={() => handlePartialSave('hours', {
+                  mondayFridayHours: formData.mondayFridayHours,
+                  saturdayHours: formData.saturdayHours,
+                  sundayHours: formData.sundayHours
+                })}
+                disabled={savingSections.hours}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm"
+              >
+                {savingSections.hours && <LoadingSpinner />}
+                {savingSections.hours ? 'Saving...' : 'Save Section'}
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
