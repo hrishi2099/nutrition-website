@@ -82,6 +82,62 @@ export default function CheckoutPage() {
     }
   };
 
+  const processPhonePePayment = async (paymentData: {
+    orderId: string;
+    amount: number;
+    currency: string;
+    customerName: string;
+    customerEmail: string;
+    customerPhone: string;
+    shippingAddress: ShippingAddress;
+    items: CartItem[];
+  }) => {
+    try {
+      // Convert amount to paise for PhonePe (multiply by 100)
+      const amountInPaise = paymentData.amount * 100;
+
+      // Initiate PhonePe payment
+      const phonePeResponse = await fetch('/api/payment/phonepe/initiate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: amountInPaise,
+          orderId: paymentData.orderId,
+          customerPhone: paymentData.customerPhone,
+          customerName: paymentData.customerName,
+          customerEmail: paymentData.customerEmail,
+        }),
+      });
+
+      if (!phonePeResponse.ok) {
+        throw new Error('Failed to initiate PhonePe payment');
+      }
+
+      const phonePeData = await phonePeResponse.json();
+
+      if (phonePeData.success && phonePeData.data.redirectUrl) {
+        // Store payment data for verification after redirect
+        sessionStorage.setItem('pending-payment', JSON.stringify({
+          merchantTransactionId: phonePeData.data.merchantTransactionId,
+          orderId: paymentData.orderId,
+          amount: paymentData.amount,
+          items: paymentData.items,
+        }));
+
+        // Redirect to PhonePe payment page
+        window.location.href = phonePeData.data.redirectUrl;
+        return;
+      } else {
+        throw new Error(phonePeData.error || 'PhonePe payment initiation failed');
+      }
+    } catch (error) {
+      console.error('PhonePe payment error:', error);
+      throw error;
+    }
+  };
+
   const clearCart = () => {
     localStorage.removeItem('nutrition-cart');
     setCartItems([]);
@@ -185,7 +241,12 @@ export default function CheckoutPage() {
     items: CartItem[];
   }) => {
     try {
-      // Create order first
+      // Handle PhonePe payment differently
+      if (gateway === 'phonepe') {
+        return await processPhonePePayment(paymentData);
+      }
+
+      // Create order first for other gateways
       const orderResponse = await fetch('/api/orders', {
         method: 'POST',
         headers: {

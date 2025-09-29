@@ -9,7 +9,7 @@ import FadeInSection from '@/components/FadeInSection';
 import AnimatedButton from '@/components/AnimatedButton';
 import { formatHeight } from '@/lib/heightUtils';
 import Link from 'next/link';
-import { Package, Settings, ShoppingCart } from 'lucide-react';
+import { Package, Settings, ShoppingCart, FileText } from 'lucide-react';
 
 interface UserProfile {
   id: string;
@@ -253,13 +253,23 @@ export default function ProfilePage() {
           <FadeInSection delay={0.1}>
             <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Link href="/profile/orders">
                   <div className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:shadow-md transition-all cursor-pointer">
                     <Package className="w-8 h-8 text-green-600 mr-3" />
                     <div>
                       <h3 className="font-medium text-gray-900">My Orders</h3>
                       <p className="text-sm text-gray-600">View order history</p>
+                    </div>
+                  </div>
+                </Link>
+
+                <Link href="/profile/pdfs">
+                  <div className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:shadow-md transition-all cursor-pointer">
+                    <FileText className="w-8 h-8 text-green-600 mr-3" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">My PDFs</h3>
+                      <p className="text-sm text-gray-600">Digital purchases</p>
                     </div>
                   </div>
                 </Link>
