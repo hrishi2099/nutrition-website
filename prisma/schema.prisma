@@ -203,7 +203,7 @@ model ChatMessage {
   sessionId     String
   session       ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   role          String      // 'user' or 'assistant'
-  content       String
+  content       String      @db.Text
   userContext   Json?       // Store user context at time of message
   createdAt     DateTime    @default(now())
 

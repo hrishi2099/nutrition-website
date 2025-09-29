@@ -61,6 +61,9 @@ export default function Header() {
               <Link href="/products" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Products
               </Link>
+              <Link href="/bmi-calculator" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
+                BMI Calculator
+              </Link>
               <Link href="/blog" className="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium transition-colors">
                 Blog
               </Link>
@@ -181,6 +184,13 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Products
+              </Link>
+              <Link
+                href="/bmi-calculator"
+                className="text-gray-600 hover:text-black block px-3 py-2 text-base font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                BMI Calculator
               </Link>
               <Link
                 href="/blog"

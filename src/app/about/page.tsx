@@ -104,10 +104,7 @@ export default function About() {
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
               <p className="text-gray-600 mb-6">
-                At <span className="inline-block">
-                  <Image src="/logoLight.svg" alt="NutriSap Logo" width={128} height={40} className="" />
-                  <Image src="/logoDark.svg" alt="NutriSap Logo" width={128} height={40} className="hidden" />
-                </span>, we believe that proper nutrition is the foundation of a healthy, fulfilling life. 
+                At NutriSap, we believe that proper nutrition is the foundation of a healthy, fulfilling life.
                 Our mission is to make personalized nutrition accessible, understandable, and sustainable for everyone.
               </p>
               <p className="text-gray-600 mb-6">
